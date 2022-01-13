@@ -1,0 +1,13 @@
+[package]
+name = "CoinSwap"
+version = "0.0.0"
+
+[addresses]
+CoinSwap = "0xC5"
+BasicCoin = "0xBC"
+GoldCoin = "0x9C"
+SilverCoin = "0x5C"
+
+[dependencies]
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin.git", subdir="vm/stdlib", rev="1429e6e49d1a8e39c8515105080b3fbb877da372"}
+BasicCoin = { local = "../basic-coin"}

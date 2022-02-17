@@ -1,0 +1,6 @@
+baseURL = "http://example.org/"
+languageCode = "en-us"
+title = "StarcoinCookBook"
+theme = "docsy"
+[params.ui.feedback]
+enable = true

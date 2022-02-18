@@ -11,7 +11,7 @@ git clone  https://github.com/starcoinorg/starcoin-cookbook.git
 ```
 ### 2 Enter the repository to update the subrepository
 ```
-cd StarcoinCookbook/doc
+cd starcoin-cookbook/doc
 ```
 ```
 git submodule update --init --recursive

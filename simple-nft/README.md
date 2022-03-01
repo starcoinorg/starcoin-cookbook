@@ -16,7 +16,7 @@ and run `dev get-coin` and `account show` command in the starcoin console, for g
 ```toml
 [addresses]
 StarcoinFramework = "0x1"
-SNFT = "0xABCDE"
+SNFT = "0xb7061a5b3141f217954e775db2829308"
 ```
 
 4. Run `mpm release` in another shell console for release package
@@ -35,7 +35,7 @@ Release done: release/simple-nft.v0.0.1.blob
 6. Execute the initialize transaction in starcoin console
 
 ```bash
-account execute-function --function 0xabcde::SimpleNFTScripts::initialize -b
+account execute-function --function 0xb7061a5b3141f217954e775db2829308::SimpleNFTScripts::initialize -b
 ```
 
 > Note: Please replace the `0xabcde` with your address.

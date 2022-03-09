@@ -1,4 +1,4 @@
-module MY_TOKEN::MyToken {
+module MyToken::MyToken {
      use StarcoinFramework::Token;
      use StarcoinFramework::Account;
 

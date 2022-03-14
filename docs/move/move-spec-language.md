@@ -1,9 +1,8 @@
 ---
-title: "Move 规范语言"
-date: 2022-03-03T11:00:43+08:00
-draft: false
-isCJKLanguage: true
+sidebar_position: 1
 ---
+
+# Move 规范语言
 
 ## 表达式 (Expression)
 MSL 中的表达式是 Move 程序表达式的子集以及一组附加结构，如以下所述。

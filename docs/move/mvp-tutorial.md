@@ -1,9 +1,8 @@
 ---
-title: "验证智能合约：Move Prover 教程"
-date: 2022-03-03T10:37:43+08:00
-draft: false
-isCJKLanguage: true
+sidebar_position: 2
 ---
+
+# 验证智能合约：Move Prover 教程
 
 ## 什么是 Move Prover
 形式化验证是一种使用严格的数学方法来描述行为和推理计算机系统的正确性的技术。现在已经在操作系统、编译器等对正确性要求高的领域有一定应用。

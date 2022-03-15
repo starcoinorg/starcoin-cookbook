@@ -8,11 +8,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Starcoin Cookbook',
   tagline: 'How to developing on starcoin',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  url: 'https://starcoinorg.github.io',
+  baseUrl: '/starcoin-cookbook/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: '/img/favicon.ico',
   organizationName: 'staroinorg', // Usually your GitHub org/user name.
   projectName: 'starcoin-cookbook', // Usually your repo name.
 
@@ -24,13 +24,13 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/starcoinorg/starcoin-cookbook/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/starcoinorg/starcoin-cookbook/edit/main/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/starcoinorg/starcoin-cookbook/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/starcoinorg/starcoin-cookbook/edit/main/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -46,7 +46,7 @@ const config = {
         title: 'Starcoin Cookbook',
         logo: {
           alt: 'Starcoin Cookbook',
-          src: 'img/logo.svg',
+          src: '/img/logo.svg',
         },
         items: [
           {

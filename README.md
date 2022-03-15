@@ -1,6 +1,6 @@
 # Starcoin CookBook
 
-Learn how to build on Starcoin
+Learn how to build on Starcoin, the document url: https://starcoinorg.github.io/starcoin-cookbook/
 
 ### Installation
 

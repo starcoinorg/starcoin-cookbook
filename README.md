@@ -24,6 +24,11 @@ $ yarn build
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
+Then run serve to serving build directory at http://localhost:3000/starcoin-cookbook/
+```
+$ yarn serve
+```
+
 ### Deployment
 
 The github action will auto deploy the documents.

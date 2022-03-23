@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkstarcoin_cookbook=self.webpackChunkstarcoin_cookbook||[]).push([[865],{8173:function(o){o.exports={blogPosts:[]}}}]);

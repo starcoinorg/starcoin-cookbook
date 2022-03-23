@@ -1,0 +1,42 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started": {
+    "message": "Getting Started",
+    "description": "The label for category Getting Started in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Download and Install": {
+    "message": "Download and Install",
+    "description": "The label for category Download and Install in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Setting up a node and participating in a network": {
+    "message": "Setting up a node and participating in a network",
+    "description": "The label for category Setting up a node and participating in a network in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Understanding and manage accounts": {
+    "message": "Understanding and manage accounts",
+    "description": "The label for category Understanding and manage accounts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Move and SmartContract Development": {
+    "message": "Move and SmartContract Development",
+    "description": "The label for category Move and SmartContract Development in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Advance Move Development": {
+    "message": "Advance Move Development",
+    "description": "The label for category Advance Move Development in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Move Spec Language and Move Prover": {
+    "message": "Move Spec Language and Move Prover",
+    "description": "The label for category Move Spec Language and Move Prover in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Web3 and DApp Development": {
+    "message": "Web3 and DApp Development",
+    "description": "The label for category Web3 and DApp Development in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Concepts": {
+    "message": "Concepts",
+    "description": "The label for category Concepts in sidebar tutorialSidebar"
+  }
+}

@@ -15,7 +15,21 @@ const config = {
   favicon: '/img/favicon.ico',
   organizationName: 'staroinorg', // Usually your GitHub org/user name.
   projectName: 'starcoin-cookbook', // Usually your repo name.
-
+  
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'zh'],
+    localeConfigs: {
+      en: {
+        label: 'English',
+        htmlLang: 'en-US',
+      },
+      zh: {
+        label: '中文',
+        htmlLang: 'zh-CN',
+      },
+    },
+  },
   presets: [
     [
       'classic',
@@ -54,6 +68,10 @@ const config = {
             docId: 'intro',
             position: 'left',
             label: 'Documents',
+          },
+          {
+            type: 'localeDropdown',
+            position: 'right',
           },
           {
             href: 'https://github.com/starcoinorg/starcoin-cookbook',

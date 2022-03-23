@@ -4,25 +4,25 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Starcoin CLI & RPC',
+    title: 'Getting started with starcoin CLI',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-          Learn how to install starcoin and use starcoin's CLI and RPC APIs
+          Learn how to install starcoin and use starcoin's CLI and participate in a network
       </>
     ),
   },
   {
-    title: 'Move language & Starcoin Move framework',
+    title: 'Move language and SmartContract Development',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-          Learn how to use Move language and starcoin-framework
+          Learn how to use Move language and starcoin-framework to write SmartContract
       </>
     ),
   },
   {
-    title: 'DApp ecosystem',
+    title: 'Web3 and DApp Development',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>

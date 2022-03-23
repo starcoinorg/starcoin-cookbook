@@ -12,3 +12,5 @@ TODO
 4. Account Resource
 5. Account Sequence Number
 6. Account Storage
+
+https://discord.com/channels/822159062475997194/892760287797714954/899142725251780608

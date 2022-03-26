@@ -4,11 +4,11 @@
     "description": "The label for version current"
   },
   "sidebar.tutorialSidebar.category.Getting Started": {
-    "message": "Getting Started",
+    "message": "入门",
     "description": "The label for category Getting Started in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Download and Install": {
-    "message": "Download and Install",
+    "message": "下载安装",
     "description": "The label for category Download and Install in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Setting up a node and participating in a network": {
@@ -38,5 +38,17 @@
   "sidebar.tutorialSidebar.category.Concepts": {
     "message": "Concepts",
     "description": "The label for category Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.How to test Move Module": {
+    "message": "How to test Move Module",
+    "description": "The label for category How to test Move Module in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.More Move Examples": {
+    "message": "More Move Examples",
+    "description": "The label for category More Move Examples in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Move Specification Language and Move Prover": {
+    "message": "Move 规范语言和 Move Prover",
+    "description": "The label for category Move Specification Language and Move Prover in sidebar tutorialSidebar"
   }
 }

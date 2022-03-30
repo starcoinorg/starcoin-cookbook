@@ -50,5 +50,9 @@
   "sidebar.tutorialSidebar.category.Move Specification Language and Move Prover": {
     "message": "Move 规范语言和 Move Prover",
     "description": "The label for category Move Specification Language and Move Prover in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Miscellaneous": {
+    "message": "杂项",
+    "description": "The label for category Miscellaneous in sidebar tutorialSidebar"
   }
 }

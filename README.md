@@ -1,37 +1,25 @@
 # Starcoin CookBook
 
-Learn how to build on Starcoin, the document url: https://starcoinorg.github.io/starcoin-cookbook/
+Learn how to build on Starcoin, the document URL: https://starcoinorg.github.io/starcoin-cookbook/
 
-### Installation
+### How to Contributing
 
-```
-$ yarn
-```
+First off, thanks for taking the time to contribute! Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make will benefit everybody else and are **greatly appreciated**.
 
-### Local Development
+Contributions in the following are welcome:
 
-```
-$ yarn start
-```
+1. Report a document bug.
+2. Submit a document suggestion.
+3. Contributing to write docuemnt. You can learn more about contributing to the Starcoin Cookbook by reading our [Contribution Guide](./docs/100-miscellaneous/99-contributing.md) |[贡献指南](./i18n/zh/docusaurus-plugin-content-docs/current/100-miscellaneous/99-contributing.md) 
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+You can view our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
-### Build
+## Support
 
-```
-$ yarn build
-```
+Reach out to the maintainer at one of the following places:
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-Then run serve to serving build directory at http://localhost:3000/starcoin-cookbook/
-```
-$ yarn serve
-```
-
-### Deployment
-
-The github action will auto deploy the documents.
+- [Starcoin Discord](https://discord.gg/starcoin)
+- [Starcoin Contributor Telegram group](https://t.me/starcoin_contributor)
 
 ### Links
 

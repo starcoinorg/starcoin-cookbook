@@ -1,6 +1,0 @@
-# Setting up Move develop environment
-
-TODO
-
-1. Install mpm.
-2. Set up env for move prover.

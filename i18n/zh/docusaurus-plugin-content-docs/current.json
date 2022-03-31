@@ -12,7 +12,7 @@
     "description": "The label for category Download and Install in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Setting up a node and participating in a network": {
-    "message": "Setting up a node and participating in a network",
+    "message": "配置节点并加入网络",
     "description": "The label for category Setting up a node and participating in a network in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Understanding and manage accounts": {

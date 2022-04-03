@@ -67,7 +67,7 @@ starcoin --connect ~/.starcoin/barnard/starcoin.ipc console
 Note: The path to the ipc file is different on Windows
 
 ``` shell
-starcoin.exe --connect \\. \pipe\starcoin.ipc console
+$ starcoin.exe --connect \\.\pipe\dev\starcoin.ipc console
 ```
 
 - To connect via websocket.

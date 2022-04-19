@@ -468,11 +468,11 @@ This's all about spec test of move.
 
 ## More example
 
-1. [basic-coin](./basic-coin/)
-2. [coin-swap](./coin-swap/)
-3. [my-token](./my-token/)
-4. [my-counter](./my-counter/)
-5. [simple-nft](./simple-nft/) A NFT example
+1. [basic-coin](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/basic-coin/)
+2. [coin-swap](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/coin-swap/)
+3. [my-token](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/my-token/)
+4. [my-counter](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/my-counter/)
+5. [simple-nft](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/simple-nft/) A NFT example
 
 ## Questions
 

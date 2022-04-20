@@ -79,7 +79,11 @@ pub fn new(TreeReader: &'a) -> Self {
 ```
 这里TreeReader是一个trait(可以认为是类似Java中inteface)， 在starcoin中可以认为是提供key value操作的数据结构
 
-在starcoin中就是对应的KVStore这里值RocksDB, mock中使用的是HashMap + BTeeSet
+在starcoin中就是对应的KVStore这里值RocksDB, MockTreeStore中使用的是HashMap + BTeeSet
+
+有TreeReader就有TreeWriter，分别对应JMT的读写,在starcoin的实现当中MockTreeStore使用了TreeWriter,
+
+持久层并没有实现TreeWriter trait
 
 可以简单认为JMT内存中是一颗trie树，持久化在RocksDB上
 
@@ -125,6 +129,112 @@ pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerklePr
 ```
 获取key对应的value的值，如果存在并返回对应的merkel proof证明
 
+
 ## 稀疏默克尔树的设计原理
+
+### 路径压缩
+上面提到账号是128 bits, 基于trie的实现，那实际上账号的数量是2的128次方,实际上的账号没有这么多，
+，是一个稀疏trie,这里处理会使用路径压缩
+路径压缩的图 （TODO FIXME 论文中的图)
+
+这样做的目前减少内存的访问次数
+
+由于是压缩的字典树，节点分为三种类型分别为Null, Internal, Leaf这里对应
+代码中的
+```rust
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum Node<K: RawKey> {
+    /// Represents `null`.
+    Null,
+    /// A wrapper of [`InternalNode`].
+    Internal(InternalNode),
+    /// A wrapper of [`LeafNode`].
+    Leaf(LeafNode<K>),
+}
+```
+数据只存储在Leaf节点上, Internal节点可以有16个子节点
+这里压缩引入了一个nibble的概念，nibble可以表示0-15的整数,也就是四个bit,
+一个byte可以表示8个bit，这样可以存储两个nibble
+
+```rust
+fn put(key: K, blob: Option<Blob>, tree_cache: &mut TreeCache<R, K>) -> Result<()>
+```
+这里是存储key，value的写入接口,其中Blob就是vec<u8>,
+
+写入的时候先根据key计算出key对应的HashValue key_hash, 这里HashValue是一个[u8;32]数组,
+然后将key_hash转成一个含有64个nibble的元素集合
+
+tree_cache是JMT在内存中缓存的信息，缓存了JMT的root的HashValue值,叫做root_node_key
+
+这里root_node_key可能是NONE,也可能是Block对应的header对应的state_root,
+
+然后读取root_node_key作为key，对应的value值，这里获取可能是从缓存也可能从rocksdb,
+
+这里给个例子
+JMT可以支持各种类型的key写入, value就是vec<u8> (被序列化的数据),只需要实现 RawKey
+这里假设我们写入key是Hello, value是World,整个JMT是空树
+```rust
+#[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash)]
+pub struct StringKey(pub Vec<u8>);
+
+impl RawKey for StringKey {
+    fn encode_key(&self) -> Result<Vec<u8>> {
+        Ok(self.0.clone())
+    }
+
+    fn decode_key(bytes: &[u8]) -> Result<Self> {
+        Ok(StringKey(bytes.to_vec()))
+    }
+}
+let db = MockTreeStringStore::default();
+let tree = JellyfishMerkleTree::new(&db);
+
+// Tree is initially empty. Root is a null node. We'll insert a key-value pair which creates a
+// leaf node.
+let key = StringKey("Hello".as_bytes().to_vec());
+let value = Blob::from("World".as_bytes().to_vec());
+
+let (_new_root_hash, batch) = tree.updates(None, vec![(key.into(), Some(value))])?;
+assert!(batch.stale_node_index_batch.is_empty());
+db.write_tree_update_batch(batch).unwrap();
+```
+
+画图LeafNode key, blob, blob_hash, cache_hash() (XXX FIXME)
+
+### 空数据插入数据流程 (XXX FIXME)
+
+每次updates会生存一个TreeCache 这个TreeCache记录 root_key， leaf_node的hash值(XXX FIXME) 和 leaf_node
+
+这里先计算key对应的sha3_256 key_hash这个值对应的是0x8ca66ee6b2fe4bb928a8e3cd2f508de4119c0895f22e011117e22cf9b13de7ef
+
+然后将key_hash生成一个64位的nibble
+
+获取JMT树的root_key, 由于是空树,root_key值是个默认值*SPARSE_MERKLE_PLACEHOLDER_HASH,
+
+删掉这个root_key, 创建新的叶子节点leaf_node, 插入新产生的(leaf_node_hash, leaf_node)
+
+这里leaf_node_hash是key的hash和blob的hash拼接后计算的hash值
+
+new_root_key设置为等于leaf_node_hash tree_cache把root_key更新为new_root_key
+
+
+### put的流程
+先生成tree_cache,
+
+从tree_cache中获得root_node_key (XXX FIXME各种情形说明)
+
+获取插入key的hash值，并转换成nibble_iter集合
+
+
+如果root_node_key是空 走空数据插入流程
+
+如果root_node_key是LeafNode, 通过tree_cache获取root_node_key对应的existing_leaf_node,
+
+获取existing_leaf_node的key对应的nibble_iter记作existing_nibble_iter
+
+
+
+
+
 
 ## 稀疏默克尔树的代码分析

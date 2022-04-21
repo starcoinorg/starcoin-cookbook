@@ -200,6 +200,7 @@ db.write_tree_update_batch(batch).unwrap();
 ```
 
 画图LeafNode key, blob, blob_hash, cache_hash() (XXX FIXME)
+画图InternalNode hash如何计算(XXX FIXME)
 
 ### 空数据插入数据流程 (XXX FIXME)
 
@@ -229,10 +230,25 @@ new_root_key设置为等于leaf_node_hash tree_cache把root_key更新为new_root
 如果root_node_key是空 走空数据插入流程
 
 如果root_node_key是LeafNode, 通过tree_cache获取root_node_key对应的existing_leaf_node,
+比较共同部分,如果是LeafNode直接更新
+如果不是Leaf
+创建InternalNode，持续创建InternalNode
 
-获取existing_leaf_node的key对应的nibble_iter记作existing_nibble_iter
+
+如果是InternalNode
 
 
+
+
+
+
+如果root_node_key是Internal
+
+
+stale_node_index_cache 相关说明在
+```rust
+pub fn freeze()代码中说明
+```
 
 
 

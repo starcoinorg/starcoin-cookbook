@@ -2,7 +2,7 @@
 
 Learn how to build on Starcoin, the document URL: https://starcoinorg.github.io/starcoin-cookbook/
 
-### How to Contributing
+### How to contribute
 
 First off, thanks for taking the time to contribute! Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make will benefit everybody else and are **greatly appreciated**.
 

@@ -1,0 +1,10 @@
+[package]
+name = "simple-nft"
+version = "0.0.1"
+
+[addresses]
+StarcoinFramework = "0x1"
+SNFT = "0xb7061a5b3141f217954e775db2829308"
+
+[dependencies]
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}

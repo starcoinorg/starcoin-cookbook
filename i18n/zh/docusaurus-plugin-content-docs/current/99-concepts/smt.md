@@ -4,8 +4,6 @@ sidebar_position: 2
 
 # Sparse Merkle Tree
 
-
-Sparse Merkle Tree
 要了解为什么用Sparse Merkle Tree(下面简称SMT)，先介绍下Merkle Tree
 
 ## Merkle Tree
@@ -59,7 +57,7 @@ starcoin是基于账户模型，不同于以太坊个人账户和合约账户是
 
 需要数据结构来处理账户地址到账户状态的映射，也就是AccountAddree -> State
 
-starcoin中账户地址(AccountAddress) 是128 bits(16个字节), 也就是32个16进制的数(一个16进制的数是4 bits)
+starcoin中账户地址(AccountAddress) 是128 bit(16个字节), 也就是32个16进制的数(一个16进制的数是4 bit)
 
 直观上来这个映射就是key -> value之间映射，处理这个可以使用HashMap
 
@@ -83,11 +81,46 @@ starcoin中账户地址(AccountAddress) 是128 bits(16个字节), 也就是32个
 
 这里使用了一种基于压缩trie数据结构jellyfish-merkle-tree (JMT)
 
-### 设计想法
+### 设计
 
 
+这段来自于diem论文(https://diem-developers-components.netlify.app/papers/jellyfish-merkle-tree/2021-01-14.pdf)
+#### Merkle Tree到SMT
 
-## 项目中用到的稀疏默克树用到的API
+在starcoin中Hash的计算都是基于sha3-256计算来的, 所以这颗树是2的256次方个元素
+
+下图显示了Merkle Tree到SMT的两个优化
+![three_smt](../../../../../static/img/three_smt.png)
+这里1显示了Merkel Tree形状，2对其做了优化将空树用placeholder方格代替, 节省了空间
+
+这里3优化将只含有一个叶子节点的子树设置成节点， 这样减少了proof时候对hash的计算
+
+这里A的2进制路径表示为0100, B的为1000， C的为1011
+
+#### 基数树前缀压缩
+
+下图显示了基于压缩的优化
+![radix_tree](../../../../../static/img/radix_tree.png)
+这里图中的Merkle Tree的key的长度都是8个bit，是颗稀疏，有很多空节点
+
+A的2进制路径为00010100， 每4个bit压缩后变成右边的0x14
+
+B的2进制路径为00011010, 压缩后变为0x1A
+
+C的2进制路径为00011111, 压缩后变为0x1F
+
+D的2进制路径为11101100， 压缩后为0xDC
+
+这里每4个bit压缩叫做一个nibble
+
+Merkle Tree可以认为是基数等于2的基数树，图中右边可以认为是基数等于16的基数树
+
+SMT就是基于基数16的基数树,这个设计的优点就是降低树的高度,减少内存访问次数,降低内存
+
+#### 树中节点类型
+
+
+## SMT API
 ### new
 ```rust
 pub fn new(TreeReader: &'a) -> Self {
@@ -149,14 +182,7 @@ pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerklePr
 
 ## 稀疏默克尔树的设计原理
 
-### 路径压缩
-上面提到账号是128 bits, 基于trie的实现，那实际上账号的数量是2的128次方,实际上的账号没有这么多，
-，是一个稀疏trie,这里处理会使用路径压缩
-路径压缩的图 （TODO FIXME 论文中的图)
-
-这样做的目前减少内存的访问次数
-
-由于是压缩的字典树，节点分为三种类型分别为Null, Internal, Leaf这里对应
+节点分为三种类型分别为Null, Internal, Leaf这里对应
 代码中的
 ```rust
 #[derive(Clone, Debug, Eq, PartialEq)]

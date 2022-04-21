@@ -44,16 +44,22 @@ Merkle Tree有以下作用
 这个过程叫做Merkle Proof
 
 
-## SMT
-介绍下为啥需要用SMT
-
-starcoin中需要用到账号地址(AccountAddress)是128 bits的，也就是32个16进制的数(一个16进制的数是4bits)
+不同于以太坊个人账户和合约账户是分开的, starcoin中合约中
 
 不同于以太坊外部账号和合约账号是分开的，在starcoin中合约相关都在账号(AccountAddress)对应的状态里面(State)
 
 在合约中包含代码(code)和存储(storage), 这里有点类似C程序中的代码段和数据段
 
-对于用户合约可以认为是AccountAddree -> State之间的映射
+## SMT
+### 介绍下为啥需要用SMT
+
+starcoin是基于账户模型，不同于以太坊个人账户和合约账户是分开的, starcoin中合约相关信息也都存储在State中， State包括合约代码(CODE)和存储(RESOURCE)
+
+余额相关信息都在RESOURCE中
+
+需要数据结构来处理账户地址到账户状态的映射，也就是AccountAddree -> State
+
+starcoin中账户地址(AccountAddress) 是128 bits(16个字节), 也就是32个16进制的数(一个16进制的数是4 bits)
 
 直观上来这个映射就是key -> value之间映射，处理这个可以使用HashMap
 
@@ -63,13 +69,23 @@ starcoin中需要用到账号地址(AccountAddress)是128 bits的，也就是32�
 
 不考虑hash碰撞，查询基本是常数时间完成(O(1)),更新也是如此
 
-这种设计最大问题是不能提供merkel proof, 比如证明某个时间点某人余额大于多少
+这种设计最大问题是不能提供Merkel Proof, 比如证明某个时间点这个账户余额大于多少(StateProof)
 
-如果基于HashMap这种结构，可能每次有新的区块交易发布，需要将HashMap构建merkel tree再将对应的top_hash发布到区块头中
+一种想法是基于当时的HashMap构建Merkel Tree
 
-这样效率是低下的
+基于这种想法，每次有新的区块发布的需要基于HashMap构建新的Merkel Tree并将Merkel Tree对应的top_hash发布到BlockHeader中
 
-这里使用了一种基于trie前缀压缩思想的数据结构jellyfish-merkle-tree (JMT)
+这个方案是有问题的，HashMap效率很高，但是每次构建Merkel Tree效率很低
+
+还有一种想法是我们不用HashMap，直接构建Merkel Tree把所有账户的状态都存下来
+
+这个方法的问题在于Merkel Tree没有提供高效查找和修改的方法
+
+这里使用了一种基于压缩trie数据结构jellyfish-merkle-tree (JMT)
+
+### 设计想法
+
+
 
 ## 项目中用到的稀疏默克树用到的API
 ### new

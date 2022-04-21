@@ -14,7 +14,7 @@ Merkle Tree又被称为二叉哈希树，主要用在文件系统或者P2P系统
 下面这个图说明下
 
 
-![merkle tree drawio](https://github.com/starcoinorg/starcoin-cookbook/tree/nkysg-patch-1/static/img/merkle_tree.png)
+![merkle tree drawio](../../../../../static/img/merkle_tree.png)
 
 
 这里有A, B, C, D四个交易这个虚线框内，在Merkle Tree属于data blocks， 这部分叫做leaf node,

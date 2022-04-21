@@ -5,46 +5,47 @@ sidebar_position: 2
 # Sparse Merkle Tree
 
 
-稀疏默克尔树
-要了解为什么用稀疏默克尔树，先介绍下默克尔树
+Sparse Merkle Tree
+要了解为什么用Sparse Merkle Tree(下面简称SMT)，先介绍下Merkle Tree
 
-## 默克尔树
-默克尔树又被称为二叉哈希树，主要用在文件系统或者P2P系统中
+## Merkle Tree
+Merkle Tree又被称为二叉哈希树，主要用在文件系统或者P2P系统中
 
-下面画个图说明下
-
-
-![merkle tree drawio](https://user-images.githubusercontent.com/2979052/163526058-498ac17e-d4cf-47f4-9ed7-4a180c03fd9e.png)
+下面这个图说明下
 
 
-这里有A, B, C, D四个交易这个虚线框内，在merkle tree属于datablock， 这部分叫做leaf node,
+![merkle tree drawio](https://github.com/starcoinorg/starcoin-cookbook/tree/nkysg-patch-1/static/img/merkle_tree.png)
+
+
+这里有A, B, C, D四个交易这个虚线框内，在Merkle Tree属于data blocks， 这部分叫做leaf node,
 
 上面的虚线框属于hash pointer,
 
-Hash 1的值是交易A的Hash值和交易B的Hash值拼接后计算的hash值(也可以有其他算法)
+Hash 1的值是交易A的hash值和交易B的hash值拼接后计算的hash值(也可以有其他算法)，在图中是H(A) H(B) hash(1) = hash(H(A) + H(B)) 这里 + 表示字符串拼接
 
-Hash 2的值是C和D的Hash值拼接后计算的
+Hash 2的值是交易C和交易D的hash值拼接后计算的hash值，在图中是H(C) H(D) hash(2) = hash(H(C) + H(D))
 
-Hash 3是Hash 1和Hash 2拼接计算的
+Hash 3是Hash 1和Hash 2拼接计算的hash值，在图中是H(AB) H(CD), hash(3) = hash(hash(1) + hash(2)),  Hash 3也叫做top_hash
 
-Hash 3也叫做top_hash
+Merkle Tree有以下作用
+
+### 快速定位修改
+如果交易A被修改后，Hash 1也会被修改,top_hash也会被修改，所以可以认为记住top_hash就记住了整个Merkle Tree
 
 ### 校验交易
 这个树的作用可以检验交易是否有效
 
-比如校验交易A是否存在将交易A的hash值，然后给你Hash(B), Hash(CD), top_hash
+在区块链light node不会记录所有交易数据，只会记录Merkle Tree的top_hash值
 
-校验下是否top_hash = hash(hash(hash(A,B), Hash(CD)))
+如果校验交易A是否存在, 这时候是把交易A的hash值这里记为H(A)发送给校验放, 校验方发送一个hash值列表[Hash(B), Hash(CD)]
 
-这个过程叫做merkle proof
-(TODO添加个wiki)
+如果保存的top_hash和hash(hash(H(A) + H(B)) + Hash(CD))相等, 证明交易A是存在的
 
-### 快速定位修改
-如果交易A被修改后，Hash 1也会被修改,top_hash也会被修改
+这个过程叫做Merkle Proof
 
 
-## 稀疏默克树
-介绍下为啥需要用稀疏默克树
+## SMT
+介绍下为啥需要用SMT
 
 starcoin中需要用到账号地址(AccountAddress)是128 bits的，也就是32个16进制的数(一个16进制的数是4bits)
 

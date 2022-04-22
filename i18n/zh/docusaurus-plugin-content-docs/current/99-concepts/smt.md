@@ -219,7 +219,7 @@ key2_hash和root_hash1有公共前缀0x123, 先由 key2, value2生成一个leafn
 然后构造0x1的Internal children3, children3[2]= hash(children2)
 
 leafnode2, children1, children2, children3都会按照hash和序列化的值写入到kvStore, 新生成的根节点是hash(children3)
-![two_leaf_insert](../../../../../static/img/)
+![two_leaf_insert](../../../../../static/img/two_leaf_insert.png)
 
 
 #### 插入有公共前缀的Internal节点
@@ -290,9 +290,9 @@ pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerklePr
 ```rust
 fn put(key: K, blob: Option<Blob>, tree_cache: &mut TreeCache<R, K>) -> Result<()>
 ```
-这里是存储key，value的写入接口,其中Blob就是vec<u8>,
+这里是存储key，value的写入接口,其中Blob就是```vec<u8>```,
 
-写入的时候先根据key计算出key对应的HashValue key_hash, 这里HashValue是一个[u8;32]数组,
+写入的时候先根据key计算出key对应的HashValue key_hash, 这里HashValue是一个```[u8;32]```数组,
 然后将key_hash转成一个含有64个nibble的元素集合
 
 tree_cache是JMT在内存中缓存的信息，缓存了JMT的root的HashValue值,叫做root_node_key
@@ -302,7 +302,7 @@ tree_cache是JMT在内存中缓存的信息，缓存了JMT的root的HashValue值
 然后读取root_node_key作为key，对应的value值，这里获取可能是从缓存也可能从rocksdb,
 
 这里给个例子
-JMT可以支持各种类型的key写入, value就是vec<u8> (被序列化的数据),只需要实现 RawKey
+JMT可以支持各种类型的key写入, value就是```vec<u8>``` (被序列化的数据),只需要实现 RawKey
 这里假设我们写入key是Hello, value是World,整个JMT是空树
 ```rust
 #[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash)]

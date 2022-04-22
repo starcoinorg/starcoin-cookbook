@@ -83,14 +83,13 @@ starcoin中账户地址(AccountAddress) 是128 bit(16个字节), 也就是32个1
 
 ### SMT设计原理
 
-这段来自于diem论文(https://diem-developers-components.netlify.app/papers/jellyfish-merkle-tree/2021-01-14.pdf)
 #### Merkle Tree到SMT
 
 在starcoin中Hash的计算都是基于sha3-256计算来的, 所以这颗树是2的256次方个元素
 
 下图显示了Merkle Tree到SMT的两个优化
 ![three_smt](../../../../../static/img/three_smt.png)
-这里1显示了Merkel Tree形状，2对其做了优化将空树用placeholder方格代替, 节省了空间
+这里1显示了Merkel Tree形状，2对其做了优化将空子树用placeholder(方格)代替, 节省了空间
 
 这里3优化将只含有一个叶子节点的子树设置成节点， 这样减少了proof时候对hash的计算
 
@@ -116,10 +115,106 @@ Merkle Tree可以认为是基数等于2的基数树，图中右边可以认为�
 
 SMT就是基于基数16的基数树(这里简称为Radix16),这个设计的优点就是降低树的高度,减少内存访问次数,降低内存
 
-#### SMT相关的数据结构和操作
+### SMT数据结构和操作
 上面提到SMT实际上是一个Radix16 Trie, 在starcoin中每个key的长度是256bit, 这里基于4个bit(一个nibble)做了压缩,
 
-每次查找比较一个nibble长度, 
+这样整个树的高度就变为64
+
+SMT的节点类型分为Null, Internal, Leaf
+
+Null就是前面提到的placeholder, Internal最多有16个子节点(子节点类型可以是Internal或者Leaf， 这里对应一个HashMap, key为0-16)， Leaf存储的是实际的key, value
+
+区块链中需要保存历史状态，这里如何查询某个key的历史状态，之前提到Merkle Tree里保存top_hash就认为是保存了整棵树,查询中需要历史key某个状态
+
+需要提供树的根节点值和查询的key，这个根节点就是在block_header中的state_root, 这也是后续讲到statetree的构建需要用到state_root
+
+starcoin中SMT需要持久化到KvStore, 这里用的是RocksDB(测试中MockTreeStore使用的是HashMap + BTreeSet)
+
+为了将整个SMT保存在KvStore中, SMT的所有节点都只存储hash值(对应的内容通过KvStore查询)
+
+例如查找key为Hello对应的value, 在SMT中计算key_hash = sha3_256("hello")
+
+操作都是对key_hash进行
+
+需要将Null, Internal Leaf节点序列化存储在KvStore中
+
+这里说明下starcoin中各种节点实现
+
+```rust
+pub struct Child {
+    // The hash value of this child node.
+    pub hash: HashValue,
+    // Whether the child is a leaf node.
+    pub is_leaf: bool,
+}
+pub type Children = HashMap<Nibble, Child>;
+
+pub struct InternalNode {
+    // Up to 16 children.
+    children: Children,
+    //Node's hash cache
+    cached_hash: Cell<Option<HashValue>>,
+}
+pub trait RawKey: Clone + Ord {
+    /// Raw key's hash, will used as tree's nibble path
+    /// Directly use origin byte's sha3_256 hash, do not use CryptoHash to add salt.
+    fn key_hash(&self) -> HashValue {
+        HashValue::sha3_256_of(
+            self.encode_key()
+                .expect("Serialize key failed when hash.")
+                .as_slice(),
+        )
+    }
+
+    /// Encode the raw key, the raw key's bytes will store to leaf node.
+    fn encode_key(&self) -> Result<Vec<u8>>;
+
+    fn decode_key(bytes: &[u8]) -> Result<Self>;
+}
+
+pub struct LeafNode<K: RawKey> {
+    /// The origin key associated with this leaf node's Blob.
+    #[serde(
+    deserialize_with = "deserialize_raw_key",
+    serialize_with = "serialize_raw_key"
+    )]
+    raw_key: K,
+    /// The hash of the blob.
+    blob_hash: HashValue,
+    /// The blob associated with `raw_key`.
+    blob: Blob,
+    #[serde(skip)]
+    cached_hash: Cell<Option<HashValue>>,
+}
+```
+Child的定义可以看到只存储了hash值，Value通过KvStore.get(hash)获取
+
+下面说明下各个操作流程
+### 在空树种创建LeafNode
+我们在一颗空树种插入 key "Hello", value "World"
+
+基于这个产生了一个hash值，这个hash值就是新的根节点, hash值和LeafNode序列化后插入到KvStore中
+
+![empty_tree_insert](../../../../../static/img/empty_tree_insert.png)
+
+### 插入一些流程
+在starcoin中hash值是256bit，画图不方便，这里用短点地址16bit做示范
+
+
+#### 空树插入叶子
+开始为空SMT,插入一个key1, value1, 生成的leafnode1的hash1为0x1234， 这个是新的根节点, 如下图
+
+![one_leaf](../../../../../static/img/one_leaf.png)
+
+
+#### 插入有公共前缀的叶子节点
+新插入一个key2, value2, 需要查找key2插入的位置, 先计算key2的key2_hash = hash(key2), 假设key2_hash值为0x1236
+
+key2_hash和root_hash1有公共前缀0x123, 先由 key2, value2生成一个leafnode2, 
+
+由于leafnode1和leafnode2有公共前缀，需要生成一个Internal,记为children1 ,其中 children1[4] = hash(leafnode1), children1[6] = hash(leafnode2),
+
+公共前缀0x1, 0x12也需要生成Internal
 
 
 ## SMT API

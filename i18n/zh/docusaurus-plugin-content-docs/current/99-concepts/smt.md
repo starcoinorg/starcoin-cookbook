@@ -81,8 +81,7 @@ starcoin中账户地址(AccountAddress) 是128 bit(16个字节), 也就是32个1
 
 这里使用了一种基于压缩trie数据结构jellyfish-merkle-tree (JMT)
 
-### 设计
-
+### SMT设计原理
 
 这段来自于diem论文(https://diem-developers-components.netlify.app/papers/jellyfish-merkle-tree/2021-01-14.pdf)
 #### Merkle Tree到SMT
@@ -105,19 +104,22 @@ starcoin中账户地址(AccountAddress) 是128 bit(16个字节), 也就是32个1
 
 A的2进制路径为00010100， 每4个bit压缩后变成右边的0x14
 
-B的2进制路径为00011010, 压缩后变为0x1A
+B的2进制路径为00011010, 压缩后为0x1A
 
-C的2进制路径为00011111, 压缩后变为0x1F
+C的2进制路径为00011111, 压缩后为0x1F
 
-D的2进制路径为11101100， 压缩后为0xDC
+D的2进制路径为11101100，压缩后为0xDC
 
 这里每4个bit压缩叫做一个nibble
 
 Merkle Tree可以认为是基数等于2的基数树，图中右边可以认为是基数等于16的基数树
 
-SMT就是基于基数16的基数树,这个设计的优点就是降低树的高度,减少内存访问次数,降低内存
+SMT就是基于基数16的基数树(这里简称为Radix16),这个设计的优点就是降低树的高度,减少内存访问次数,降低内存
 
-#### 树中节点类型
+#### SMT相关的数据结构和操作
+上面提到SMT实际上是一个Radix16 Trie, 在starcoin中每个key的长度是256bit, 这里基于4个bit(一个nibble)做了压缩,
+
+每次查找比较一个nibble长度, 
 
 
 ## SMT API

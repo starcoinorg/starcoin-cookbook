@@ -214,7 +214,15 @@ key2_hash和root_hash1有公共前缀0x123, 先由 key2, value2生成一个leafn
 
 由于leafnode1和leafnode2有公共前缀，需要生成一个Internal,记为children1 ,其中 children1[4] = hash(leafnode1), children1[6] = hash(leafnode2),
 
-公共前缀0x1, 0x12也需要生成Internal
+公共前缀0x1, 0x12也需要生成Internal， 这里先构造0x12的Internal记为children2, children2[3] = hash(children1)
+
+然后构造0x1的Internal children3, children3[2]= hash(children2)
+
+leafnode2, children1, children2, children3都会按照hash和序列化的值写入到kvStore, 新生成的根节点是hash(children3)
+![two_leaf_insert](../../../../../static/img/)
+
+
+#### 插入有公共前缀的Internal节点
 
 
 ## SMT API
@@ -263,7 +271,7 @@ blob_set是key, value列表，
 
 这里这么设计是为了一个Block执行交易后满足幂等性 这里state_root_hash等于前一个BlockHeader中的state_root
 
-返回值Result<(HashValue, TreeUpdateBatch<KEY>) HashValue代表新的JMT的Hash值, 这个新的HashValue存在
+返回值```Result<(HashValue, TreeUpdateBatch<KEY>)>``` HashValue代表新的JMT的Hash值, 这个新的HashValue存在
 
 Block中Header的state_root
 
@@ -278,23 +286,6 @@ pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerklePr
 
 
 ## 稀疏默克尔树的设计原理
-
-节点分为三种类型分别为Null, Internal, Leaf这里对应
-代码中的
-```rust
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum Node<K: RawKey> {
-    /// Represents `null`.
-    Null,
-    /// A wrapper of [`InternalNode`].
-    Internal(InternalNode),
-    /// A wrapper of [`LeafNode`].
-    Leaf(LeafNode<K>),
-}
-```
-数据只存储在Leaf节点上, Internal节点可以有16个子节点
-这里压缩引入了一个nibble的概念，nibble可以表示0-15的整数,也就是四个bit,
-一个byte可以表示8个bit，这样可以存储两个nibble
 
 ```rust
 fn put(key: K, blob: Option<Blob>, tree_cache: &mut TreeCache<R, K>) -> Result<()>
@@ -376,21 +367,3 @@ new_root_key设置为等于leaf_node_hash tree_cache把root_key更新为new_root
 
 
 如果是InternalNode
-
-
-
-
-
-
-如果root_node_key是Internal
-
-
-stale_node_index_cache 相关说明在
-```rust
-pub fn freeze()代码中说明
-```
-
-
-
-
-## 稀疏默克尔树的代码分析

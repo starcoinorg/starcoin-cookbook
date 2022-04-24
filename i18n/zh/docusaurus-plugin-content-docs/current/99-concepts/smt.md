@@ -41,13 +41,6 @@ Merkle Tree有以下作用
 
 这个过程叫做Merkle Proof
 
-
-不同于以太坊个人账户和合约账户是分开的, starcoin中合约中
-
-不同于以太坊外部账号和合约账号是分开的，在starcoin中合约相关都在账号(AccountAddress)对应的状态里面(State)
-
-在合约中包含代码(code)和存储(storage), 这里有点类似C程序中的代码段和数据段
-
 ## SMT
 ### 介绍下为啥需要用SMT
 

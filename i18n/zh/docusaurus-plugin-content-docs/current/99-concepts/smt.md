@@ -11,7 +11,7 @@ Merkle Tree又被称为二叉哈希树，主要用在文件系统或者P2P系统
 这里 A, B, C, D 四个交易在虚线框内，在 Merkle Tree属于 Data Blocks， 这部分叫做 LeafNode, 上面的虚线框属于Hash Pointer, 
 Hash 1的值是交易A的Hash值和交易B的Hash值拼接后计算的Hash值(也可以有其他算法)，在图中是H(A) H(B) Hash(1) = Hash(H(A) + H(B)) 这里 + 表示字符串拼接,
 Hash 2的值是交易C和交易D的Hash值拼接后计算的Hash值，在图中是H(C) H(D), 其中Hash(2) = Hash(H(C) + H(D)),
-Hash 3是Hash 1和Hash 2拼接计算的hash值，在图中是H(AB) H(CD), Hash(3) = Hash(Hash(1) + Hash(2)),  Hash 3也叫做Root_Hash
+Hash 3是Hash 1和Hash 2拼接计算的Hash值，在图中是H(AB) H(CD), Hash(3) = Hash(Hash(1) + Hash(2)),  Hash 3也叫做Root_Hash
 
 Merkle Tree有以下作用
 
@@ -20,8 +20,8 @@ Merkle Tree有以下作用
 
 ### 校验交易
 这个树的作用可以检验交易是否有效 ,在区块链 Light Node不会记录所有交易数据, 只会记录Merkle Tree的Root_Hash值,
-如果校验交易A是否存在, 这时候是把交易 A 的Hash值这里记为H(A)发送给校验放, 校验方发送一个hash值列表[Hash(B), Hash(CD)],
-如果保存的root_hash和hash(hash(H(A) + H(B)) + Hash(CD))相等, 证明交易A是存在的,这个过程叫做Merkle Proof
+如果校验交易A是否存在, 这时候是把交易 A 的Hash值这里记为H(A)发送给校验放, 校验方发送一个Hash值列表[Hash(B), Hash(CD)],
+如果保存的Root_Hash和Hash(Hash(H(A) + H(B)) + Hash(CD))相等, 证明交易A是存在的,这个过程叫做Merkle Proof
 
 ## SMT
 ### 介绍下为啥需要用SMT
@@ -44,14 +44,14 @@ State包括合约代码(CODE)和资源(RESOURCE),余额相关信息都在RESOURC
 #### Merkle Tree到SMT
 在starcoin中Hash的计算都是基于Sha3-256计算来的, 所以这颗树是2的256次方个元素
 下图显示了Merkle Tree到SMT的两个优化
-![three_smt](../../../../../static/img/three_smt.png)
+![three_smt](../../../../../static/img/smt/three_smt.png)
 这里1显示了Merkel Tree形状，图2对其做了优化将空子树用PlaceHolder(方格)代替, 节省了空间,
 图3优化将只含有一个叶子节点的子树设置成节点， 这样减少了Proof时候对Hash的计算,
 这里A的2进制路径表示为0100, B的为1000， C的为1011,
 
 #### 基数树前缀压缩
 下图显示了基于压缩的优化
-![radix_tree](../../../../../static/img/radix_tree.png)
+![radix_tree](../../../../../static/img/smt/radix_tree.png)
 这里图中的Merkle Tree的key的长度都是8个bit，是颗稀疏，有很多空节点,
 A的2进制路径为00010100， 每4个bit压缩后变成右边的0x14,
 B的2进制路径为00011010, 压缩后为0x1A,
@@ -124,12 +124,12 @@ pub struct LeafNode<K: RawKey> {
     cached_hash: Cell<Option<HashValue>>,
 }
 ```
-Child的定义可以看到只存储了Hash值，Value通过KvStore.get(hash)获取, 然后再反序列化确定是Internal还是LeafNode
+Child的定义可以看到只存储了Hash值，Value通过KvStore.get(Hash)获取, 然后再反序列化确定是Internal还是LeafNode
 
 下面说明下各个操作流程
 ## 在空树种创建LeafNode例子
 我们在一颗空树种插入 Key "Hello", Value "World",
-基于这个产生一个叶子节点和叶子节点的hash值，这个Hash值就是SMT新的根节点, Hash值和LeafNode序列化后插入到KvStore中,
+基于这个产生一个叶子节点和叶子节点的Hash值，这个Hash值就是SMT新的根节点, Hash值和LeafNode序列化后插入到KvStore中,
 ![empty_tree_insert](../../../../../static/img/smt/empty_tree_insert.png)
 
 ## 插入流程
@@ -184,7 +184,7 @@ pub fn new(TreeReader: &'a) -> Self {
 在starcoin中对应的KvStore是RocksDB, MockTreeStore中使是HashMap + BTeeSet,
 有TreeReader就有TreeWriter，这里TreeReader对应的是JMT的查找和在内存中的计算, TreeWriter对应的是持久化到KvStore操作,
 starcoin持久层并没有实现TreeWriter trait, 现在直接写KvStore, Mock操作的MockTreeStore使用了TreeWriter,
-可以简单认为JMT内存中是一颗Trie树，持久化在RocksDB上
+可以简单认为SMT是内存中一颗Trie树，持久化在RocksDB上
 
 ### updates
 ```rust
@@ -207,9 +207,9 @@ pub struct TreeUpdateBatch<KEY> {
 ```
 这里HashValue就是之前提到的Sha3_256的计算值,
 这里说明下各个参数,
-state_root_hash是某个SMT树的根节点Hash值，通过hash值唯一确定了这颗SMT树，
+state_root_hash是某个SMT树的根节点Hash值，通过Hash值唯一确定了这颗SMT树，
 blob_set是Key, Value列表，
-这么设计是为了一个Block执行交易后满足幂等性 这里state_root_hash等于前一个BlockHeader中的state_root(SMT的根hash值),
+这么设计是为了一个Block执行交易后满足幂等性 这里state_root_hash等于前一个BlockHeader中的state_root(SMT的Root_Hash值),
 返回值```Result<(HashValue, TreeUpdateBatch<KEY>)>``` HashValue代表新的SMT的Hash值, 这个新的HashValue存储在BlockHeader中的state_root,
 返回值中TreeUpdateBatch 里面的node_batch, 这里比如我们blob_set是{(Key1, Value1), (Key2, Value2}, SMT会产生LeafNode和Internal, 会把这些按照Hash值和自身存到BTreeMap中,
 StaleNodeIndex中stale_since_version是这次新产生的根节点Hash, node_key是被修改过的Node的Hash

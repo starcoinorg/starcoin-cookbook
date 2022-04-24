@@ -8,9 +8,10 @@ sidebar_position: 2
 ## Merkle Tree
 Merkle Tree又被称为二叉哈希树，主要用在文件系统或者P2P系统中。下面这个图说明，
 这里 A, B, C, D 四个交易在虚线框内，在 Merkle Tree属于 Data Blocks， 这部分叫做 LeafNode, 上面的虚线框属于Hash Pointer。
-Hash 1的值是交易A的Hash值和交易B的Hash值拼接后计算的Hash值(也可以有其他算法)，在图中是H(A) H(B) Hash(1) = Hash(H(A) + H(B)) 这里 + 表示字符串拼接，
+Hash 1的值是交易A的Hash值和交易B的Hash值拼接后计算的Hash值(也可以有其他算法)，在图中是H(A) H(B),
+其中Hash(1) = Hash(H(A) + H(B)) 这里 + 表示字符串拼接，
 Hash 2的值是交易C和交易D的Hash值拼接后计算的Hash值，在图中是H(C) H(D), 其中Hash(2) = Hash(H(C) + H(D))，
-Hash 3是Hash 1和Hash 2拼接计算的Hash值，在图中是H(AB) H(CD), Hash(3) = Hash(Hash(1) + Hash(2))，
+Hash 3是Hash 1和Hash 2拼接计算的Hash值，在图中是H(AB) H(CD), 其中Hash(3) = Hash(Hash(1) + Hash(2))，
 Hash 3也叫做Root_Hash
 ![merkle tree](../../../../../static/img/smt/merkle_tree.png)
 

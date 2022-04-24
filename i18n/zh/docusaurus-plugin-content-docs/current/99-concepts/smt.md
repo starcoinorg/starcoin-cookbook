@@ -89,9 +89,9 @@ starcoin中账户地址(AccountAddress) 是128 bit(16个字节), 也就是32个1
 
 下图显示了Merkle Tree到SMT的两个优化
 ![three_smt](../../../../../static/img/three_smt.png)
-这里1显示了Merkel Tree形状，2对其做了优化将空子树用placeholder(方格)代替, 节省了空间
+这里1显示了Merkel Tree形状，图2对其做了优化将空子树用placeholder(方格)代替, 节省了空间
 
-这里3优化将只含有一个叶子节点的子树设置成节点， 这样减少了proof时候对hash的计算
+图3优化将只含有一个叶子节点的子树设置成节点， 这样减少了proof时候对hash的计算
 
 这里A的2进制路径表示为0100, B的为1000， C的为1011
 
@@ -114,6 +114,10 @@ D的2进制路径为11101100，压缩后为0xDC
 Merkle Tree可以认为是基数等于2的基数树，图中右边可以认为是基数等于16的基数树
 
 SMT就是基于基数16的基数树(这里简称为Radix16),这个设计的优点就是降低树的高度,减少内存访问次数,降低内存
+
+这种Radix Tree叫做ADAPTIVE RADIX TREE(starcoin中固定为node16，论文https://db.in.tum.de/~leis/papers/ART.pdf有更多实现中的细节这里不介绍)
+
+还有其他一些Radix Tree优化思路，比如以太坊使用的是改进版本的Patricia Radix Tree(https://eth.wiki/fundamentals/patricia-tree), 比如HAT RADIX TREE， 这些这里不介绍
 
 ### SMT数据结构和操作
 上面提到SMT实际上是一个Radix16 Trie, 在starcoin中每个key的长度是256bit, 这里基于4个bit(一个nibble)做了压缩,
@@ -190,25 +194,24 @@ pub struct LeafNode<K: RawKey> {
 Child的定义可以看到只存储了hash值，Value通过KvStore.get(hash)获取
 
 下面说明下各个操作流程
-### 在空树种创建LeafNode
+## 在空树种创建LeafNode例子
 我们在一颗空树种插入 key "Hello", value "World"
 
-基于这个产生了一个hash值，这个hash值就是新的根节点, hash值和LeafNode序列化后插入到KvStore中
+基于这个产生一个叶子节点和叶子节点的hash值，这个hash值就是SMT新的根节点, hash值和LeafNode序列化后插入到KvStore中
 
 ![empty_tree_insert](../../../../../static/img/empty_tree_insert.png)
 
-### 插入一些流程
+## 插入流程
 在starcoin中hash值是256bit，画图不方便，这里用短点地址16bit做示范
 
-
-#### 空树插入叶子
+### 空树插入叶子
 开始为空SMT,插入一个key1, value1, 生成的leafnode1的hash1为0x1234， 这个是新的根节点, 如下图
 
 ![one_leaf](../../../../../static/img/one_leaf.png)
 
 
-#### 插入有公共前缀的叶子节点
-新插入一个key2, value2, 需要查找key2插入的位置, 先计算key2的key2_hash = hash(key2), 假设key2_hash值为0x1236
+### 新插入叶子节点和某个叶子节点有公共前缀
+在上面基础下新插入key2, value2, 需要查找key2插入的位置, 先计算key2的key2_hash = hash(key2), 假设key2_hash值为0x1236
 
 key2_hash和root_hash1有公共前缀0x123, 先由 key2, value2生成一个leafnode2, 
 
@@ -218,11 +221,35 @@ key2_hash和root_hash1有公共前缀0x123, 先由 key2, value2生成一个leafn
 
 然后构造0x1的Internal children3, children3[2]= hash(children2)
 
-leafnode2, children1, children2, children3都会按照hash和序列化的值写入到kvStore, 新生成的根节点是hash(children3)
+leafnode2, children1, children2, children3按照hash和序列化的值写入到kvStore, 新生成的根节点是hash(children3)
+
 ![two_leaf_insert](../../../../../static/img/two_leaf_insert.png)
 
 
-#### 插入有公共前缀的Internal节点
+### 新插入叶子结点和某个内部节点有公共前缀
+在上面基础上，假定插入key3, value3,
+假定插入key3的hash值key3_hash为0x35ef, children3的index 3的子节点为空, 将key3, value3生成新的叶子节点leafload3
+children3[3] = hash(leafnode3)
+
+将leafnode3, children3按照hash和序列化的的值写入到kvStore, 新生成的根节点是hash(children3)
+
+如下面这图，这种情况对应当前Internal添加新的子节点
+![internal_insert_leaf](../../../../../static/img/internal_insert_leaf.png)
+
+假定插入key3_hash值为0x25ef, children3的index 2的子节点为children2, 递归处理在children2插入
+更新children2, 更新children3[2] = hash(children2)
+
+将children2, children3按照hash和序列化的kv写入到kvStore,新生成的根节点是hash(children3)
+
+如下面这图，这种情况对应当前Internal修改已存在的子节点,需要递归处理
+![internal_insert_recursive](../../../../../static/img/internal_insert_recursive.png)
+
+## 查询流程
+在上面流程基础上，假设要查询的key4,
+先计算key4的key_hash4 = hash(key4)
+
+
+
 
 
 ## SMT API

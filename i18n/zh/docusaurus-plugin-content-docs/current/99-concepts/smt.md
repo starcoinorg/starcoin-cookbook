@@ -133,6 +133,7 @@ Child的定义可以看到只存储了Hash值，Value通过KvStore.get(Hash)获�
 我们在一颗空树种插入 Key "Hello"， Value "World"，
 基于这个产生一个叶子节点和叶子节点的Hash值,这个Hash值就是SMT新的根节点,
 Hash值和LeafNode序列化后插入到KvStore中,
+
 ![empty_tree_insert](../../../../../static/img/smt/empty_tree_insert.png)
 
 ## 插入流程
@@ -179,6 +180,7 @@ Children3[3] = hash(LeafNode3)。
 [1]如果是LeafNode，查看下LeafNode对应的Key的Hash值是否和Key4_Hash相等，相等就返回结果， 不相等返回None
 [2]如果是IntenalNode 查找Internal对应Nibblei的子节点(初始i = 0，每次i++),，查找到新Node是LeafNode，走条件[1]， 否则跳转到[2]，
 流程图在下面(代码get_proof_with)，
+
 ![search](../../../../../static/img/smt/search.png)
 
 ## SMT API 相关说明

@@ -227,6 +227,8 @@ leafnode2, children1, children2, children3按照hash和序列化的值写入到k
 
 
 ### 新插入叶子结点和某个内部节点有公共前缀
+
+#### 情形内部节点插入新子节点
 在上面基础上，假定插入key3, value3,
 假定插入key3的hash值key3_hash为0x35ef, children3的index 3的子节点为空, 将key3, value3生成新的叶子节点leafload3
 children3[3] = hash(leafnode3)
@@ -236,6 +238,8 @@ children3[3] = hash(leafnode3)
 如下面这图，这种情况对应当前Internal添加新的子节点
 ![internal_insert_leaf](../../../../../static/img/internal_insert_leaf.png)
 
+
+#### 情形内部节点更新子节点
 假定插入key3_hash值为0x25ef, children3的index 2的子节点为children2, 递归处理在children2插入
 更新children2, 更新children3[2] = hash(children2)
 
@@ -253,7 +257,9 @@ children3[3] = hash(leafnode3)
 
 [2]如果是IntenalNode 查找Internal对应nibblei的子节点(初始i = 0，每次i++), 查找到新Node是LeafNode,走条件1, 否则跳转到[2]
 
-流程图在下面
+流程图在下面(代码get_proof_with)
+
+
 ![search](../../../../../static/img/search.png)
 
 
@@ -317,4 +323,4 @@ pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerklePr
 获取key对应的value的值，如果存在并返回对应的merkel proof证明
 
 
-相关资源[draw.io](../../../../../static/smt.draw.io)
+相关资源[draw.io](../../../../../static/smt.drawio)

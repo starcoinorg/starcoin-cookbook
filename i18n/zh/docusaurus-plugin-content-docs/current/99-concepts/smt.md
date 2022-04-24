@@ -23,21 +23,21 @@ Hash 1的值是交易A的hash值和交易B的hash值拼接后计算的hash值(�
 
 Hash 2的值是交易C和交易D的hash值拼接后计算的hash值，在图中是H(C) H(D) hash(2) = hash(H(C) + H(D))
 
-Hash 3是Hash 1和Hash 2拼接计算的hash值，在图中是H(AB) H(CD), hash(3) = hash(hash(1) + hash(2)),  Hash 3也叫做top_hash
+Hash 3是Hash 1和Hash 2拼接计算的hash值，在图中是H(AB) H(CD), hash(3) = hash(hash(1) + hash(2)),  Hash 3也叫做root_hash
 
 Merkle Tree有以下作用
 
 ### 快速定位修改
-如果交易A被修改后，Hash 1也会被修改,top_hash也会被修改，所以可以认为记住top_hash就记住了整个Merkle Tree
+如果交易A被修改后，Hash 1也会被修改,root_hash也会被修改，所以可以认为记住root_hash就记住了整个Merkle Tree
 
 ### 校验交易
 这个树的作用可以检验交易是否有效
 
-在区块链light node不会记录所有交易数据，只会记录Merkle Tree的top_hash值
+在区块链light node不会记录所有交易数据，只会记录Merkle Tree的root_hash值
 
 如果校验交易A是否存在, 这时候是把交易A的hash值这里记为H(A)发送给校验放, 校验方发送一个hash值列表[Hash(B), Hash(CD)]
 
-如果保存的top_hash和hash(hash(H(A) + H(B)) + Hash(CD))相等, 证明交易A是存在的
+如果保存的root_hash和hash(hash(H(A) + H(B)) + Hash(CD))相等, 证明交易A是存在的
 
 这个过程叫做Merkle Proof
 
@@ -71,7 +71,7 @@ starcoin中账户地址(AccountAddress) 是128 bit(16个字节), 也就是32个1
 
 一种想法是基于当时的HashMap构建Merkel Tree
 
-基于这种想法，每次有新的区块发布的需要基于HashMap构建新的Merkel Tree并将Merkel Tree对应的top_hash发布到BlockHeader中
+基于这种想法，每次有新的区块发布的需要基于HashMap构建新的Merkel Tree并将Merkel Tree对应的root_hash发布到BlockHeader中
 
 这个方案是有问题的，HashMap效率很高，但是每次构建Merkel Tree效率很低
 
@@ -115,7 +115,7 @@ Merkle Tree可以认为是基数等于2的基数树，图中右边可以认为�
 
 SMT就是基于基数16的基数树(这里简称为Radix16),这个设计的优点就是降低树的高度,减少内存访问次数,降低内存
 
-这种Radix Tree叫做ADAPTIVE RADIX TREE(starcoin中固定为node16，论文https://db.in.tum.de/~leis/papers/ART.pdf有更多实现中的细节这里不介绍)
+这种Radix Tree叫做ADAPTIVE RADIX TREE(starcoin中固定为node16), 论文(https://db.in.tum.de/~leis/papers/ART.pdf) 有更多内容这里不介绍
 
 还有其他一些Radix Tree优化思路，比如以太坊使用的是改进版本的Patricia Radix Tree(https://eth.wiki/fundamentals/patricia-tree), 比如HAT RADIX TREE， 这些这里不介绍
 
@@ -128,7 +128,7 @@ SMT的节点类型分为Null, Internal, Leaf
 
 Null就是前面提到的placeholder, Internal最多有16个子节点(子节点类型可以是Internal或者Leaf， 这里对应一个HashMap, key为0-16)， Leaf存储的是实际的key, value
 
-区块链中需要保存历史状态，这里如何查询某个key的历史状态，之前提到Merkle Tree里保存top_hash就认为是保存了整棵树,查询中需要历史key某个状态
+区块链中需要保存历史状态，这里如何查询某个key的历史状态，之前提到Merkle Tree里保存root_hash就认为是保存了整棵树,查询中需要历史key某个状态
 
 需要提供树的根节点值和查询的key，这个根节点就是在block_header中的state_root, 这也是后续讲到statetree的构建需要用到state_root
 
@@ -142,7 +142,7 @@ starcoin中SMT需要持久化到KvStore, 这里用的是RocksDB(测试中MockTre
 
 需要将Null, Internal Leaf节点序列化存储在KvStore中
 
-这里说明下starcoin中各种节点实现
+这里说明下starcoin中各种节点
 
 ```rust
 pub struct Child {
@@ -245,27 +245,33 @@ children3[3] = hash(leafnode3)
 ![internal_insert_recursive](../../../../../static/img/internal_insert_recursive.png)
 
 ## 查询流程
-在上面流程基础上，假设要查询的key4,
-先计算key4的key_hash4 = hash(key4)
+在上面流程基础上，假设要查询的key4, 先计算key4的key4_hash = hash(key4), 在starcoin中key_hash4是个256 bit的值，也就是64个nibble(一个nibble为4bit), 记为nibble0..nibble63
+
+查找先从根节点root_hash获取根节点对应Node,查看Node的类型
+
+[1]如果是LeafNode查看下LeafNode对应的key的hash值是否和key4_hash相等，相等就返回结果, 不相等返回None
+
+[2]如果是IntenalNode 查找Internal对应nibblei的子节点(初始i = 0，每次i++), 查找到新Node是LeafNode,走条件1, 否则跳转到[2]
+
+流程图在下面
+![search](../../../../../static/img/search.png)
 
 
 
-
-
-## SMT API
+## SMT API 相关说明
 ### new
 ```rust
 pub fn new(TreeReader: &'a) -> Self {
     
 }
 ```
-这里TreeReader是一个trait(可以认为是类似Java中inteface)， 在starcoin中可以认为是提供key value操作的数据结构
+这里TreeReader是一个trait(可以认为是类似Java中inteface)， 在starcoin中是提供key value操作的数据结构
 
-在starcoin中就是对应的KVStore这里值RocksDB, MockTreeStore中使用的是HashMap + BTeeSet
+在starcoin中对应的KVStore是RocksDB, MockTreeStore中使是HashMap + BTeeSet
 
-有TreeReader就有TreeWriter，分别对应JMT的读写,在starcoin的实现当中MockTreeStore使用了TreeWriter,
+有TreeReader就有TreeWriter，这里TreeReader对应的是JMT的查找和在内存中的计算, TreeWriter对应的是持久化到KvStore操作,
 
-持久层并没有实现TreeWriter trait
+持久层并没有实现TreeWriter trait, 现在直接写KvStore, 实现了Mock操作的MockTreeStore使用了TreeWriter,
 
 可以简单认为JMT内存中是一颗trie树，持久化在RocksDB上
 
@@ -289,21 +295,20 @@ pub struct TreeUpdateBatch<KEY> {
     pub num_stale_leaves: usize,
 }
 ```
-这里HashValue可以认为是一个[u8;32]的数组
+这里HashValue就是之前提到的sha3_256的计算值
 这里说明下各个参数
 
-state_root_hash是某个JMT树的hash值，通过hash值唯一确定了这颗JMT树，
+state_root_hash是某个SMT树的根节点hash值，通过hash值唯一确定了这颗SMT树，
 
 blob_set是key, value列表，
 
-这里这么设计是为了一个Block执行交易后满足幂等性 这里state_root_hash等于前一个BlockHeader中的state_root
+这么设计是为了一个Block执行交易后满足幂等性 这里state_root_hash等于前一个BlockHeader中的state_root(SMT的根hash值)
 
-返回值```Result<(HashValue, TreeUpdateBatch<KEY>)>``` HashValue代表新的JMT的Hash值, 这个新的HashValue存在
+返回值```Result<(HashValue, TreeUpdateBatch<KEY>)>``` HashValue代表新的JMT的Hash值, 这个新的HashValue存储在BlockHeader中的state_root
 
-Block中Header的state_root
+返回值中TreeUpdateBatch 里面的node_batch, 这里比如我们blob_set是{(key1, value1), (key2, value2}, SMT会产生leafnode和internal, 会把这些按照hash值和自身存到BTreeMap中
 
-返回值中TreeUpdateBatch 里面的 node_batch, 这里的比如我们blob_set是(key1, value1), 插入的是
-key是hash(key1 + value1), value是(key1, value1)
+StaleNodeIndex中stale_since_version是这次新产生的根节点hash, node_key
 
 ### get_proof_with
 ```rust
@@ -312,85 +317,4 @@ pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerklePr
 获取key对应的value的值，如果存在并返回对应的merkel proof证明
 
 
-## 稀疏默克尔树的设计原理
-
-```rust
-fn put(key: K, blob: Option<Blob>, tree_cache: &mut TreeCache<R, K>) -> Result<()>
-```
-这里是存储key，value的写入接口,其中Blob就是```vec<u8>```,
-
-写入的时候先根据key计算出key对应的HashValue key_hash, 这里HashValue是一个```[u8;32]```数组,
-然后将key_hash转成一个含有64个nibble的元素集合
-
-tree_cache是JMT在内存中缓存的信息，缓存了JMT的root的HashValue值,叫做root_node_key
-
-这里root_node_key可能是NONE,也可能是Block对应的header对应的state_root,
-
-然后读取root_node_key作为key，对应的value值，这里获取可能是从缓存也可能从rocksdb,
-
-这里给个例子
-JMT可以支持各种类型的key写入, value就是```vec<u8>``` (被序列化的数据),只需要实现 RawKey
-这里假设我们写入key是Hello, value是World,整个JMT是空树
-```rust
-#[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq, Hash)]
-pub struct StringKey(pub Vec<u8>);
-
-impl RawKey for StringKey {
-    fn encode_key(&self) -> Result<Vec<u8>> {
-        Ok(self.0.clone())
-    }
-
-    fn decode_key(bytes: &[u8]) -> Result<Self> {
-        Ok(StringKey(bytes.to_vec()))
-    }
-}
-let db = MockTreeStringStore::default();
-let tree = JellyfishMerkleTree::new(&db);
-
-// Tree is initially empty. Root is a null node. We'll insert a key-value pair which creates a
-// leaf node.
-let key = StringKey("Hello".as_bytes().to_vec());
-let value = Blob::from("World".as_bytes().to_vec());
-
-let (_new_root_hash, batch) = tree.updates(None, vec![(key.into(), Some(value))])?;
-assert!(batch.stale_node_index_batch.is_empty());
-db.write_tree_update_batch(batch).unwrap();
-```
-
-画图LeafNode key, blob, blob_hash, cache_hash() (XXX FIXME)
-画图InternalNode hash如何计算(XXX FIXME)
-
-### 空数据插入数据流程 (XXX FIXME)
-
-每次updates会生存一个TreeCache 这个TreeCache记录 root_key， leaf_node的hash值(XXX FIXME) 和 leaf_node
-
-这里先计算key对应的sha3_256 key_hash这个值对应的是0x8ca66ee6b2fe4bb928a8e3cd2f508de4119c0895f22e011117e22cf9b13de7ef
-
-然后将key_hash生成一个64位的nibble
-
-获取JMT树的root_key, 由于是空树,root_key值是个默认值*SPARSE_MERKLE_PLACEHOLDER_HASH,
-
-删掉这个root_key, 创建新的叶子节点leaf_node, 插入新产生的(leaf_node_hash, leaf_node)
-
-这里leaf_node_hash是key的hash和blob的hash拼接后计算的hash值
-
-new_root_key设置为等于leaf_node_hash tree_cache把root_key更新为new_root_key
-
-
-### put的流程
-先生成tree_cache,
-
-从tree_cache中获得root_node_key (XXX FIXME各种情形说明)
-
-获取插入key的hash值，并转换成nibble_iter集合
-
-
-如果root_node_key是空 走空数据插入流程
-
-如果root_node_key是LeafNode, 通过tree_cache获取root_node_key对应的existing_leaf_node,
-比较共同部分,如果是LeafNode直接更新
-如果不是Leaf
-创建InternalNode，持续创建InternalNode
-
-
-如果是InternalNode
+相关资源[draw.io](../../../../../static/smt.draw.io)

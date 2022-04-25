@@ -63,7 +63,7 @@ D的2进制路径为11101100，压缩后为0xDC，
 这里每4个bit压缩叫做一个Nibble，
 Merkle Tree可以认为是基数等于2的基数树，图中右边可以认为是基数等于16的基数树，
 SMT就是基于基数16的基数树(这里简称为Radix16)，这个设计的优点就是降低树的高度，减少内存访问次数，降低内存，
-这种Radix Tree目前有些优化手段比如ADAPTIVE RADIX TREE(starcoin中固定为node16)， 论文(https://db.in.tum.de/~leis/papers/ART.pdf) 有更多内容这里不介绍，
+这种Radix Tree目前有些优化手段比如ADAPTIVE RADIX TREE(starcoin中固定为node16)， 论文(https://db.in.tum.de/~leis/papers/ART.pdf) 有更多内容，
 还有其他一些Radix Tree优化思路，比如以太坊使用的是改进版本的Patricia Radix Tree(https://eth.wiki/fundamentals/patricia-tree)，
 还有HAT RADIX TREE， 这些这里不介绍
 

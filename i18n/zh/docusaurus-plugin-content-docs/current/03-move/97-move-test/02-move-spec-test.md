@@ -1,26 +1,18 @@
-# Write Move integration test
+## Move 集成测试
 
-Now you know how to write unit test in Move.
-But unit test only suits for simple test scenarios, like mathematical computation.
-For end-to-end test cases with user interactions, integration test comes to play.
+现在你知道如何在Move中写单元测试了。但是单元测试只适合于简单的测试场景，如数学计算。对于有用户交互的端到端测试案例，集成测试就开始发挥作用了。
 
-Integration test is a feature of mpm.
+集成测试是 mpm 的一个功能，它可以模拟：
 
-It can simulates:
+- 账户初始化。
+- 块的生成。
+- 模块发布。
+- 执行脚本或脚本函数。
 
-- account initialization.
-- block generation.
-- module publishing.
-- execute scripts or script function.
+所有的动作都被包装成事务。所有的集成测试文件应该在软件包根路径下的`integration-tests`目录中。
 
-All actions are wrapped into transactions.
-
-All integration test files should be in `integration-tests` dir under the package root path.
-
-integration test file contains test directives seperated by empty newlines.
-
-directives works like a command line, you provide command name and command arguments,
-and move pacakge manager executes the directives like OS executes cli commands.
+集成测试文件包含测试指令，用空的换行符隔开。指令的工作方式类似于命令行，你提供命令名称和命令参数。
+mpm 执行指令，就像操作系统执行 cli 命令一样。
 
 
 ```
@@ -77,9 +69,9 @@ ARGS:
                 the filter are run
 ```
 
-### Integration Test Directives
+###  编写 test 指令
 
-#### Directive - init
+#### `init` 指令
 
 ``` shell
 task-init 0.1.0
@@ -99,12 +91,18 @@ OPTIONS:
         --rpc <rpc>                         use remote starcoin rpc as initial state
 ```
 
-Directive `init` can declare the initial state of you integration test.
+`init` 指令用来声明某个集成测试的的初始状态。
+
 You can either start from a fresh blockchain state by providing arg `-n test`,
 or fork from a remote state snapshot like `--rpc http://main.seed.starcoin.org:9850 --block-number 100000`.
 `--address <named-addresses>` can be used to declare additional named addressed which will be used in the integration test later.
 
-Examples:
+你可以申明测试从一个创世块开始（通过参数 `-n test` ），
+或者从一个远程状态快照开始，比如`--rpc http://main.seed.starcoin.org:9850 --block-number 100000`。
+
+`--address <named-addresses>` 可以用来声明额外的命名地址，这将在后面的集成测试中使用。
+
+例子:
 
 ```
 //# init -n dev
@@ -117,7 +115,7 @@ Examples:
 
 ```
 
-#### Directive - block
+#### `block` 指令
 
 ```
 task-block 0.1.0
@@ -136,7 +134,8 @@ OPTIONS:
         --uncles <uncles>
 ```
 
-Directive `block` start a new block.
+`block` 指令申明一个新区块产生。
+
 
 Every directives between this block directive and next block directive are running in this block.
 You can pass custom `--author`, `--timestamp`, `--uncles` to fit your need.
@@ -144,7 +143,14 @@ You can pass custom `--author`, `--timestamp`, `--uncles` to fit your need.
 If no block directive specified, transactions will run on default block whose block number is the next block number of initial state.
 If you fork from a remote state of block number `h`, then the next block's number is `h+1`.
 
-Examples:
+这个 `block` 指令和下一个 `block` 指令之间的其他指令都在这个区块中运行。
+你可以自定义 区块的 `--author`，`--timestamp`，`--uncles`。
+
+如果没有 `block` 指令，事务将在默认的块上运行，其块号是初始状态的下一个块号。
+
+如果你的初始状态是某个远程状态，其最新区块高度为 `h`，那么测试默认使用的区块高度是`h+1`。
+
+例子:
 
 
 ```
@@ -157,7 +163,7 @@ Examples:
 //# block --uncles 10
 ```
 
-#### Directive - faucet
+#### `faucet` 指令
 
 ```
 task-faucet 0.1.0
@@ -175,12 +181,12 @@ OPTIONS:
         --public-key <public-key>
 ```
 
-Directive **faucet** can create and faucet an address (can be named address like `alice`, `tom` or raw address like `0x1`, `0x2`) with some STC of given amount.
-If the address is a named address, it will auto generate an raw address(and public key) and assign it to the named address.
-If you has some specific requirements on `public-key`, use `--public-key` to specify it.
+`faucet` 指令可以创建地址，给地址充钱。
+地址可以是命名地址(named address)，比如 `alice`, `tom`， 或者是字面地址(raw address)，比如 `0x1`, `0x2`。
+如果是命名地址，它会为该地址自动生成一个字面地址以及对应的公钥。
+如果你想指定具体的某个公钥，可以用 `--public-key` 参数。
 
-
-Examples:
+例子:
 
 ```
 //# faucet --addr bob
@@ -191,7 +197,7 @@ Examples:
 
 ```
 
-#### Directive - publish
+#### `publish` 指令
 
 ```
 task-publish 0.1.0
@@ -210,13 +216,16 @@ OPTIONS:
         --syntax <syntax>
 ```
 
-Directive `publish` can publish a module to the blockchain.
-The module code must follows the directive.
 
-`--gas-budget` specifies the max gas of the transaction.
-`--syntax` can be ingored for now.
 
-Exmaples:
+`pulish` 指令可以将某个模块发布到链上。
+模块代码必须跟在该指令后面。
+
+- `--gas-budget` 指定了该交易的最大gas。
+- `--syntax` 暂时还没有用到，可以忽略。
+
+
+例子:
 
 ```
 //# publish
@@ -244,7 +253,7 @@ module Dummy::DummyModule {}
 
 ```
 
-#### Directive - run
+#### `run` 指令
 
 ```
 task-run 0.1.0
@@ -270,14 +279,14 @@ ARGS:
     <NAME>
 ```
 
-Directive `run` can execute a script of script function.
-If it's a script, the script code must follow the directive.
-If it's a script function, then `<NAME>` should be provided.
+`run` 指令可以执行一个脚本或者脚本函数。
+如果是脚本，那么脚本代码必须跟在该指令后面。
+如果是脚本函数，那么函数名字 `<NAME>` 必须提供。
 
-`--signers` declare the transaction sender.
-`--type-args` and `--args` declare type arguments and arguments of the script of script function.
+- `--signers` 声明交易的发起者。
+- `--type-args` 和 `--args` 声明交易要执行的函数的类型参数和参数。
 
-Examples:
+例子:
 
 ```
 //# run --signers alice
@@ -295,7 +304,7 @@ fun main(account: signer) {
 
 ```
 
-#### Directive - view
+#### `view` 指令
 
 
 ```
@@ -313,10 +322,10 @@ OPTIONS:
         --resource <resource>
 ```
 
-Directive `view` can query any resource of any address.
+`view` 指令可以查询某个地址下的某个资源数据。
 
 
-Examples:
+例子:
 
 ```
 //# view --address alice --resource 01::Account::Account
@@ -324,7 +333,7 @@ Examples:
 //# view --address StarcoinFramework --resource 0x1::Config::Config<0x1::VMConfig::VMConfig>
 ```
 
-#### Directive - print-bytecode
+#### `print-bytecode` 指令
 
 ```
 task-print-bytecode 0.1.0
@@ -341,17 +350,18 @@ OPTIONS:
         --input <input>    The kind of input: either a script, or a module [default: script]
 ```
 
-Directive `print-bytecode` can print the bytecode of given module or script.
+`print-bytecode` 指令可以打印给定的模块或者脚本的字节码。
 
-### Integration Test Expectation
+### 集成测试的期望结果
 
-Each integration test should have an corresponding expectation file, which contains the expected output of each directives in integration test.
-Move package manager will compare the test result of a integration test with the expectation file.
-If there are different outputs, then the integration test fails.
-You can generate the expected file by providing `--ub` argument when running `mpm integration-test` for the first time.
-But you have to check whether the generated output really is the expected output of your integration test.
+每个集成测试都应该有一个相应的期望文件，它包含了集成测试中每个指令的预期输出。
+mpm 将比较集成测试的测试结果和期望文件。
+如果两者不同，那么该集成测试就会失败。
 
-Example:
+你可以在运行`mpm integration-test`时提供`--ub`参数来生成期望文件。
+但你必须检查生成的输出是否真的是你的集成测试的预期输出。
+
+例子:
 
 ```
 cd coin-swap
@@ -359,4 +369,4 @@ mpm pacakge build
 mpm integration-test test_coin_swap
 ```
 
-This's all about integration test of move.
+以上就是集成测试的用法，如有疑问，欢迎在 starcoin 的 discord 论坛提出。

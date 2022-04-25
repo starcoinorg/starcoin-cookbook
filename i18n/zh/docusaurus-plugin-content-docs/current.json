@@ -54,5 +54,13 @@
   "sidebar.tutorialSidebar.category.Miscellaneous": {
     "message": "杂项",
     "description": "The label for category Miscellaneous in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Reference": {
+    "message": "Reference",
+    "description": "The label for category Reference in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.StarcoinFramework": {
+    "message": "StarcoinFramework",
+    "description": "The label for category StarcoinFramework in sidebar tutorialSidebar"
   }
 }

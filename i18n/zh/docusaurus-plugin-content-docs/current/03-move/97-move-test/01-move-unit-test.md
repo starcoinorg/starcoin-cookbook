@@ -133,7 +133,7 @@ $ mpm package new TestExample; cd TestExample
 
 ```
 [addresses]
-Owner=0xAAAA
+Owner="0xAAAA"
 
 [dependencies]
 MoveStdlib = { git = "https://github.com/move-language/move.git", subdir="language/move-stdlib", rev = "1817aff44ddfff9d5f815e1975f63cdf03040cb7", addr_subst = { "Std" = "0x1" } }
@@ -289,7 +289,7 @@ These flags will print the global state for any test failures. e.g., if we added
 例如，如果我们在 `MyModule` 的例子中加入以下（失败的）测试。
 
 ```
-module 0x1::MyModule {
+module Owner::MyModule {
     ...
     #[test(a = @0x1)]
     fun test_has_coin_bad(a: signer) {

@@ -231,5 +231,8 @@ pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerklePr
 ```
 获取Key对应的Value的值，如果存在并返回对应的Merkel Proof证明
 
+参考文档:
+https://developers.diem.com/papers/jellyfish-merkle-tree/2021-01-14.pdf
+https://westar.io/blog/jellyfish-merkle-tree-in-libra/
 
 相关资源[draw.io](../../../../../static/smt.drawio)

@@ -33,7 +33,7 @@ cargo build
 cargo build --release
 ```
 
-4. Taret file
+4. Target file
 
 After compiling, you can find the corresponding starcoin program in the target directory.
 
@@ -83,13 +83,5 @@ yum install devtoolset-7
     rpm qa | grep "llvm-private" # Find packages containing llvm-private
     rpm -e --nodeps llvm-private-6.0.1-2.el7.x86_64 # Uninstall found packages
     ```
-- Aftr each compilation error, after solving, you need to `cargo clean`, remove the previously compiled object files, and then recompile.
+- After each compilation error, after solving, you need to `cargo clean`, remove the previously compiled object files, and then recompile.
 
-
-:::note
-
-This document needs to be improved.
-
-* Add more troubleshooting notes
-
-:::

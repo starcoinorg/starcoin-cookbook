@@ -11,7 +11,7 @@ sidebar_position: 2
 这颗树的作用主要是提供Block，Transaction的Merkle Proof，以及通过指序列号获取对应的Block(Transaction类似)。
 下面介绍下在starcoin中Accumulator的一些信息。
 
-##节点类型介绍
+## 节点类型介绍
 节点分为三种类型Leaf， Internal， Empty。
 这里以存储Block为例子(存储Transaction类似)。
 图1显示了偶数个Block组成一个Accumlator的情况(这里只有Leaf和Internal)
@@ -31,7 +31,7 @@ Internal 01的Hash01 = Hash(Hash0 + Hash1)， +代表拼接字符串。
 
 上面这些图中，(Hash(Block), Block)会按照KV对的形式存在KvStore中。 
 
-#节点的frozen
+## 节点的frozen
 Merkle Tree是在内存中的形式, Accumulator需要把Merkle Tree保存在KvStore中。
 一种直观的想法就是把把所有的Leaf节点保存下来，比如图3中，保存Hash0，Hash1， Hash2， Hash3， Hash4，还需要保存这些顺序关系，
 第一次用的时候计算就可以构建Merkle Tree，图3中需要计算6次，也挺快的。
@@ -58,10 +58,22 @@ pub struct AccumulatorInfo {
 在图1中frozen_subtree_roots元素只有一个就是Root_Hash(accumulator_root)。
 图3中有2个都标出来了,他们和Root_Hash不同。
 这里我们可以证明frozen_subtree_roots最多只有64个。
-证明如下，假设有n个节点，假设 2^k <= n < 2^(k + 1), 最大的那颗frozen_subtree用的节点数是2^k，第二大的frozen_subtree用的子节点数是2^k1，
-由于1 + 2^1 + .... + 2^63 = 2^64 - 1最多有64个节点数。
+证明如下，假设有n个节点，假设 2^k <= n < 2^(k + 1)， 最大的那颗frozen_subtree用的节点数是2^k，第二大的frozen_subtree用的子节点数是2^k1，
+其中2^k1 <= (n - 2^k) < 2^(k1 + 1)， 可以发现和n的二进制表示是对应的，由于n定以为64位整数，最多有64个节点数。
 由于HashValue使用sha3_256计算占8个字节，一个AccumulatorInfo占的内存最大是(1 + 64 + 2) * 8个字节。
-在Merkle Tree中提到记住Root_Hash就可以认为是记住了整棵树, 在starcoin中，需要保证Accumulator是幂等的，
+
+## frozen节点计算Root_Hash
+
+## append流程
+
+## Accumlator的幂等性
+在Merkle Tree中提到记住Root_Hash就可以认为是记住了整棵树, 在starcoin中，需要保证Accumulator是幂等的。
+比如在图3中，我们已经执行了Block0-4的计算，这时候又有逻辑把Block4添加进来计算，这时候会不会出现重复添加Block5实际是Block4的逻辑，实际上不会，由于Block的BlockHeader有前一个Block的Hash值，
+通过前一个Hash值就知道整个Accumulator的Leaf数目为4，对应的子Accumulator的Hash值是Hash(Hash01 + Hash23),会和Hash(Block4)计算新的Accumlator。
+
+## 查询实现
+
+## KvStore中存储实现
 
 
 ## Accumulator中API说明

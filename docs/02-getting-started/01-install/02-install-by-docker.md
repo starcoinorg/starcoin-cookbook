@@ -1,6 +1,6 @@
 # Install by docker
 
-Starcoin supports running nodes via Docker, so you can install Starcoin via a Docker image.
+Starcoin supports running nodes through Docker, and provides `starcoin` application images, which can be directly pulled to run locally.
 
 ## Pull the Docker image
 

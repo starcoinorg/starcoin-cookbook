@@ -29,16 +29,20 @@ Internal 01的Hash01 = Hash(Hash0 + Hash1)， +代表拼接字符串。
 
 ![odd_accumulator.png](../../../../../static/img/accumulator/odd_accumulator.png)
 
-上面这些图中，(Hash(Block), Block)会按照KV对的形式存在KvStore中。 
+上面这些图中，(Hash(Block), Block)会按照KV对的形式存在KvStore中。
+这里给定了Leaf和Internal的定义, 代码参考如下
+```rust
+```
 
 ## 节点的frozen
 Merkle Tree是在内存中的形式, Accumulator需要把Merkle Tree保存在KvStore中。
 一种直观的想法就是把把所有的Leaf节点保存下来，比如图3中，保存Hash0，Hash1， Hash2， Hash3， Hash4，还需要保存这些顺序关系，
 第一次用的时候计算就可以构建Merkle Tree，图3中需要计算6次，也挺快的。
-当Leaf数量比较大的时候，比如2^23个Leaf(大概800万个Block,)，就需要需要2^23次sha3_256计算，这个数量级是O(N)的有点慢。
-需要加速下计算的过程，这里注意到Merkle Tree是只添加不会出现删除和更新的情况，
-比如在图3中，Hash0，Hash1，Hash2，Hash3构建成的子Accumulator是Hash(Hash01 + Hash23)， 再添加新的Leaf，不会被修改它。
-可以基于这些已经固定的子Accumulator进行加速计算。这里引入了frozen的概念。
+当Leaf数量比较大的时候，比如2^23个Leaf(大概800万个Block,)，需要2^23次sha3_256计算，这个数量级是O(N)的有点慢。
+需要加速下计算的过程，这里注意到Accumulator是只添加不会出现删除和更新的情况，
+比如在图3中，Hash0，Hash1，Hash2，Hash3构建成的子Accumulator是Hash(Hash01 + Hash23)， 再添加新的Leaf，不会修改根节点Hash(Hash01 + Hash23)的子Accumulator。
+可以基于这些已经固定的子Accumulator进行加速计算。进一步可以发现固定的Accumlator都是满二叉树(Full Binary Tree)。
+这里引入了frozen的概念。
 PlaceHolder是not frozen的, Leaf都是frozen的,  Internal的frozen是递归定义，是指左子树和右子树中不含有PlaceHolder节点。
 一个Accumlator中节点数目指所有frozen的节点,在图1中是7个，图3中是9个。
 一个Accumulator可以通过Root_Hash和frozen_subtree_roots快速确定下来。
@@ -75,12 +79,25 @@ pub struct AccumulatorInfo {
 
 ## KvStore中存储实现
 
+## NodeIndex实现讲解
+如果不想深入源码，这部分可以不看
+
 
 ## Accumulator中API说明
 下面Leaf和Internal在代码中的定义
 ```rust
+pub struct MerkleAccumulator {
+    tree: Mutex<AccumulatorTree>,
+}
 
+impl MerkleAccumulator {
+    pub fn new_with_info(
+        acc_info: AccumulatorInfo,
+        node_store: Arc<dyn AccumulatorTreeStore>,
+    ) -> Self;
+}
 ```
+new_with_info通过API
 
 
 在[Merkle Tree](merkle_tree.md)中可以提到可以认为有Root_Hash就是有了Accumulator，

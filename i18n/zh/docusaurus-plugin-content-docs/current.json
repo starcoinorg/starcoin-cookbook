@@ -62,5 +62,9 @@
   "sidebar.tutorialSidebar.category.StarcoinFramework": {
     "message": "StarcoinFramework",
     "description": "The label for category StarcoinFramework in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.CLI": {
+    "message": "CLI",
+    "description": "The label for category CLI in sidebar tutorialSidebar"
   }
 }

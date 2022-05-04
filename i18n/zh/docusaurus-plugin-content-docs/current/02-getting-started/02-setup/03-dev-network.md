@@ -1,4 +1,4 @@
-# How to set up a local dev network
+# 如何设置本地开发网络
 
 TODO
 1. local dev node set up.
@@ -7,39 +7,36 @@ TODO
 4. Some useful tips for local dev node
     * How to skip time in local dev?
 
+## 运行本地网络
 
-
-## Run Local Network
-
-the following command could start new dev node:
+下面的命令可以启动新的 dev 节点：
 
 ```shell
 starcoin -n dev
 ```
 
-after this command, you could find node address in log or std output, it could like:
+在此命令之后，你可以在日志或 std 输出中找到节点地址，它可能如下所示：
 
 ```shell
 Self address is: /ip4/127.0.0.1/tcp/59476/p2p/12D3KooWPePRG6BDdjgtEYmPDxNyJfMWpQ1Rwgefuz9eqksLfxJb
 ```
 
-then you could setup another node by this command:
+然后，你可以通过以下命令设置另一个节点：
 
 ```shell
 starcoin -n dev --seed /ip4/127.0.0.1/tcp/59476/p2p/12D3KooWPePRG6BDdjgtEYmPDxNyJfMWpQ1Rwgefuz9eqksLfxJb
 
 ```
 
-You could use subcommand console to start cli console:
+你可以使用子命令控制台来启动 cli 控制台：
 
 ```shell
 starcoin -n dev console
 ```
 
-repeat these steps, you cloud get multi node local dev network.
+重复这些步骤，你可以获得多节点本地开发网络。
 
-
-Run node by docker:
+通过 docker 运行节点：
 
 ```shell
 docker run --name starcoin -d --network host -v ~/.starcoin/:/root/.starcoin/ starcoin/starcoin:latest /starcoin/starcoin -n dev

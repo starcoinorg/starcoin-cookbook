@@ -1,27 +1,26 @@
-# User Guide of Move Package Manager
+# Move 包管理器用户指南
 
-Move Package Manager(mpm) is a command line tool to develop move projects, like Cargo for Rust, or NPM for NodeJS.
+Move Package Manager（mpm）是一个命令行工具，用于开发移动项目，例如用于 Rust 的 Cargo，或用于 NodeJS 的 NPM。
 
-It integrates the latest move pacakge system introduced in [move-language/move](https://github.com/move-language/move/tree/main/language/tools/move-package),
-and reuse most functionality of [move-cli](https://github.com/move-language/move/tree/main/language/tools/move-cli) by diem.
-**Before dive into this tutorial, please read the [pacakge section](https://github.com/move-language/move/blob/main/language/documentation/book/src/packages.md) of move book first.**
-Understanding how move package work is a prerequest.
+它集成了 [move-language/move](https://github.com/move-language/move/tree/main/language/tools/move-package) 中引入的最新 move 包系统，并通过 diem 复用 [move-cli](https://github.com/move-language/move/tree/main/language/tools/move-cli) 的大部分功能。
+在深入学习本教程之前，请先阅读 move book 的 [pacakge 部分](https://github.com/move-language/move/blob/main/language/documentation/book/src/packages.md)。
+了解移动包的工作方式是一个先决条件。
 
+## 安装
 
-## Installation
+从 [starcoiorg/starcoin](https://github.com/starcoinorg/starcoin) 的发布页面下载。
 
-Download from the release page of [starcoiorg/starcoin](https://github.com/starcoinorg/starcoin).
-
-Or use:
+或使用：
 
 ```
 cargo install --git https://github.com/starcoinorg/starcoin move-package-manager --bin mpm
 ```
 
-### Overview
+### 概览
+
 
 ``` shell
-joe@MX:~$ mpm
+$ mpm
 move-package-manager 1.11.7-rc
 Starcoin Core Dev <dev@starcoin.org>
 CLI frontend for the Move compiler and VM
@@ -59,18 +58,17 @@ SUBCOMMANDS:
     sandbox                Execute a sandbox command
 ```
 
+mpm 一个方便的包装器和 [move-cli](https://github.com/move-language/move/tree/main/language/tools/move-cli) 的超集。
 
-mpm is a convenient wrapper and superset of [move-cli](https://github.com/move-language/move/tree/main/language/tools/move-cli).
+适用于 move-cli 的内容也适用于 mpm。
 
-What applies to move-cli is also applied to mpm.
+因此，我们建议您阅读 move-language 编写的[教程](https://github.com/move-language/move/tree/main/language/documentation/tutorial)。
 
-**So, We recommend you to go through the (https://github.com/move-language/move/tree/main/language/documentation/tutorial) written by move-language.**
+在该教程中，您可以添加别名 `alias move='mpm'` 以便您可以按原样调用 move。
 
-In that tutorial, you can add an alias `alias move="mpm"` so that you can invoke move as it is.
+您可以通过运行以下命令来检查它是否正常工作：
 
-You can check that it is working by running the following command:
-
-```
+```shell
 move package -h
 
 mpm-package 0.1.0
@@ -112,25 +110,24 @@ SUBCOMMANDS:
     test           Run Move unit tests in this package
 ```
 
-### Spec Test
+### 集成测试
 
-Based on move-cli, mpm add the support of integration test to test your move project in the whole.
+在 move-cli 的基础上，mpm 增加了集成测试的支持，可以对你的 move 项目进行整体测试。
 
-It can simulates:
+它可以模拟：
 
-- account initialization.
-- block generation.
-- module publishing.
-- execute scripts or script function.
+- 账户初始化。
+- 块生成。
+- 模块发布。
+- 执行脚本或脚本函数。
 
-All actions are wrapped into transactions.
+所有操作都包含在事务中。
 
-All integration test files should be in `integration-tests` dir under the package root path.
+所有规范测试文件都应该在包根路径下的 `integration-tests` 目录中。
 
-spec test file contains test directives seperated by empty newlines.
+集成测试文件包含由空换行符分隔的测试指令。
 
-directives works like a command line, you provide command name and command arguments,
-and move pacakge manager executes the directives like OS executes cli commands.
+指令像命令行一样工作，您提供命令名称和命令参数，然后移动 pacakge 管理器执行指令，就像 OS 执行 cli 命令一样。
 
 ```shell
 $ mpm integration-test --help
@@ -194,12 +191,12 @@ OPTIONS:
             update test baseline
 
     -v
-            Print additional diagnostics if available@
+            Print additional diagnostics if available
 ```
 
-### Integration test Directives
+### 集成测试指令
 
-#### Directive - init
+#### 指令 - 初始化
 
 ``` shell
 task-init 0.1.0
@@ -219,12 +216,11 @@ OPTIONS:
         --rpc <rpc>                         use remote starcoin rpc as initial state
 ```
 
-Directive `init` can declare the initial state of you spec test.
-You can either start from a fresh blockchain state by providing arg `-n test`,
-or fork from a remote state snapshot like `--rpc http://main.seed.starcoin.org:9850 --block-number 100000`.
-`--address <named-addresses>` can be used to declare additional named addressed which will be used in the spec test later.
+指令 `init` 可以声明规范测试的初始状态。
+你可以通过提供参数 `-n test` 从新的区块链状态开始，或者从远程状态快照，如 `--rpc http://main.seed.starcoin.org:9850 --block-number 100000` 分叉。
+`--address <named-addresses>` 可用于声明其他命名地址，稍后将在规范测试中使用。
 
-Examples:
+例子：
 
 ```
 //# init -n dev
@@ -234,12 +230,11 @@ Examples:
 //# init -n barnard
 
 //# init --rpc http://main.seed.starcoin.org:9850 --block-number 100000
-
 ```
 
-#### Directive - block
+#### 指令 - block
 
-```
+```shell
 task-block 0.1.0
 
 USAGE:
@@ -256,15 +251,15 @@ OPTIONS:
         --uncles <uncles>
 ```
 
-Directive `block` start a new block.
+指令 `block` 开始一个新的块。
 
-Every directives between this block directive and next block directive are running in this block.
-You can pass custom `--author`, `--timestamp`, `--uncles` to fit your need.
+此块指令和下一个块指令之间的每个指令都在此块中运行。
+你可以通过自定义 `--author`、`--timestamp`、`--uncles` 来满足您的需要。
 
-If no block directive specified, transactions will run on default block whose block number is the next block number of initial state.
-If you fork from a remote state of block number `h`, then the next block's number is `h+1`.
+如果没有指定块指令，事务将在默认块上运行，其块号是初始状态的下一个块号。
+如果你从一个区块编号为 `h` 的远程状态分叉，那么下一个区块的编号是 `h+1`。
 
-Examples:
+例子：
 
 ```
 //# block
@@ -276,9 +271,9 @@ Examples:
 //# block --uncles 10
 ```
 
-#### Directive - faucet
+#### 指令 - faucet
 
-```
+```shell
 task-faucet 0.1.0
 
 USAGE:
@@ -294,12 +289,11 @@ OPTIONS:
         --public-key <public-key>
 ```
 
-Directive **faucet** can create and faucet an address (can be named address like `alice`, `tom` or raw address like `0x1`, `0x2`) with some STC of given amount.
-If the address is a named address, it will auto generate an raw address(and public key) and assign it to the named address.
-If you has some specific requirements on `public-key`, use `--public-key` to specify it.
+指令 `faucet` 可以创建和点击一个地址（可以命名为 `alice`、`tom` 等地址或 `0x1`、`0x2` 等原始地址），其中包含一定数量的 STC。
+如果地址是命名地址，它将自动生成一个原始地址（和公钥）并将其分配给命名地址。
+如果您对 `public-key` 有一些特定要求，请使用 `--public-key` 来指定它。
 
-
-Examples:
+例子：
 
 ```
 //# faucet --addr bob
@@ -329,13 +323,13 @@ OPTIONS:
         --syntax <syntax>
 ```
 
-Directive `publish` can publish a module to the blockchain.
-The module code must follows the directive.
+指令 `publish` 可以将模块发布到区块链。
+模块代码必须遵循指令。
 
-`--gas-budget` specifies the max gas of the transaction.
-`--syntax` can be ingored for now.
+`--gas-budget` 指定交易的最大气体。
+`--syntax` 现在可以输入。
 
-Exmaples:
+示例：
 
 ```
 //# publish
@@ -359,8 +353,6 @@ module alice::Holder {
 
 //# publish
 module Dummy::DummyModule {}
-
-
 ```
 
 #### Directive - run
@@ -389,14 +381,14 @@ ARGS:
     <NAME>
 ```
 
-Directive `run` can execute a script of script function.
-If it's a script, the script code must follow the directive.
-If it's a script function, then `<NAME>` should be provided.
+指令 `run` 可以执行脚本函数的脚本。
+如果是脚本，则脚本代码必须遵循指令。
+如果是脚本函数，则应提供 `<NAME>`。
 
-`--signers` declare the transaction sender.
-`--type-args` and `--args` declare type arguments and arguments of the script of script function.
+`--signers` 声明交易发送者。
+`--type-args` 和 `--args` 声明类型参数和脚本函数脚本的参数。
 
-Examples:
+例子：
 
 ```
 //# run --signers alice
@@ -432,10 +424,9 @@ OPTIONS:
         --resource <resource>
 ```
 
-Directive `view` can query any resource of any address.
+指令 `view` 可以查询任何地址的任何资源。
 
-
-Examples:
+例子：
 
 ```
 //# view --address alice --resource 01::Account::Account
@@ -443,9 +434,9 @@ Examples:
 //# view --address StarcoinFramework --resource 0x1::Config::Config<0x1::VMConfig::VMConfig>
 ```
 
-#### Directive - print-bytecode
+#### 指令 - print-bytecode
 
-```
+```shell
 task-print-bytecode 0.1.0
 Translates the given Move IR module or script into bytecode, then prints a textual representation of that bytecode
 
@@ -460,17 +451,17 @@ OPTIONS:
         --input <input>    The kind of input: either a script, or a module [default: script]
 ```
 
-Directive `print-bytecode` can print the bytecode of given module or script.
+指令 `print-bytecode` 可以打印给定模块或脚本的字节码。
 
-### Installation Test Expectation
+### 集成测试期望
 
-Each integration test should have an corresponding expectation file, which contains the expected output of each directives in integration test.
-Move package manager will compare the test result of a integration test with the expectation file.
-If there are different outputs, then the integration test fails.
-You can generate the expected file by providing `--ub` argument when running `mpm integration-test` for the first time.
-But you have to check whether the generated output really is the expected output of your integration test.
+每个集成测试都应该有一个对应的期望文件，其中包含集成测试中每个指令的期望输出。
+Move 包管理器会将集成测试的测试结果与期望文件进行比较。
+如果有不同的输出，则集成测试失败。
+您可以在第一次运行 `mpm integration-test` 时通过提供 `--ub` 参数来生成预期的文件。
+但是您必须检查生成的输出是否真的是您的集成测试的预期输出。
 
-Example:
+例子：
 
 ```
 cd coin-swap
@@ -478,9 +469,9 @@ mpm pacakge build
 mpm integration-test test_coin_swap
 ```
 
-This's all about integration test of move.
+这都是关于 Move 的集成测试。
 
-## More example
+## 更多例子
 
 1. [basic-coin](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/basic-coin/)
 2. [coin-swap](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/coin-swap/)
@@ -488,6 +479,6 @@ This's all about integration test of move.
 4. [my-counter](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter/)
 5. [simple-nft](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/simple-nft/) A NFT example
 
-## Questions
+## 问题
 
-If you have any question, please go to [Starcoin/move-lang channel in Discord](https://discord.com/channels/822159062475997194/892760287797714954).
+如果您有任何问题，请前往 Discord 中的 [Starcoin/move-lang channel in Discord](https://discord.com/channels/822159062475997194/892760287797714954) 频道。

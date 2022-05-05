@@ -77,6 +77,40 @@ yum install devtoolset-7
 
 ### Common troubleshooting
 
+#### Q1
+
+The following error message appears when compiling with Cargo:
+
+```shell
+error: linker cc not found | = note: No such file or directory (os error 2)
+```
+
+This is because Cargo cannot find the `cc` compiler program (linker) to compile the given application.
+
+Since Rust does not yet include its own linker, usually we need to install a C compiler, such as: compilation tools such as `gcc` and `cmake`.
+
+**Solution:**
+
+- To install gcc on Ubuntu, simply run, `build-essential` contains the basic toolset needed to compile and develop:
+
+```shell
+sudo apt install build-essential
+```
+
+- To install Cmake on Arch Linux, enable the `[Extra]` repository and run:
+
+```shell
+sudo pacman -S gcc cmake
+```
+
+- On Fedora, RHEL, CentOS:
+
+```shell
+sudo dnf install gcc cmake
+```
+
+#### Q2
+
 - If the error message `Could not find directory of OpenSSL installation` appears, you need to install the OpenSSL library.
 - If the error ```Unable to find libclang: "the `libclang` shared library at /usr/lib64/clang-private/libclang.so.6.0"``` appears, it may be the cause of `llvm-private`. The solution is to uninstall it:
     ```shell

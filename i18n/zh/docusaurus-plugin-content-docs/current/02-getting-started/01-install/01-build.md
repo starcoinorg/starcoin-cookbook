@@ -83,6 +83,40 @@ rpm -e --nodeps llvm-private-6.0.1-2.el7.x86_64 # 卸载查找到的包，实际
 
 ### 常见问题排查
 
+#### Q1
+
+使用 Cargo 编译时出现如下错误信息：
+
+```shell
+error: linker cc not found | = note: No such file or directory (os error 2)
+```
+
+这是因为 Cargo 找不到 `cc` 编译器程序（连接器）来编译给定的应用程序。
+
+由于 Rust 还没有包含它自己的链接器，通常我们需要安装一个 C 编译器，如：`gcc` 和 `cmake` 等编译工具。
+
+**解决方案**：
+
+- 要在 Ubuntu 上安装 gcc，只需运行，`build-essential` 包含了编译开发所需的基本工具集：
+
+```shell
+sudo apt install build-essential
+```
+
+- 要在 Arch Linux 上安装 Cmake，请启用 `[Extra]` 存储库并运行：
+
+```shell
+sudo pacman -S gcc cmake
+```
+
+- 在 Fedora、RHEL、CentOS：
+
+```shell
+sudo dnf install gcc cmake
+```
+
+#### Q2
+
 - 若出现 `Could not find directory of OpenSSL installation` 的报错信息，则需要安装 OpenSSL 库。
 - 若出现 ```Unable to find libclang: "the `libclang` shared library at /usr/lib64/clang-private/libclang.so.6.0"``` 字样错误，则可能是 `llvm-private` 的原因，解决方法是卸载它：
     ```shell

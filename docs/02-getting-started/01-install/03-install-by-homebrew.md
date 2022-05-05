@@ -1,6 +1,5 @@
 # Install by Homebrew
 
-
 ## Installation
 ```
 brew tap starcoinorg/starcoin

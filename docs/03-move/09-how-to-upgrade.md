@@ -1,5 +1,9 @@
 # How to upgrade Move Module
 
+
+
+:::note
+
 TODO
 
 1. Introduce the Compatibility requirement
@@ -7,6 +11,21 @@ TODO
 3. Suggestion to keep Compatibility and How to force upgrade
 4. Hot to delegate UpgradeCapability to DAO
 3. Give an example for upgrade module
+
+Migrate and Rewrite
+
+* https://starcoin.org/en/developer/blog/starcoin_stdlib_upgrade/
+* https://starcoin.org/zh/developer/blog/starcoin_stdlib_upgrade/ 
+
+Part of 
+
+* https://starcoin.org/zh/developer/blog/starcoin_code_is_law/
+* https://starcoin.org/zh/developer/blog/starcoin_code_is_law/
+
+
+:::
+
+
 
 ## FAQ
 

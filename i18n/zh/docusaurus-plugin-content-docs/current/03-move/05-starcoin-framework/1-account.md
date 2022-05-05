@@ -1,22 +1,23 @@
-# Account
+# 帐户
 
-The module for the account resource that governs every account
+管理每个帐户的帐户资源模块
 
 ## [Resource `Account`](https://github.com/starcoinorg/starcoin-framework/blob/main/build/StarcoinFramework/docs/Account.md#resource-account)
 
-Every account has a Account::Account resource
+每个帐户都有一个 Account::Account 资源
+
 ```
 struct Account has key
 ```
 
 ## [Resource `Balance`](https://github.com/starcoinorg/starcoin-framework/blob/main/build/StarcoinFramework/docs/Account.md#resource-balance)
 
-A resource that holds the tokens stored in this account
+持有该账户中存储的代币的资源
 ```
 struct Balance<TokenType> has key
 ```
 
-## [Module `0x1::AccountScripts`](https://github.com/starcoinorg/starcoin-framework/blob/main/build/StarcoinFramework/docs/AccountScripts.md#module-0x1accountscripts)
+## [`0x1::AccountScripts` 模块](https://github.com/starcoinorg/starcoin-framework/blob/main/build/StarcoinFramework/docs/AccountScripts.md#module-0x1accountscripts)
 
 - [Function `enable_auto_accept_token`](https://github.com/starcoinorg/starcoin-framework/blob/main/build/StarcoinFramework/docs/AccountScripts.md#function-enable_auto_accept_token)
 - [Function `disable_auto_accept_token`](https://github.com/starcoinorg/starcoin-framework/blob/main/build/StarcoinFramework/docs/AccountScripts.md#function-disable_auto_accept_token)
@@ -24,6 +25,7 @@ struct Balance<TokenType> has key
 use 0x1::Account;
 ```
 
+
 :::note
-introduce Account module
+介绍有关 Account 模块的更多信息
 :::

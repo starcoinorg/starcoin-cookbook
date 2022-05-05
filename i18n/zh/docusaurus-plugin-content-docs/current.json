@@ -23,6 +23,10 @@
     "message": "Move 和智能合约开发",
     "description": "The label for category Move and SmartContract Development in sidebar tutorialSidebar"
   },
+  "sidebar.tutorialSidebar.category.Starcoin Move Framework": {
+    "message": "Starcoin Move 框架",
+    "description": "The label for category Starcoin Move Framework"
+  },
   "sidebar.tutorialSidebar.category.Advance Move Development": {
     "message": "Advance Move Development",
     "description": "The label for category Advance Move Development in sidebar tutorialSidebar"

@@ -1,7 +1,3 @@
---- 
-sidebar_position: 2
----
-
 # Sparse Merkle Tree
 要了解为什么用Sparse Merkle Tree(下面简称SMT)，先介绍下Merkle Tree
 

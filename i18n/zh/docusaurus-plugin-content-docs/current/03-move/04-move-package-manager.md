@@ -2,7 +2,9 @@
 
 Move Package Manager（mpm）是一个命令行工具，用于开发移动项目，例如用于 Rust 的 Cargo，或用于 NodeJS 的 NPM。
 
-它集成了 [diem/move](https://github.com/diem/move/tree/main/language/tools/move-package) 中引入的最新 move 包系统，并通过 diem 复用 [move-cli](https://github.com/diem/move/tree/main/language/tools/move-cli) 的大部分功能。在深入学习本教程之前，请先阅读 [pacakge section](https://github.com/diem/move/blob/main/language/documentation/book/src/packages.md) move book 的 pacakge 部分。了解移动包的工作方式是一个先决条件。
+它集成了 [move-language/move](https://github.com/move-language/move/tree/main/language/tools/move-package) 中引入的最新 move 包系统，并通过 diem 复用 [move-cli](https://github.com/move-language/move/tree/main/language/tools/move-cli) 的大部分功能。
+在深入学习本教程之前，请先阅读 move book 的 [pacakge 部分](https://github.com/move-language/move/blob/main/language/documentation/book/src/packages.md)。
+了解移动包的工作方式是一个先决条件。
 
 ## 安装
 
@@ -18,43 +20,49 @@ cargo install --git https://github.com/starcoinorg/starcoin move-package-manager
 
 
 ``` shell
-move-package-manager
-Package and build system for Move code.
+$ mpm
+move-package-manager 1.11.7-rc
+Starcoin Core Dev <dev@starcoin.org>
+CLI frontend for the Move compiler and VM
 
 USAGE:
-    mpm [FLAGS] [OPTIONS] <SUBCOMMAND>
-
-FLAGS:
-    -d, --dev        Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if this flag
-                     is set. This flag is useful for development of packages that expose named addresses that are not
-                     set to a specific value
-        --force      Force recompilation of all packages
-        --abi        Generate ABIs for packages
-        --doc        Generate documentation for packages
-    -h, --help       Prints help information
-        --test       Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with
-                     any code in the 'test' directory
-    -V, --version    Prints version information
-    -v               Print additional diagnostics if available
+    mpm [OPTIONS] <SUBCOMMAND>
 
 OPTIONS:
-        --install-dir <install-dir>    Installation directory for compiled artifacts. Defaults to current directory
-    -p, --path <package-path>          Path to a package which the command should be run with respect to [default: .]
+        --abi                          Generate ABIs for packages
+    -d, --dev                          Compile in 'dev' mode. The 'dev-addresses' and 'dev-
+                                       dependencies' fields will be used if this flag is set. This
+                                       flag is useful for development of packages that expose named
+                                       addresses that are not set to a specific value
+        --doc                          Generate documentation for packages
+        --force                        Force recompilation of all packages
+    -h, --help                         Print help information
+        --install-dir <INSTALL_DIR>    Installation directory for compiled artifacts. Defaults to
+                                       current directory
+    -p, --path <PACKAGE_PATH>          Path to a package which the command should be run with
+                                       respect to [default: .]
+        --test                         Compile in 'test' mode. The 'dev-addresses' and 'dev-
+                                       dependencies' fields will be used along with any code in the
+                                       'test' directory
+    -v                                 Print additional diagnostics if available
+    -V, --version                      Print version information
 
 SUBCOMMANDS:
-    experimental    (Experimental) Run static analyses on Move source or bytecode
-    help            Prints this message or the help of the given subcommand(s)
-    package         Execute a package command. Executed in the current directory or the closest containing Move
-                    package
-    sandbox         Execute a sandbox command
-    spectest        Datatest-harness for running data-driven tests
+    check-compatibility    Check compatibility of modules comparing with remote chain chate
+    experimental           (Experimental) Run static analyses on Move source or bytecode
+    help                   Print this message or the help of the given subcommand(s)
+    integration-test       Run integration tests in tests dir
+    package                Execute a package command. Executed in the current directory or the
+                               closest containing Move package
+    release                Release the package
+    sandbox                Execute a sandbox command
 ```
 
-mpm 一个方便的包装器和 [diem/move-cli](https://github.com/diem/move/tree/main/language/tools/move-cli) 的超集。
+mpm 一个方便的包装器和 [move-cli](https://github.com/move-language/move/tree/main/language/tools/move-cli) 的超集。
 
 适用于 move-cli 的内容也适用于 mpm。
 
-因此，我们建议您阅读 diem 编写的[教程](https://github.com/diem/move/tree/main/language/documentation/tutorial)。
+因此，我们建议您阅读 move-language 编写的[教程](https://github.com/move-language/move/tree/main/language/documentation/tutorial)。
 
 在该教程中，您可以添加别名 `alias move='mpm'` 以便您可以按原样调用 move。
 
@@ -102,9 +110,9 @@ SUBCOMMANDS:
     test           Run Move unit tests in this package
 ```
 
-### 规格测试
+### 集成测试
 
-在 move-cli 的基础上，mpm 增加了 spec test 的支持，可以对你的 move 项目进行整体测试。
+在 move-cli 的基础上，mpm 增加了集成测试的支持，可以对你的 move 项目进行整体测试。
 
 它可以模拟：
 
@@ -115,69 +123,80 @@ SUBCOMMANDS:
 
 所有操作都包含在事务中。
 
-所有规范测试文件都应该在包根路径下的 `spectests` 目录中。
+所有规范测试文件都应该在包根路径下的 `integration-tests` 目录中。
 
-spec 测试文件包含由空换行符分隔的测试指令。
+集成测试文件包含由空换行符分隔的测试指令。
 
 指令像命令行一样工作，您提供命令名称和命令参数，然后移动 pacakge 管理器执行指令，就像 OS 执行 cli 命令一样。
 
 ```shell
-mpm-spectest
-Datatest-harness for running data-driven tests
+$ mpm integration-test --help
+mpm-integration-test
+Run integration tests in tests dir
 
 USAGE:
-    mpm spectest [FLAGS] [OPTIONS] [--] [filter]
-
-FLAGS:
-        --bench                   NO-OP: unsupported option, exists for compatibility with the default test harness
-    -d, --dev                     Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used
-                                  if this flag is set. This flag is useful for development of packages that expose named
-                                  addresses that are not set to a specific value
-        --ensure-time             NO-OP: unsupported option, exists for compatibility with the default test harness
-        --exclude-should-panic    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --exact                   Exactly match filters rather than by substring
-        --force                   Force recompilation of all packages
-        --force-run-in-process    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --abi                     Generate ABIs for packages
-        --doc                     Generate documentation for packages
-    -h, --help                    Prints help information
-        --ignored                 List or run ignored tests (always empty: it is currently not possible to mark tests as
-                                  ignored)
-        --include-ignored         NO-OP: unsupported option, exists for compatibility with the default test harness
-        --list                    List all tests
-        --nocapture               NO-OP: unsupported option, exists for compatibility with the default test harness
-    -q, --quiet                   Output minimal information
-        --show-output             NO-OP: unsupported option, exists for compatibility with the default test harness
-        --test                    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --ub                      update test baseline
-    -V, --version                 Prints version information
-    -v                            Print additional diagnostics if available
-
-OPTIONS:
-        --color <color>                  NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --format <format>                Configure formatting of output: pretty = Print verbose output; terse = Display
-                                         one character per test; (json is unsupported, exists for compatibility with the
-                                         default test harness) [default: Pretty]  [possible values: Pretty, Terse, Json]
-        --install-dir <install-dir>      Installation directory for compiled artifacts. Defaults to current directory
-        --logfile <logfile>              NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-    -p, --path <package-path>            Path to a package which the command should be run with respect to [default: .]
-        --report-time <report-time>      NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --skip <skip>...                 NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --test-threads <test-threads>    Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=]
-                                         [default: 32]
+    mpm integration-test [OPTIONS] [FILTER]
 
 ARGS:
-    <filter>    The FILTER string is tested against the name of all tests, and only those tests whose names contain
-                the filter are run
+    <FILTER>    The FILTER string is tested against the name of all tests, and only those tests
+                whose names contain the filter are run
+
+OPTIONS:
+        --abi
+            Generate ABIs for packages
+
+    -d, --dev
+            Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if
+            this flag is set. This flag is useful for development of packages that expose named
+            addresses that are not set to a specific value
+
+        --doc
+            Generate documentation for packages
+
+        --exact
+            Exactly match filters rather than by substring
+
+        --force
+            Force recompilation of all packages
+
+        --format <FORMAT>
+            Configure formatting of output: pretty = Print verbose output; terse = Display one
+            character per test; (json is unsupported, exists for compatibility with the default test
+            harness) [default: pretty] [possible values: pretty, terse]
+
+    -h, --help
+            Print help information
+
+        --install-dir <INSTALL_DIR>
+            Installation directory for compiled artifacts. Defaults to current directory
+
+        --list
+            List all tests
+
+    -p, --path <PACKAGE_PATH>
+            Path to a package which the command should be run with respect to [default: .]
+
+    -q, --quiet
+            Output minimal information
+
+        --test
+            Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used
+            along with any code in the 'test' directory
+
+        --test-threads <TEST_THREADS>
+            Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=] [default:
+            32]
+
+        --ub
+            update test baseline
+
+    -v
+            Print additional diagnostics if available
 ```
 
-### 规格测试指令
+### 集成测试指令
 
-####指令 - 初始化
+#### 指令 - 初始化
 
 ``` shell
 task-init 0.1.0
@@ -434,31 +453,31 @@ OPTIONS:
 
 指令 `print-bytecode` 可以打印给定模块或脚本的字节码。
 
-### 规格测试期望
+### 集成测试期望
 
-每个规范测试都应该有一个对应的期望文件，其中包含规范测试中每个指令的期望输出。
-Move 包管理器会将规范测试的测试结果与期望文件进行比较。
-如果有不同的输出，则规范测试失败。
-您可以在第一次运行 `mpm spectest` 时通过提供 `--ub` 参数来生成预期的文件。
-但是您必须检查生成的输出是否真的是您的规范测试的预期输出。
+每个集成测试都应该有一个对应的期望文件，其中包含集成测试中每个指令的期望输出。
+Move 包管理器会将集成测试的测试结果与期望文件进行比较。
+如果有不同的输出，则集成测试失败。
+您可以在第一次运行 `mpm integration-test` 时通过提供 `--ub` 参数来生成预期的文件。
+但是您必须检查生成的输出是否真的是您的集成测试的预期输出。
 
 例子：
 
 ```
 cd coin-swap
 mpm pacakge build
-mpm spectest test_coin_swap
+mpm integration-test test_coin_swap
 ```
 
-这都是关于 Move 的规格测试。
+这都是关于 Move 的集成测试。
 
 ## 更多例子
 
-1. [basic-coin](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/basic-coin/)
-2. [coin-swap](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/coin-swap/)
-3. [my-token](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/my-token/)
-4. [my-counter](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/my-counter/)
-5. [simple-nft](https://github.com/starcoinorg/starcoin-cookbook/tree/migrate_to_cookbook/examples/simple-nft/) A NFT example
+1. [basic-coin](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/basic-coin/)
+2. [coin-swap](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/coin-swap/)
+3. [my-token](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-token/)
+4. [my-counter](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter/)
+5. [simple-nft](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/simple-nft/) A NFT example
 
 ## 问题
 

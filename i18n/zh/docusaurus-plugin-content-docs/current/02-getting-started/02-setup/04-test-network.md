@@ -7,7 +7,7 @@ TODO
 
 ## 加入 Halley 网络
 
-**Halley** 是 StarCoin 的第一个测试网络。链上的数据将被定期清理。
+**Halley** 是 Starcoin 的第一个测试网络。链上的数据将被定期清理。
 
 你可以使用下面的命令加入 Halley 网络：
 

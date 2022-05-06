@@ -1,6 +1,3 @@
---- 
-sidebar_position: 2
----
 # Merkle Tree
 Merkle Tree又被称为二叉哈希树，主要用在文件系统或者P2P系统中。下面这个图说明，
 有 A, B, C, D 四个交易在虚线框内，在 Merkle Tree中属于 Data Blocks， 这部分叫做 LeafNode, 上面的虚线框属于Hash Pointers。

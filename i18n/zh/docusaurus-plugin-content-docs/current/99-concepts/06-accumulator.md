@@ -1,7 +1,3 @@
---- 
-sidebar_position: 2
----
-
 # Accumulator
 
 介绍Accumulator之前，先了解下什么是[Merkle Tree](merkle_tree.md)。

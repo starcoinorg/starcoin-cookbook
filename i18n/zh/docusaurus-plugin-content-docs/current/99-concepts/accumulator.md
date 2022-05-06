@@ -100,13 +100,35 @@ Node Index在代码中对应前面的NodeIndex。
 这里使用中序遍历的原因是，Accumulator需要将Merkle Tree保存到KvStore中，由于保存的都是HashValue,需要知道HashValue在Merkle Tree中的位置
 图3在图1基础上添加一个Hash4的节点，中序遍历情况下各个节点的NodeIndex值是不变的。
 
-## KvStore中存储实现
-Merkle Tree在内存中不用记录Node对应的NodeIndex，Accumulator在KvStore中需要记录Node对应的NodeIndex，目前的存储是把所有的Leaf，Internal
-按照(Hash(Node), Serial(Node)) Key Value键值对的形式存储在KvStore
+## Accumulator append过程
+```rust
+pub fn append(&mut self, new_leaves: &[HashValue])
+```
+上面是对应的代码
+### 计算过程
 ![accumulator_store.png](../../../../../static/img/accumulator/accumlator_store.png)
-在图4中显示了Accumulator存储在KvStore，使用Column BLOCK_ACCUMULATOR(TRANSACTION对应的是TRANSACTION_ACCUMULATOR), 这里只画了部分Leaf，Internal,
-注意到Internal分为Frozen和Not Frozen，图4中Internal67 这个Internal节点会有一个Not Frozen的，添加Hash7的时候会变成Frozen的，这样会存储两份数据到KvStore
-前面提到Node Frozen以后就不会改变，这样存储Not Frozen的Internal可能会浪费一些存储空间
+这里以图4为例，Hash0-Hash3构建的Accumulator的Root_Hash为Hash(Internal 0123)， 现在添加Hash4-Hash6。
+添加Hash4 LeafNode， Hash4添加到to_freeze，to_freeze = [Hash4]，Hash4为左孩子节点，Hash4添加完成。
+添加Hash5 LeafNode， 添加Hash5到to_freeze, to_freeze = [Hash4, Hash5], Hash5为右孩子节点，需要和其兄弟节点(sibling)生成一个Frozen的Internal 45,
+并且添加到to_freeze， to_freeze = [Hash4, Hash5, Internal45], 这里产生了一个查询sibling操作，后面会介绍， Hash5添加完成。
+添加Hash6 LeafNode， 添加Hash6到to_freeze，to_freeze = [Hash4, Hash5, Internal45, Hash6], Hash6为一个左孩子节点，Hash6添加完成。
+需要计算下生成的新Root_Hash值，Hash6和PlaceHolder生成Not Frozen Node Internal67， 记录到not_freeze列表， not_freeze = [Internal67]，
+Internal67和其sibling节点Internal45生成Not Frozen Node Internal4567， not_freeze = [Internal67, Internal4567]， 这里会有个查询节点操作，
+Internal4567和其sibling节点Internal0123生成一个Not Frozen Node Internal01234567，
+记录到not——freeze列表， not_freeze = [Internal67, Internal4567, Internal01234567]， Hash(Internal01234567)是新的Root_Hash。
+starcoin实现中
+
+### 存储过程
+将to_freeze和not_free按照(Hash(Node), encode(NOde)) Key Value键值对形式存储在KvStore中。
+在图4中使用的是Column BLOCK_ACCUMULATOR，实际还有Transaction对应的Column TRANSACTION_ACCUMULATOR，图中只画了部分Leaf，Internal。
+注意到Internal分为Frozen和Not Frozen, 图中Internal 67这个Internal节点是Not Frozen的，如果再添加一个新的Leaf Hash7会变成Frozen, 这样会保存
+两个不同状态的Internal67到KvStore。前面提到Node Frozen以后就固定下来，个人觉得存储Not Frozen的Internal有点浪费存储空间，再下次添加Hash7需要重新计算
+Internal67也不会用到原来状态。
+
+### 查询过程
+在
+
+
 
 ## frozen节点计算Root_Hash
 这里是内存相关属性的计算
@@ -122,7 +144,6 @@ FrozenSubTreeIterator讲解(XXX FIXME 这里原理依次找出num_leaves二进�
 
 ## KvStore中存储实现
 diem中存储的就是NodeIndex -> HashValue的值 (确认下是不是Frozen的才存)
-starcoin中为啥搞的很复杂(是不是也是Frozen的才存, 设计成只flush accumulator的)
 
 ## Accumlator的幂等性
 在Merkle Tree中提到记住Root_Hash就可以认为是记住了整棵树, 在starcoin中，需要保证Accumulator是幂等的。

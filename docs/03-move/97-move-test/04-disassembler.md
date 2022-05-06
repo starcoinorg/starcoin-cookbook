@@ -102,7 +102,7 @@ B2 simply pushes false and returns.
 
 B1 is a dummy block that takes the control flow to B3. It does the global borrow from instruction
 7-8 and store it in `id_nft` at instruction 9. Instruction 10 loads that to the stack again (yes, you
-might have noticed that a simple peephole instruction can eliminate instructions 9-10. Currently Move
+might have noticed that a simple peephole optimization can eliminate instructions 9-10. Currently Move
 compiler doesn't really do much optimization). The last three instructions 11-13 return the result of the
 predicate `is_some()` on field 0.
 
@@ -133,8 +133,10 @@ B4:
 We won't elaborate on the details here again, since most of the instructions are the same.
 We can notice a few differences:
 1. There are more basic blocks in the one-liner version.
-2. Results are no longer returned directly from the stack. Notice that the compiler generated an unnamed local variable `%#1`, any value to be returned gets stored into it, and finally B4
-   returns it.
+2. Results are no longer returned directly from the stack. 
+  Notice that the compiler generated an unnamed local variable `%#1`, 
+  any value to be returned gets stored into it, 
+  and finally B4 returns it.
 3. Redundant instructions 9-10 in the original bytecode no longer exists here, since the one-liner
    don't have a temporary variable `id_nft`.
 

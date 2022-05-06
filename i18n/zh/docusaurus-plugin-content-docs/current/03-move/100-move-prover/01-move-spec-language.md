@@ -276,6 +276,31 @@ spec increment_R {
 }
 ```
 
+值得注意的是，可以使用 `old()` 的表达式是有限制的。
+在没有仔细理解它的意义之前，我们很容易错误地认为所有“值随时间变化的表达式”都可以放在其中。
+但如果你试卷写下类似下面这样一个函数和 spec：
+```
+public fun sub1(n: u64): u64 {
+    n = n - 1;
+    n
+}
+
+spec sub1 { ensures n == old(n) - 1; }
+```
+运行后会得到错误信息：old(...) applied to expression which doesn't depend on state.
+
+直觉上这里的变量 `n` 的值确实在执行前后产生了变化，但编译器却认为它是无状态的。
+检查编译器代码，可以看到在
+[`rewrite_exp`](https://github.com/move-language/move/blob/f3b6112d16b0811babfca1bab597095041c1a115/language/move-model/src/spec_translator.rs#L590)
+当中，对 `old()` 的调用会作一个 `is_pure` 的检查，看表达式是不是纯的（即 pure，无副作用）。
+[`is_pure()`](https://github.com/move-language/move/blob/f3b6112d16b0811babfca1bab597095041c1a115/language/move-model/src/ast.rs#L1011) 要求表达式要么包含可变引用（mutable reference），要么含有全局状态，或者调用了用到内存的函数。
+
+因此，把 spec 变成如下形式：
+```
+spec sub1 { ensures result == n - 1; }
+```
+这样代码就能通过语法检查并通过验证了。
+
 ### 辅助函数
 MSL 允许定义辅助函数。然后可以在表达式中使用这些函数。
 

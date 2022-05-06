@@ -50,7 +50,7 @@ pub struct LeafNode {
 ```
 这里index和is_frozen在Internal和Leaf中都不参与Hash计算， NodeIndex主要用途是Accumulator存储在KvStore中用到，后面会介绍
 
-## 节点的frozen
+## 节点的Frozen
 Merkle Tree是在内存中的形式, Accumulator需要把Merkle Tree保存在KvStore中。
 一种直观的想法就是把把所有的Leaf节点保存下来，比如图3中，保存Hash0，Hash1， Hash2， Hash3， Hash4，还需要保存这些顺序关系，
 第一次用的时候计算就可以构建Merkle Tree，图3中需要计算6次，也挺快的。
@@ -59,7 +59,7 @@ Merkle Tree是在内存中的形式, Accumulator需要把Merkle Tree保存在KvS
 比如在图3中，Hash0，Hash1，Hash2，Hash3构建成的子Accumulator是Hash(Hash01 + Hash23)， 再添加新的Leaf，不会修改根节点Hash(Hash01 + Hash23)的子Accumulator。
 可以基于这些已经固定的子Accumulator进行加速计算。可以发现固定的子Accumlator都是满二叉树(Full Binary Tree)。
 这里引入了frozen的概念。
-PlaceHolder是not frozen的, Leaf都是frozen的,  Internal的frozen是递归定义，是指左子树和右子树中不含有PlaceHolder节点。
+PlaceHolder是not Frozen的, Leaf都是Frozen的,  Internal的Frozen是递归定义，是指左子树和右子树中不含有PlaceHolder节点。
 一个Accumlator中节点数目指所有frozen的节点,在图1中是7个，图3中是8个。
 一个Accumulator可以通过Root_Hash和frozen_subtree_roots快速确定下来。
 这里就引入了AccumulatorInfo, 这部分数据结构如下
@@ -82,26 +82,32 @@ pub struct AccumulatorInfo {
 其中2^k1 <= (n - 2^k) < 2^(k1 + 1)， 可以发现frozen_subtree_roots和n的二进制表示中的1是对应的，由于n定以为64位整数，最多有64个节点数。
 由于HashValue使用sha3_256计算占8个字节，一个AccumulatorInfo占的内存最大是(1 + 64 + 2) * 8个字节。
 
-## Leaf index 和 Node index
+## Leaf Index 和 Node Index
 如图1中，Hash0-Hash3是Merkle Tree的Leaf节点，他们分别对应0-3的Leaf节点(计数从0开始)
-Leaf index就是从左开始Leaf节点的顺序。Node index是中序遍历Tree的顺序，Hash0-Hash3对应的序号是0,2,4,6。
+Leaf Index就是从左开始Leaf节点的顺序。Node Index是中序遍历Tree的顺序，Hash0-Hash3对应的序号是0,2,4,6。
 简略图如下
 ```shell
      3
     /  \
    /    \
-  1      5 <-[Node index, in order transver]
+  1      5 <-[Node Index, in order transver]
  / \    / \
 0   2  4   6
 
-0   1  2   3 <[Leaf index]
+0   1  2   3 <[Leaf Index]
 ```
-Node index在代码中对应前面的NodeIndex。
+Node Index在代码中对应前面的NodeIndex。
 这里使用中序遍历的原因是，Accumulator需要将Merkle Tree保存到KvStore中，由于保存的都是HashValue,需要知道HashValue在Merkle Tree中的位置
 图3在图1基础上添加一个Hash4的节点，中序遍历情况下各个节点的NodeIndex值是不变的。
-NodeIndex提供了一些操作
-(1)通过LeafCount计算整个树高
-(2)
+
+## KvStore中存储实现
+Merkle Tree在内存中不用记录Node对应的NodeIndex，Accumulator在KvStore中需要记录Node对应的NodeIndex，目前的存储是把所有的Leaf，Internal
+按照(Hash(Node), Serial(Node)) Key Value键值对的形式存储在KvStore
+![accumulator_store.png](../../../../../static/img/accumulator/accumlator_store.png)
+在图4中显示了Accumulator存储在KvStore，使用Column BLOCK_ACCUMULATOR(TRANSACTION对应的是TRANSACTION_ACCUMULATOR), 这里只画了部分Leaf，Internal,
+注意到Internal分为Frozen和Not Frozen，图4中Internal67 这个Internal节点会有一个Not Frozen的，添加Hash7的时候会变成Frozen的，这样会存储两份数据到KvStore
+前面提到Node Frozen以后就不会改变，这样存储Not Frozen的Internal可能会浪费一些存储空间
+
 ## frozen节点计算Root_Hash
 这里是内存相关属性的计算
 computer_root_hash根据frozen_subtree_roots计算出root hash,在内存中只操作，在存储中直接将这结构存在block_info或者transaction_info中，
@@ -111,7 +117,7 @@ KvStore中的还没看
 Merkle Tree中只使用了append_one
 Accumulator中的操作类似append_one的操作, 先生成新的LeafNode, NodeIndex为leaf_pos, 检查是否为right_child,(XXX FIXME, 插入Frozen图, 插入No Frozen图)
 
-FrozenSubTreeIterator讲解(XXX FIXME 这里原理依次找出num_leaves二进制里的的1,most significant set bit of a u64, 解释参考Hackers Delight的flp部分)
+FrozenSubTreeIterator讲解(XXX FIXME 这里原理依次找出num_leaves二进制里的的1,most significant set bit of a u64, 原因参考Hackers Delight的flp部分)
 )
 
 ## KvStore中存储实现
@@ -125,11 +131,14 @@ starcoin中为啥搞的很复杂(是不是也是Frozen的才存, 设计成只flu
 
 ## 查询实现
 通过NodeIndex获取HashValue, 检查NodeIndex是否PlaceHolder等等(XXX FIXME， 查找的流程图)
-
+这里主要通过LeafIndexgou'zhao
 
 
 ## NodeIndex实现讲解
-如果不想深入源码，这部分可以不看
+如果不想深入源码，这部分可以不看(XXX FIXME)
+NodeIndex提供了一些操作
+(1)通过LeafCount计算整个树高
+(2)
 
 
 ## Accumulator中API说明

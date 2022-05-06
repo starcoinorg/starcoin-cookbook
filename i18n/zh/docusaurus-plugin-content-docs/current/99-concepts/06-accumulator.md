@@ -1,6 +1,6 @@
 # Accumulator
 
-介绍Accumulator之前，先了解下什么是[Merkle Tree](merkle_tree.md)。
+介绍Accumulator之前，先了解下什么是[Merkle Tree](00-merkletree.md)。
 在starcoin中，Accumulator可以认为是Merkle Tree存储在KvStore上。
 
 ## 用途

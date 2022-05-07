@@ -1,4 +1,4 @@
-# `starcoin` help message
+# `starcoin` 帮助信息
 
 ## 用法
 

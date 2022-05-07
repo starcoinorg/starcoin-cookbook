@@ -46,8 +46,8 @@ mpm [OPTIONS] <SUBCOMMAND>
   - 指定命令应该运行的包的路径，默认为当前路径，即 `[default: .]`。
 
 - `--test`
-  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'test' directory
-  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `test` 目录中的任何代码一起使用。
+  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
+  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
 
 - `-v`
   - Print additional diagnostics if available
@@ -73,11 +73,14 @@ mpm [OPTIONS] <SUBCOMMAND>
 
 ### `mpm package` 详述
 
+**用法：**
 
 ```shell
 # mpm package 选项 子命令
 mpm package [OPTIONS] <SUBCOMMAND>
 ```
+
+**子命令：**
 
 ```shell
 # 结构描述
@@ -131,10 +134,10 @@ mpm package [OPTIONS] <SUBCOMMAND>
 
 这个命令用于发布包。
 
-```shell
-# 用法
-# mpm release 选项
+**用法：**
 
+```shell
+# mpm release 选项
 mpm release [OPTIONS]
 
 # 结构描述
@@ -193,8 +196,8 @@ mpm release [OPTIONS]
   - 为初始化脚本函数设置一个标签。
 
 - `--test`
-  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'test' directory
-  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `test` 目录中的任何代码一起使用。
+  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
+  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
 
 - `-v`
   - Print additional diagnostics if available
@@ -205,16 +208,18 @@ mpm release [OPTIONS]
 
 在测试目录（`integration-tests`）运行集成测试。
 
-```shell
-# 用法
-# mpm integration-test 选项 过滤器
+**用法：**
 
+```shell
+# mpm integration-test 选项 过滤器
 mpm integration-test [OPTIONS] [FILTER]
 
 - `<FILTER>`
  - The FILTER string is tested against the name of all tests, and only those tests whose names contain the filter are run
  - 过滤字符串是针对所有测试的名称进行测试的，并且只有那些包含过滤器的名称的测试才能运行。
 ```
+
+**选项：**
 
 ```shell
 # 结构描述
@@ -269,8 +274,8 @@ mpm integration-test [OPTIONS] [FILTER]
   - 输出最小信息。
 
 - `--test`
-  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'test' directory
-  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `test` 目录中的任何代码一起使用。
+  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
+  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
 
 - `--test-threads <TEST_THREADS>`
   - Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=] [default: 32]
@@ -284,16 +289,212 @@ mpm integration-test [OPTIONS] [FILTER]
   - Print additional diagnostics if available
   - 如果功能用，将打印额外的诊断信息。
 
-
-
 ### `mpm sandbox` 详述
 
-DOTO
+这个组合命令用于执行相关的沙箱命令。
+
+**用法：**
+
+```shell
+mpm sandbox [OPTIONS] <SUBCOMMAND>
+```
+
+**选项：**
+- `--abi`
+  - Generate ABIs for packages
+  - 为包生成应用程序二进制接口（ABI），即两个程序模块之间的接口。
+
+- `d, --dev`
+  - Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if this flag is set. This flag is useful for development of packages that expose named addresses that are not set to a specific value
+  - 在 `dev` 模式下编译。如果设置了此标志（选项），则会使用 `dev-addresses` 和 `dev-dependencies` 字段。这个选项对于公开未设置为特定值的命名地址的包的开发非常有用。
+
+- `--doc`
+  - Generate documentation for packages
+  - 为包生成文档。
+
+- `-h, --help`
+  - Print help information
+  - 打印帮助信息。
+
+- `-p, --path <PACKAGE_PATH>`
+  - Path to a package which the command should be run withrespect to [default: .]
+  - 指定命令应该运行的包的路径，默认为当前路径，即 `[default: .]`。
+
+- `--storage-dir <STORAGE_DIR>`
+  - Directory storing Move resources, events, and module bytecodes produced by module publishing and script execution [default: storage]
+  - 指定由模块发布和脚本执行所生成的 Move 资源、事件和模块的字节码，默认目录为 `storage`。
+
+- `--test`
+  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
+  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
+
+- `-v`
+  - Print additional diagnostics if available
+  - 如果功能用，将打印额外的诊断信息。
+
+**子命令：**
+
+```shell
+# 结构描述
+
+- 子命令
+  - 子命令的原文描述
+  - 子命令的通俗解释
+```
+
+- `clean`
+  - Delete all resources, events, and modules stored on disk under `storage-dir`.
+  - 删除存储在磁盘上 `storage-dir` 下的所有资源、事件、模块，不会删除 `src` 中的任何内容。
+- `doctor`
+  - Run well-formedness checks on the `storage-dir` and `install-dir` directories
+  - 对 `storage-dir` 和 `install-dir` 进行格式良好检查。
+
+- `exp-test`
+  - Run expected value tests using the given batch file
+  - 使用给定的批处理文件运行预期值测试。
+
+- `generate`
+  - Generate struct layout bindings for the modules stored on disk under `storage-dir`
+  - 为存储在 `storage-dir` 磁盘上的模块生成结构布局绑定。
+
+- `publish`
+  - Compile the modules in this package and its dependencies and publish the resulting bytecodes in global storage
+  - 编译当前包中的模块及其依赖项，并发布在全局存储中生成的字节码。
+
+- `run`
+  - Run a Move script that reads/writes resources stored on disk in `storage-dir`. The script must be defined in the package
+  - 运行一个 Move 脚本，读取/写入存储在 `storage-dir` 磁盘上的资源。脚本必须定义在包中。
+
+- `view`
+  - View Move resources, events files, and modules stored on disk
+  - 查看存储在磁盘上 Move 的资源、事件文件和模块。
 
 ### `check-compatibility` 详述
 
-TODO
+这个命令是让模块跟远程链（链上）的状态比较，检查模块的兼容性。
+
+**用法：**
+
+```shell
+mpm check-compatibility [OPTIONS]
+```
+
+**选项：**
+
+```shell
+# 结构描述
+
+- 选项
+  - 选项原文描述
+  - 选项通俗解释
+```
+
+- `--abi`
+  - Generate ABIs for packages
+  - 为包生成应用程序二进制接口（ABI），即两个程序模块之间的接口。
+
+- `--block-number <BLOCK_NUMBER>`
+  - block number to read state from. default to latest block number
+  - 指定要读取状态的块号，默认为最新的块号。
+
+- `d, --dev`
+  - Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if this flag is set. This flag is useful for development of packages that expose named addresses that are not set to a specific value
+  - 在 `dev` 模式下编译。如果设置了此标志（选项），则会使用 `dev-addresses` 和 `dev-dependencies` 字段。这个选项对于公开未设置为特定值的命名地址的包的开发非常有用。
+
+- `--doc`
+  - Generate documentation for packages
+  - 为包生成文档。
+
+- `--force`
+  - Force recompilation of all packages
+  - 强制重新编译所有的包。
+
+- `-h, --help`
+  - Print help information
+  - 打印帮助信息。
+
+- `--install-dir <INSTALL_DIR>`
+  - Installation directory for compiled artifacts. Defaults to current directory
+  - 为手动编译的程序指定安装目录，默认为当前目录。
+
+- `-n, --network <NETWORK>`
+  - genesis with the network
+  - 指定网络。
+
+- `-p, --path <PACKAGE_PATH>`
+  - Path to a package which the command should be run withrespect to [default: .]
+  - 指定命令应该运行的包的路径，默认为当前路径，即 `[default: .]`。
+
+- `--rpc <rpc>`
+  - use remote starcoin rpc as initial state
+  - 使用远程（链上）的 Starcoin rpc 作为初始状态。
+
+- `--test`
+  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
+  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
+
+- `-v`
+  - Print additional diagnostics if available
+  - 如果功能用，将打印额外的诊断信息。
 
 ### `experimental` 详述
 
-TODO
+在 Move 的源代码或字节码上运行静态分析，这个功能目前处于实验阶段。
+
+**用法：**
+
+```shell
+mpm experimental [OPTIONS] <SUBCOMMAND>
+```
+
+**选项：**
+
+- `--abi`
+  - Generate ABIs for packages
+  - 为包生成应用程序二进制接口（ABI），即两个程序模块之间的接口。
+
+- `-d, --dev`
+  - Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if this flag is set. This flag is useful for development of packages that expose named addresses that are not set to a specific value
+  - 在 `dev` 模式下编译。如果设置了此标志（选项），则会使用 `dev-addresses` 和 `dev-dependencies` 字段。这个选项对于公开未设置为特定值的命名地址的包的开发非常有用。
+
+- `--doc`
+  - Generate documentation for packages
+  - 为包生成文档。
+
+- `--force`
+  - Force recompilation of all packages
+  - 强制重新编译所有的包。
+
+- `--install-dir <INSTALL_DIR>`
+  - Installation directory for compiled artifacts. Defaults to current directory
+  - 为手动编译的程序指定安装目录，默认为当前目录。
+
+- `-p, --path <PACKAGE_PATH>`
+  - Path to a package which the command should be run withrespect to [default: .]
+  - 指定命令应该运行的包的路径，默认为当前路径，即 `[default: .]`。
+
+- `--storage-dir <STORAGE_DIR>`
+  - Directory storing Move resources, events, and module bytecodes produced by module publishing and script execution [default: storage]
+  - 指定由模块发布和脚本执行所生成的 Move 资源、事件和模块的字节码，默认目录为 `storage`。
+
+- `--test`
+  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
+  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
+
+- `-v`
+  - Print additional diagnostics if available
+  - 如果功能用，将打印额外的诊断信息。
+
+**子命令：**
+
+```shell
+# 结构描述
+
+- 子命令
+  - 子命令的原文描述
+  - 子命令的通俗解释
+```
+
+- `read-write-set`
+  - Perform a read/write set analysis and print the results for `module_file`::`script_name`
+  - 执行读取/写入来设置分析并打印 `module_file`::`script_name` 的结果。

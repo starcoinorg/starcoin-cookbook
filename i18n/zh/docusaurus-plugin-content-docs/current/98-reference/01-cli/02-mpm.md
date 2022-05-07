@@ -203,7 +203,7 @@ mpm release [OPTIONS]
 
 ### `mpm-integration-test` 详述
 
-在测试目录（`integration-test`）运行集成测试。
+在测试目录（`integration-tests`）运行集成测试。
 
 ```shell
 # 用法

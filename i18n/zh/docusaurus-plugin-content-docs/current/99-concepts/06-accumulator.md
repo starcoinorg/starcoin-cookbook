@@ -12,13 +12,13 @@
 
 节点分为三种类型 Leaf，Internal，Empty。
 这里以存储 Block 为例子（存储 Transaction类似）。
-图1显示了偶数个 Block 组成一个 Accumlator 的情况（这里只有 Leaf 和 Internal）
+图1显示了偶数个 Block 组成一个 Accumulator 的情况（这里只有 Leaf 和 Internal）
 ![even_accumulator.png](../../../../../static/img/accumulator/even_accumulator.png)
 
 最下面 Leaf 那层的 Hash0 代表 Block0 的 Hash 值，Hash1 代表 Block1 的值， Hash2，Hash3 类似。
 这里 Internal01 的左子树是 Hash0，右子树是 Hash1。
 Internal 01 的 Hash01 = Hash(Hash0 + Hash1)，+ 代表拼接字符串。
-在 Accumlator 中 Internal 节点的 Hash 值计算方法是左子树 Hash 值和右子树 Hash 值拼接后再 Hash 计算下，Hash 计算的函数是 sha3_256。
+在 Accumulator 中 Internal 节点的 Hash 值计算方法是左子树 Hash 值和右子树 Hash 值拼接后再 Hash 计算下，Hash 计算的函数是 sha3_256。
 这里从 Block0 开始是因为在区块链中有创世块（Genesis Block），最上面的根节点叫做 Root_Hash。
 
 ![odd_accumulator_origin.png](../../../../../static/img/accumulator/odd_accumulator_origin.png)
@@ -49,13 +49,14 @@ pub struct LeafNode {
 这里 index 和 is_frozen 在 Internal 和 Leaf 中都不参与Hash计算， NodeIndex 主要用途是 Accumulator 存储在 KvStore 中计算 Internal 用到，后面会介绍。
 
 ## 节点的Frozen
+
 Merkle Tree 是在内存中的形式, Accumulator 需要把 Merkle Tree 保存在 KvStore 中。
 一种直观的想法就是把把所有的 Leaf 节点保存下来，比如图3中，保存 Hash0，Hash1， Hash2， Hash3， Hash4，还需要保存这些顺序关系。
 第一次用的时候计算就可以构建 Merkle Tree，图3中需要计算6次，
-当 Leaf 数量比较大的时候，比如2^23个 Leaf (大概800万个Block)，需要2^23次 sha3_256 计算，这个复杂度是O(N)。
+当 Leaf 数量比较大的时候，比如`2^23`个 Leaf (大概800万个Block)，需要`2^23`次 sha3_256 计算，这个复杂度是O(N)。
 需要加速下计算的过程，注意到 Accumulator 是只添加 Leaf 不会出现删除和更新Leaf的情况，
 比如在图3中，Hash0，Hash1，Hash2，Hash3 构建成的子 Accumulator 是 Hash(Hash01 + Hash23)， 再添加新的 Leaf，不会修改根节点 Hash(Hash01 + Hash23) 的 Accumulator。
-可以基于这些已经固定的子 Accumulator 进行加速计算。可以发现固定的子 Accumlator 都是满二叉树(Full Binary Tree)。
+可以基于这些已经固定的子 Accumulator 进行加速计算。可以发现固定的子 Accumulator 都是满二叉树(Full Binary Tree)。
 这里引入了 Frozen 的概念。
 PlaceHolder 是not Frozen 的， Leaf 都是 Frozen 的，Internal 的 Frozen 是递归定义，是指左子树和右子树中不含有 PlaceHolder 节点。
 一个 Accumulator 中节点数目指所有 Frozen 的节点,在图1中是7个，图3中是8个。
@@ -81,6 +82,7 @@ pub struct AccumulatorInfo {
 HashValue 使用 sha3_256 计算占8个字节，一个 AccumulatorInfo 占的内存最大是`(1 + 64 + 2) * 8`个字节。
 
 ## Leaf Index 和 Node Index
+
 如图1中，Hash0-Hash3 是 Merkle Tree 的 Leaf 节点，他们分别对应`0-3`的 Leaf 节点(计数从0开始)
 Leaf Index 就是从左开始 Leaf 节点的顺序。Node Index 是中序遍历 Tree 的各个节点的顺序，Hash0-Hash3 对应的 Node Index 是`0,2,4,6`。
 简略图如下
@@ -101,6 +103,7 @@ Node Index 在代码中表示为 NodeIndex 。
 下面介绍下 Accumulator 的一些操作过程
 
 ## Accumulator append 过程
+
 ```rust
 pub fn append(&mut self, new_leaves: &[HashValue]) -> Result<HashValue>
 ```
@@ -120,6 +123,7 @@ Starcoin实现中会将 to_freeze, not_freeze 合并起来，并构建`LruCache<
 `index_cache = [(8, Hash4), (10, Hash5), (9, Hash45), (13, Hash(Internal67)), (11, Hash(Internal4567)), (7, HashInternal(Internal01234567))]`。
 
 ## Accumulator flush 和 Accumulator 在 KvStore 中的存储
+
 ```rust
 pub fn flush(&mut self) -> Result<()> 
 ```
@@ -129,6 +133,7 @@ pub fn flush(&mut self) -> Result<()>
 两个不同状态的 Internal67 到 KvStore。
 
 ## 查询节点
+
 ```rust
 fn get_node_hash_always(&mut self, index: NodeIndex) -> Result<HashValue>
 ```
@@ -141,16 +146,20 @@ Accumulator 在 KvStore 中的存储中提到，Column BLOCK_ACCUMULATOR 保存�
 
 
 ## Accumulator 在 KvStore 中改进想法
+
 这里感觉可以改进为按照`(NodeIndex, HashValue)`方式存储，只存储 Merkle Tree 中 Frozen 的节点， Not Frozen 节点通过获取其左孩子节点值和 PlaceHolder 值拼接计算
 获取。这种设计下，后面 API 接口中批量获取 Leaf 可以使用 KvStore 的 multiple_get 提升读取性能。
 
 ## Accumulator 的幂等性
+
 在 Merkle Tree 中提到记住 Root_Hash 就可以认为是记住了整棵树, 在 Starcoin 中，需要保证 Accumulator 是幂等的。
 比如在图3中，我们已经执行了 Block0-4 的计算，这时候又有逻辑把 Block4 添加进来计算，这时候会不会出现添加 Block5 实际是 Block4 的逻辑，实际上不会，由于 Block 的 BlockHeader 有前一个 Block 的 Hash 值，
 通过前一个 Hash 值就知道整个 Accumulator 的 Leaf 数目为4，对应的子 Accumulator 的 Hash 值是 Hash(Hash01 + Hash23),会和 Hash(Block4) 计算新的Accumulator，这部分需要结合区块执行来理解。
 
 ## Accumulator 中API说明
+
 ### 创建 Accumulator
+
 ```rust
 pub struct MerkleAccumulator {
     tree: Mutex<AccumulatorTree>,
@@ -166,18 +175,21 @@ impl MerkleAccumulator {
 new_with_info 通过 AccumulatorInfo 创建新的 Accumulator
 
 ### 添加新的元素
+
 ```rust
  fn append(&self, leaves: &[HashValue]) -> Result<HashValue>
 ```
 添加新的 LeafNode，这个前面介绍过
 
 ### 保存树到 KvStore
+
 ```rust
  fn flush(&self) -> Result<()>;
 ```
 将 append 产生的新元素存到 KvStore
 
 ### 获取叶子节点
+
 ```rust
 fn get_leaf(&self, leaf_index: u64) -> Result<Option<HashValue>>;
 fn get_leaves(&self, start_index: u64, reverse: bool, max_size: u64) -> Result<Vec<HashValue>>;
@@ -185,18 +197,22 @@ fn get_leaves(&self, start_index: u64, reverse: bool, max_size: u64) -> Result<V
 第一个是获取叶子节点，第二个是批量获取叶子节点
 
 ### 获取proof
+
 ```rust
 fn get_proof(&self, leaf_index: u64) -> Result<Option<AccumulatorProof>> {
 ```
 获取Merkle Proof证明
 
 ## 其他琐碎细节
+
 ### append 过程中的获取 frozen_subtree_roots
+
 ```rust
 FrozenSubTreeIterator::new(self.num_leaves)
 ```
 这里是因为 frozen_subtree 和 num_leaves 二进制里的的1对应， 就是找MSB操作(most significant set bit of a u64), 原理参考 Hackers Delight 的 flp 部分
 ### NodeIndex 相关操作
+
 如果不想研究 NodeIndex 源码，这部分可以不看
 NodeIndex 提供了一些操作
 (1)通过 LeafCount 计算整个树高

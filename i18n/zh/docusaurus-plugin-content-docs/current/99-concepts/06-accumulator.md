@@ -109,6 +109,7 @@ Node Index 在代码中表示为 NodeIndex 。
 pub fn append(&mut self, new_leaves: &[HashValue]) -> Result<HashValue>
 ```
 上面是对应的代码
+
 ![accumulator_store.png](../../../../../static/img/accumulator/accumulator_store.png)
 如图4中，Hash0-Hash3 构建的 Accumulator 的 Root_Hash 为 Hash(Internal0123)， 现在添加 Hash4-Hash6。
 添加 Hash4 LeafNode， Hash4 添加到 to_freeze，`to_freeze = [Hash4]`，Hash4 为左孩子节点，Hash4 添加完成。

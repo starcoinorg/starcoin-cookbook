@@ -5,7 +5,7 @@
 
 ## 用途
 
-这颗树的作用主要是提供 Block，Transaction 的 Merkle Proof，以及通过指序列号获取对应的 Block（Transaction类似）。
+这颗树的作用主要是提供 Block，Transaction 的 Merkle Proof，以及通过指序列号获取对应的 Block（ Transaction 类似）。
 下面介绍下在 Starcoin 中 Accumulator 的一些信息。
 
 ## 节点类型介绍
@@ -23,7 +23,7 @@ Internal 01 的 Hash01 = Hash(Hash0 + Hash1)，+ 代表拼接字符串。
 
 ![odd_accumulator_origin.png](../../../../../static/img/accumulator/odd_accumulator_origin.png)
 图2显示了奇数个 Block 组成一个 Accumulator 的情况，在图1基础上添加了 Block4，由于 Block4 构建 Internal 需要 Empty 节点来配对，这里 Empty 节点就是 PlaceHolder。
-这种情况下要补充多个 PlaceHolder，这里做了些优化，空子树用 PlaceHolder 表示来减少计算， 这里 PlaceHolder 有固定的 Hash 值ACCUMULATOR_PLACEHOLDER_HASH，如图3。
+这种情况下要补充多个 PlaceHolder，这里做了些优化，空子树用 PlaceHolder 表示来减少计算， 这里 PlaceHolder 有固定的 Hash 值 ACCUMULATOR_PLACEHOLDER_HASH，如图3。
 
 ![odd_accumulator.png](../../../../../static/img/accumulator/odd_accumulator.png)
 
@@ -74,7 +74,7 @@ pub struct AccumulatorInfo {
     pub num_nodes: u64,
 }
 ```
-在图1中 frozen_subtree_roots 元素只有一个就是 Root_Hash(accumulator_root)。
+在图1中 frozen_subtree_roots 元素只有一个就是 Root_Hash ( accumulator_root )。
 图3中有2个都标出来了,他们和 Root_Hash 不同。
 这里 frozen_subtree_roots 最多只有64个。
 原因如下，假设有n个节点，假设 `2^k <= n < 2^(k + 1)`， 第一个 frozen_subtree 用的节点数是`2^k`，第二个的 frozen_subtree 用的节点数是 `2^k1`，
@@ -97,7 +97,7 @@ Leaf Index 就是从左开始 Leaf 节点的顺序。Node Index 是中序遍历 
 0   1  2   3 <[Leaf Index]
 ```
 Node Index 在代码中表示为 NodeIndex 。
-这里使用中序遍历的原因可能是 Accumulator 需要将 Merkle Tree 保存到 KvStore 中，由于保存的都是 HashValue ,需要知道 HashValue 在 Merkle Tree 中的位置
+这里使用中序遍历的原因可能是 Accumulator 需要将 Merkle Tree 保存到 KvStore 中，由于保存的都是 HashValue，需要知道 HashValue 在 Merkle Tree 中的位置
 图3在图1基础上添加一个 Hash4 的节点，中序遍历情况下各个节点的 NodeIndex 值是不变的。
 
 下面介绍下 Accumulator 的一些操作过程
@@ -115,7 +115,7 @@ pub fn append(&mut self, new_leaves: &[HashValue]) -> Result<HashValue>
 并且添加到 to_freeze， `to_freeze = [Hash4, Hash5, Internal45]`， 这里产生了一个查询 sibling 操作，后面会介绍， Hash5 添加完成。
 添加 Hash6 LeafNode， Hash6 添加到 to_freeze，`to_freeze = [Hash4, Hash5, Internal45, Hash6]`, Hash6 为一个左孩子节点，Hash6 添加完成。
 需要计算下生成的新 Root_Hash 值，Hash6 和 PlaceHolder 生成 Not Frozen Node Internal67， 添加到 not_freeze， `not_freeze = [Internal67]`，
-Internal67 和其 sibling 节点 Internal45 生成 Not Frozen Node Internal4567 添加到not_freeze，`not_freeze = [Internal67, Internal4567]`， 这里会有个查询节点操作，
+Internal67 和其 sibling 节点 Internal45 生成 Not Frozen Node Internal4567 添加到 not_freeze，`not_freeze = [Internal67, Internal4567]`， 这里会有个查询节点操作，
 Internal4567 和其 sibling 节点 Internal0123 生成一个 Not Frozen Node Internal01234567，
 添加到not_freeze， `not_freeze = [Internal67, Internal4567, Internal01234567]`， `Hash(Internal01234567)`是新的 Root_Hash。
 Starcoin实现中会将 to_freeze, not_freeze 合并起来，并构建`LruCache<NodeIndex, HashValue>`， 这个称为 index_cache , 查询中会用到
@@ -129,7 +129,7 @@ pub fn flush(&mut self) -> Result<()>
 ```
 将 append 过程中产生的 to_freeze 和 not_free 合并后按照`(Hash(Node), encode(Node))` Key Value 键值对形式存储在 KvStore 中。
 在图4中使用的是 Column BLOCK_ACCUMULATOR，实际还有 Transaction 对应的 Column TRANSACTION_ACCUMULATOR，图中只画了部分 Leaf，Internal。
-注意到 Internal 分为 Frozen 和 Not Frozen， 图4中 Internal 67这个 Internal 节点是Not Frozen 的，如果再添加一个新的 Leaf Hash7会变成 Frozen， 这样会保存
+注意到 Internal 分为 Frozen 和 Not Frozen， 图4中 Internal 67这个 Internal 节点是 Not Frozen 的，如果再添加一个新的 Leaf Hash7会变成 Frozen， 这样会保存
 两个不同状态的 Internal67 到 KvStore。
 
 ## 查询节点
@@ -153,8 +153,8 @@ Accumulator 在 KvStore 中的存储中提到，Column BLOCK_ACCUMULATOR 保存�
 ## Accumulator 的幂等性
 
 在 Merkle Tree 中提到记住 Root_Hash 就可以认为是记住了整棵树, 在 Starcoin 中，需要保证 Accumulator 是幂等的。
-比如在图3中，我们已经执行了 Block0-4 的计算，这时候又有逻辑把 Block4 添加进来计算，这时候会不会出现添加 Block5 实际是 Block4 的逻辑，实际上不会，由于 Block 的 BlockHeader 有前一个 Block 的 Hash 值，
-通过前一个 Hash 值就知道整个 Accumulator 的 Leaf 数目为4，对应的子 Accumulator 的 Hash 值是 Hash(Hash01 + Hash23),会和 Hash(Block4) 计算新的Accumulator，这部分需要结合区块执行来理解。
+比如在图3中，我们已经执行了 Block0-4 的计算，这时候又有逻辑把 Block4 添加进来计算，这时候会不会出现添加 Block5 实际是 Block4 的逻辑，实际上不会，由于 Block 的 BlockHeader 存储了前一个 Block 的 Hash 值，
+通过前一个 Hash 值就知道整个 Accumulator 的 Leaf 数目为4，对应的子 Accumulator 的 Hash 值是 Hash(Hash01 + Hash23),会和 Hash(Block4) 计算新的 Accumulator，这部分需要结合区块执行来理解。
 
 ## Accumulator 中API说明
 

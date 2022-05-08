@@ -1,6 +1,6 @@
 # Sparse Merkle Tree
 
-要了解为什么用Sparse Merkle Tree(下面简称SMT)，先需要了解下[Merkle Tree](00-merkletree.md)
+要了解为什么用Sparse Merkle Tree (下面简称 SMT )，先需要了解下 [Merkle Tree](00-merkletree.md)
 
 ## SMT
 
@@ -13,10 +13,10 @@ State 包括合约代码( CODE )和资源( RESOURCE )，余额相关信息都在
 查询账户余额就在 HashMap 中使用 Key 来查询，
 不考虑 Hash 碰撞，查询基本是常数时间完成(O(1))，更新也是，
 这种设计最大问题是不能提供 Merkle Proof， 比如证明某个时间点这个账户余额大于多少( StateProof )。
-一种想法是基于当时的 HashMap构建 Merkle Tree，
+一种想法是基于当时的 HashMap 构建 Merkle Tree，
 基于这种想法，每次有新的区块发布的需要基于 HashMap 构建新的 Merkle Tree，
-并将 Merkle Tree对应的 Root_Hash 发布到 BlockHeader 中，
-这个方案是有问题的，HashMap 效率很高，但是每次构建 Merkle Tree效率很低。
+并将 Merkle Tree 对应的 Root_Hash 发布到 BlockHeader 中，
+这个方案是有问题的，HashMap 效率很高，但是每次构建 Merkle Tree 效率很低。
 还有一种想法是我们不用 HashMap，直接构建 Merkle Tree 把所有账户的状态都存下来，
 这个方法的问题在于 Merkle Tree 没有提供高效查找和修改的方法。
 这里使用了一种基于压缩 Trie 数据结构 Jellyfish-Merkle-Tree (JMT)
@@ -44,8 +44,8 @@ D 的2进制路径为11101100，压缩后为0xDC，
 这里每4个 bit 压缩叫做一个 Nibble，
 Merkle Tree 可以认为是基数等于2的基数树，图中右边可以认为是基数等于16的基数树，
 SMT 就是基于基数16的基数树(这里简称为 Radix16)，这个设计的优点就是降低树的高度，减少内存访问次数，降低内存，
-这种 Radix Tree 目前有些优化手段比如 ADAPTIVE RADIX TREE(Starcoin中固定为node16)， 论文(https://db.in.tum.de/~leis/papers/ART.pdf) 有更多内容，
-还有其他一些 Radix Tree 优化思路，比如以太坊使用的是改进版本的 Patricia Radix Tree(https://eth.wiki/fundamentals/patricia-tree)，
+这种 Radix Tree 目前有些优化手段比如 ADAPTIVE RADIX TREE (Starcoin中固定为 node16)， 论文(https://db.in.tum.de/~leis/papers/ART.pdf) 有更多内容，
+还有其他一些 Radix Tree 优化思路，比如以太坊使用的是改进版本的 Patricia Radix Tree (https://eth.wiki/fundamentals/patricia-tree)，
 还有 HAT RADIX TREE， 这些这里不介绍
 
 ### SMT 数据结构和操作
@@ -53,7 +53,7 @@ SMT 就是基于基数16的基数树(这里简称为 Radix16)，这个设计的�
 上面提到SMT实际上是一个Radix16 Trie， 在 Starcoin 中每个 SMT 中 Key 的长度是256 bit，这里基于4个 bit (一个 Nibble )做了压缩,对于任意一个输入，我们计算sha3_256后进行处理，
 这样整个树的高度就变为64。
 SMT 的节点类型分为 Null， InternalNode， LeafNode，
-Null 就是前面提到的PlaceHolder(方格)， InternalNode 最多有16个子节点( InternalNode 对应一个 HashMap， 子节点索引为为0-16，子节点类型是 InternalNode 或者 LeafNode )， LeafNode 存储的是实际的 Key， Value 的键值对。
+Null 就是前面提到的 PlaceHolder(方格)， InternalNode 最多有16个子节点( InternalNode 对应一个 HashMap， 子节点索引为为0-16，子节点类型是 InternalNode 或者 LeafNode )， LeafNode 存储的是实际的 Key， Value 的键值对。
 区块链中需要保存历史状态，这里如何查询某个 Key 的历史状态，之前提到 Merkle Tree 里保存 Root_Hash 就认为是保存了整棵树，
 需要提供树的根节点值( Root_Hash )和查询的 Key ，这个根节点就是在 Starcoin 中 BlockHeader 中的 state_root ， 这也是后续讲到 StateTree 的构建需要用到 state_root。
 Starcoin 中 SMT 需要持久化到 KvStore ， 这里用的是 RocksDB (测试中 MockTreeStore 使用的是 HashMap + BTreeSet)，
@@ -139,7 +139,7 @@ Hash 值和 LeafNode 序列化后插入到 KvStore 中。图中说明了这点
 公共前缀0x12， 0x1也需要生成 InternalNode。这里先构造0x12的 InternalNode 记为 Children2， `Children2[3] = Hash(Children1)`，
 然后构造0x1的 InternalNode 记为 Children3， `Children3[2]= Hash(Children2)`。
 LeafNode2，Children1，Children2， Children3 按照 Hash 和序列化后的键值对写入到 KvStore，
-新生成的根节点是 Hash(Children3)
+新生成的根节点是 Hash(Children3)。
 
 ![two_leaf_insert](../../../../../static/img/smt/two_leaf_insert.png)
 
@@ -185,7 +185,7 @@ pub fn new(TreeReader: &'a) -> Self {
 这里 TreeReader 是一个 trait (可以认为是类似 Java 中 inteface )， 在 Starcoin 中是提供 Key Value 操作的数据结构，
 在 Starcoin 中对应的 KvStore 是 RocksDB， MockTreeStore 中使是 HashMap + BTeeSet，
 有 TreeReader 就有 TreeWriter，这里 TreeReader 对应的是 SMT 的查找和在内存中的计算， TreeWriter 对应的是持久化到 KvStore 操作，
-Starcoin 持久层并没有实现 TreeWriter trait，现在直接写 KvStore(这部分需要结合 StateDB 的 flush 来理解)， Mock 操作的 MockTreeStore 使用了 TreeWriter。
+Starcoin 持久层并没有实现 TreeWriter trait，现在直接写 KvStore(这部分需要结合 代码中StateDB 的 flush 来理解)， Mock 操作的 MockTreeStore 使用了 TreeWriter。
 可以简单认为 SMT 是内存中一颗 Trie 树，持久化在 RocksDB 上。
 
 ### updates
@@ -216,7 +216,7 @@ blob_set 是 Key，Value 列表，
 返回值`Result<(HashValue, TreeUpdateBatch<KEY>)>` HashValue 代表新的 SMT 的 Hash 值， 这个新的 HashValue 存储在 BlockHeader 中的 state_root，
 返回值中 TreeUpdateBatch 里面的 node_batch， 这里比如我们 blob_set 是`[(Key1, Value1), (Key2, Value2]`，
 SMT 会产生 LeafNode 和 InternalNode，会把这些按照Hash值和自身存到 BTreeMap 中，
-StaleNodeIndex 中 stale_since_version 是这次新产生的根节点 Hash， node_key 是被修改过的 Node的Hash。
+StaleNodeIndex 中 stale_since_version 是这次新产生的根节点 Hash， node_key 是被修改过的 Node 的 Hash。
 
 ### get_proof_with
 

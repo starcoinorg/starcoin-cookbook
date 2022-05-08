@@ -23,6 +23,7 @@ Internal 01 的 Hash01 = Hash(Hash0 + Hash1)，+ 代表拼接字符串。
 这里从 Block0 开始是因为在区块链中有创世块（Genesis Block），最上面的根节点叫做 Root_Hash。
 
 ![odd_accumulator_origin.png](../../../../../static/img/accumulator/odd_accumulator_origin.png)
+
 图2显示了奇数个 Block 组成一个 Accumulator 的情况，在图1基础上添加了 Block4，由于 Block4 构建 Internal 需要 Empty 节点来配对，这里 Empty 节点就是 PlaceHolder。
 这种情况下要补充多个 PlaceHolder，这里做了些优化，空子树用 PlaceHolder 表示来减少计算， 这里 PlaceHolder 有固定的 Hash 值 ACCUMULATOR_PLACEHOLDER_HASH，如图3。
 
@@ -111,6 +112,7 @@ pub fn append(&mut self, new_leaves: &[HashValue]) -> Result<HashValue>
 上面是对应的代码
 
 ![accumulator_store.png](../../../../../static/img/accumulator/accumulator_store.png)
+
 如图4中，Hash0-Hash3 构建的 Accumulator 的 Root_Hash 为 Hash(Internal0123)， 现在添加 Hash4-Hash6。
 添加 Hash4 LeafNode， Hash4 添加到 to_freeze，`to_freeze = [Hash4]`，Hash4 为左孩子节点，Hash4 添加完成。
 添加 Hash5 LeafNode， Hash5 添加到 to_freeze， `to_freeze = [Hash4, Hash5]`, Hash5 为右孩子节点，需要和其兄弟节点( sibling )生成一个 Frozen 的 Internal 45,
@@ -144,8 +146,8 @@ Accumulator 在 KvStore 中的存储中提到，Column BLOCK_ACCUMULATOR 保存�
 只能从其父类节点一层层查找，比如查询 NodeIndex x0 (假设为2)的 HashValue，查 NodeIndex x1 (假设为1)的父节点，如果 index_cache 中有，通过其 HashValue 从 KvStore 中获取这个 Node，如果
  index_cache 中没有，找其父节点的父节点，最终肯定能找到(最差的情况是找到 Root_Hash ), 这个节点记为 Cur_Node , 然后再从 Cur_Node 层次遍历找到子孙节点中 NodeIndex 等于 x0 的节点。
 流程图见图5
-![query_index.png](../../../../../static/img/accumulator/query_index.png)
 
+![query_index.png](../../../../../static/img/accumulator/query_index.png)
 
 ## Accumulator 在 KvStore 中改进想法
 

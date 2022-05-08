@@ -13,6 +13,7 @@
 节点分为三种类型 Leaf，Internal，Empty。
 这里以存储 Block 为例子（存储 Transaction类似）。
 图1显示了偶数个 Block 组成一个 Accumulator 的情况（这里只有 Leaf 和 Internal）
+
 ![even_accumulator.png](../../../../../static/img/accumulator/even_accumulator.png)
 
 最下面 Leaf 那层的 Hash0 代表 Block0 的 Hash 值，Hash1 代表 Block1 的值， Hash2，Hash3 类似。

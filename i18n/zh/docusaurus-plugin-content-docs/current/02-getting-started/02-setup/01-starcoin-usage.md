@@ -54,7 +54,6 @@ $ starcoin --c ws://main.seed.starcoin.org:9870 chain info
 ```
 
 
-
 ## 控制台的使用
 
 `starcoin` 有一个特殊的子命令 `console`, 执行这个命令后，会进入一个交互式的控制台。
@@ -143,7 +142,7 @@ starcoin% chain info
 }
 ```
 
-像上面这样进入控制台，如果发现当前尚未启动 starcoin 节点，会在后台启动了一个 `starcoin` 的节点，控制台和它在进程内通信。这样的节点声明周期和控制台的声明周期绑定，从控制台退出后，节点也会自动退出。
+像上面这样进入控制台，如果发现当前尚未启动 starcoin 节点，会在后台启动了一个 `starcoin` 的节点，控制台和它在进程内通信。这样的节点生命周期和控制台的生命周期绑定，从控制台退出后，节点也会自动退出。
 
 当然也可以通过 IPC 或者 WebSocket RPC 的方式连接，然后进入控制台。
 
@@ -397,11 +396,11 @@ starcoin -c ws://main.seed.starcoin.org:9870 chain info|jq '.ok.head.number'
 ### 子命令
 
 * account
-*  state
+* state
 * node
 * chain
-*  txpool
-*  dev
+* txpool
+* dev
 * contract
 * console
 

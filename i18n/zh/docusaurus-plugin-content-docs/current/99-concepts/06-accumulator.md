@@ -112,15 +112,22 @@ pub fn append(&mut self, new_leaves: &[HashValue]) -> Result<HashValue>
 上面是对应的代码
 
 ![accumulator_store.png](../../../../../static/img/accumulator/accumulator_store.png)
+流程分为节点的添加和根节点的计算
+
+### 新节点添加
 
 如图4中，Hash0-Hash3 构建的 Accumulator 的 Root_Hash 为 Hash(Internal0123)， 现在添加 Hash4-Hash6。
 添加 Hash4 LeafNode， Hash4 添加到 to_freeze，`to_freeze = [Hash4]`，Hash4 为左孩子节点，Hash4 添加完成。
 添加 Hash5 LeafNode， Hash5 添加到 to_freeze， `to_freeze = [Hash4, Hash5]`, Hash5 为右孩子节点，需要和其兄弟节点( sibling )生成一个 Frozen 的 Internal 45,
 并且添加到 to_freeze， `to_freeze = [Hash4, Hash5, Internal45]`， 这里产生了一个查询 sibling 操作，后面会介绍， Hash5 添加完成。
 添加 Hash6 LeafNode， Hash6 添加到 to_freeze，`to_freeze = [Hash4, Hash5, Internal45, Hash6]`, Hash6 为一个左孩子节点，Hash6 添加完成。
+
+### 根节点的计算
+
+根节点的计算会需要用到`NodeIndex, HashValue`的映射，就是下面提到 index_cache。
 需要计算下生成的新 Root_Hash 值，Hash6 和 PlaceHolder 生成 Not Frozen Node Internal67， 添加到 not_freeze， `not_freeze = [Internal67]`，
-Internal67 和其 sibling 节点 Internal45 生成 Not Frozen Node Internal4567 添加到 not_freeze，`not_freeze = [Internal67, Internal4567]`， 这里会有个查询节点操作，
-Internal4567 和其 sibling 节点 Internal0123 生成一个 Not Frozen Node Internal01234567，
+Internal67 和其 sibling 节点 Internal45 (这里会产生查询操作) 生成 Not Frozen Node Internal4567  添加到 not_freeze，`not_freeze = [Internal67, Internal4567]`， 这里会有个查询节点操作，
+Internal4567 和其 sibling 节点 Internal0123 (这里会产生查询操作) 生成一个 Not Frozen Node Internal01234567，
 添加到not_freeze， `not_freeze = [Internal67, Internal4567, Internal01234567]`， `Hash(Internal01234567)`是新的 Root_Hash。
 Starcoin实现中会将 to_freeze, not_freeze 合并起来，并构建`LruCache<NodeIndex, HashValue>`， 这个称为 index_cache , 查询中会用到
 图4中 NodeIndex 用蓝色表示。
@@ -136,7 +143,7 @@ pub fn flush(&mut self) -> Result<()>
 注意到 Internal 分为 Frozen 和 Not Frozen， 图4中 Internal 67这个 Internal 节点是 Not Frozen 的，如果再添加一个新的 Leaf Hash7会变成 Frozen， 这样会保存
 两个不同状态的 Internal67 到 KvStore。
 
-## 查询节点
+## 查询操作
 
 ```rust
 fn get_node_hash_always(&mut self, index: NodeIndex) -> Result<HashValue>
@@ -148,11 +155,6 @@ Accumulator 在 KvStore 中的存储中提到，Column BLOCK_ACCUMULATOR 保存�
 流程图见图5
 
 ![query_index.png](../../../../../static/img/accumulator/query_index.png)
-
-## Accumulator 在 KvStore 中改进想法
-
-这里感觉可以改进为按照`(NodeIndex, HashValue)`方式存储，只存储 Merkle Tree 中 Frozen 的节点， Frozen 的节点 直接通过 KvStore 获取，Not Frozen 节点通过获取其左孩子节点值和右节点值拼接计算
-获取。这种设计下，后面 API 接口中批量获取 Leaf 可以使用 KvStore 的 multiple_get 提升读取性能。
 
 ## Accumulator 的幂等性
 

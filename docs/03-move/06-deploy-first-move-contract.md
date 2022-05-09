@@ -2,7 +2,7 @@
 
 This article guides you on how to compile and deploy a Move contract to the starcoin blockchain.
 
-Move is a new programming language developed to provide a safe and programmable foundation for the Diem Blockchain. Starcoin Blockchain also support Move language to write smart contract.
+Move is a new programming language developed to provide a safe and programmable foundation for the [Diem](https://github.com/deim/diem) Blockchain. Starcoin Blockchain also support Move language to write smart contract.
 
 In this article, you will learn:  
 
@@ -10,7 +10,7 @@ In this article, you will learn:
 - How to package(or compile) a Move module.
 - How to deploy the compiled binary to the starcoin blockchain.
 
-First start a dev network as described in [How to set up a local dev network](../02-getting-started/02-setup/03-dev-network.md), get some coins, and unlock your account. Here assume your account address is 0xb19b07b76f00a8df445368a91c0547cc .
+First start a dev network as described in [How to set up a local dev network](../02-getting-started/02-setup/03-dev-network.md), get some dev net test coin, and unlock your account. Here assume your account address is 0xb19b07b76f00a8df445368a91c0547cc .
 
 ```bash
 starcoin% dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
@@ -78,7 +78,7 @@ Release done: release/my_counter.v0.0.1.blob, package hash: 0xa7e3c02c102c85708c
 
 It will compile the module, you will get the binary package at `release/my_counter.v0.0.1.blob`.
 
-4. deploy to blockchain
+4. Deploy to blockchain
 
 ```bash
 starcoin% dev deploy /your/dev/path/my-counter/release/my_counter.v0.0.1.blob -s 0xb19b07b76f00a8df445368a91c0547cc -b
@@ -109,12 +109,3 @@ txn 0xeb055894f0c4440608246825c238a36683a8a0ad57144e905a12398a02ce806b submitted
   ....
 }
 ```
-
-:::note
-
-More docs: 
-
-* https://starcoin.org/en/developer/tutorials/deploy_move_contract/
-* https://starcoin.org/zh/developer/tutorials/deploy_move_contract/
-
-:::

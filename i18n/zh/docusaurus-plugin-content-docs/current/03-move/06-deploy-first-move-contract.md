@@ -1,25 +1,25 @@
-# Deploy your first Move contract
+# 部署你的第一个智能合约
 
-This article guides you on how to compile and deploy a Move contract to the starcoin blockchain.
+这篇文章指导你如何编译和部署 Move 合约到 starcoin 区块链。
 
-Move is a new programming language developed to provide a safe and programmable foundation for the Diem Blockchain. Starcoin Blockchain also support Move language to write smart contract.
+Move 是一种新的编程语言，旨在为 [Diem 区块链](https://github.com/deim/diem) 提供安全和可编程的基础。 Starcoin Blockchain 还支持 Move 语言编写智能合约。
 
-In this article, you will learn:  
+通过这篇文章，你将学习到：
 
-- How to setup Move develop folder and config.
-- How to package(or compile) a Move module.
-- How to deploy the compiled binary to the starcoin blockchain.
+- 如何为 Move 开发设置工作目录和配置文件；
+- 如何打包（编译）一个 Move 模块；
+- 如何将编译好的二进制文件部署到 starcoin 区块链上。
 
-First start a dev network as described in [How to set up a local dev network](../02-getting-started/02-setup/03-dev-network.md), get some coins, and unlock your account. Here assume your account address is 0xb19b07b76f00a8df445368a91c0547cc .
+首先，根据[如何设置本地开发网络](../02-getting-started/02-setup/03-dev-network.md)的描述启动一个 dev 网络，然后获取一些 dev 网络的测试代币，并解锁账户。这里假设账户地址是 0xb19b07b76f00a8df445368a91c0547cc 。
 
 ```bash
 starcoin% dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
 starcoin% account unlock 0xb19b07b76f00a8df445368a91c0547cc -p my-pass
 ```
 
-Then, let's get started!
+好了，现在我们开始吧！
 
-1. Assume you are working under folder `/your/dev/path/my-counter/`, setup your develop folder with the tree below. 
+1. 假设工作目录为 `/your/dev/path/my-counter/` ，该目录下的结构为：
 
 ```
 .
@@ -28,9 +28,9 @@ Then, let's get started!
     └── MyCounter.move
 ```
 
-The file `Move.toml` and folder `sources` are required by the mpm package tool, which should not be modified. All the Move modules are putting under `sources/` folder. Here say a simple module: MyCounter.
+`Move.toml` 文件和 `sources` 目录是 mpm 打包工具所要求的，不可更改，所有的 Move 模块都放在 `sources/` 目录下。这里我们实现了一个简单的模块：MyCounter。
 
-2. Code your Move module. The source file is at [my-counter](https://github.com/starcoinorg/starcoin-cookbook/blob/main/examples/my-counter/sources/MyCounter.move).
+2. 完成 Move 模块的编码，该代码源文件位于 [my-counter](https://github.com/starcoinorg/starcoin-cookbook/blob/main/examples/my-counter/sources/MyCounter.move) 。
 
 ```
 module MyCounter::MyCounter {
@@ -57,16 +57,16 @@ module MyCounter::MyCounter {
 }
 ```
 
-3. Compile the module.  
+3. 编译模块。
 
-Change the address of the module:
+修改模块的地址：
 
-- edit [Move.toml](https://github.com/starcoinorg/starcoin-cookbook/blob/main/examples/my-counter/Move.toml)
+- 编辑 [Move.toml](https://github.com/starcoinorg/starcoin-cookbook/blob/main/examples/my-counter/Move.toml)
 - MyCounter = “0xABCDE” to MyCounter = “0xb19b07b76f00a8df445368a91c0547cc”
 
-> A Move module should be declared with `module <Account>::<ModuleName> {`, and you must assign the variable `Account` you account address in the `Move.toml` file. In this example, it's the first `MyCounter` in the first line.
+> Move 模块的声明以 `module <Account>::<ModuleName> {` 开头，并且需要在 `Move.toml` 文件中将变量 Account 的值设置为你的账户地址。在本文示例中，代码第一行中第一个 MyCounter 就是需要设置的变量。
 
-Then, in console, run:
+然后，在命令行中运行：
 
 ```bash
 $ mpm release
@@ -76,9 +76,9 @@ Packaging Modules:
 Release done: release/my_counter.v0.0.1.blob, package hash: 0xa7e3c02c102c85708c6fa8c9f84064d09cf530b9581278aa92568d67131c3b6d
 ```
 
-It will compile the module, you will get the binary package at `release/my_counter.v0.0.1.blob`.
+该命令将编译模块，并生成一个二进制包 `release/my_counter.v0.0.1.blob`。
 
-4. deploy to blockchain
+4. 部署到区块链
 
 ```bash
 starcoin% dev deploy /your/dev/path/my-counter/release/my_counter.v0.0.1.blob -s 0xb19b07b76f00a8df445368a91c0547cc -b
@@ -109,12 +109,3 @@ txn 0xeb055894f0c4440608246825c238a36683a8a0ad57144e905a12398a02ce806b submitted
   ....
 }
 ```
-
-:::note
-
-More docs: 
-
-* https://starcoin.org/en/developer/tutorials/deploy_move_contract/
-* https://starcoin.org/zh/developer/tutorials/deploy_move_contract/
-
-:::

@@ -6,7 +6,7 @@
 
 ## 使用方法
 
-`starcoin` [FLAGS] [OPTIONS] [SUBCOMMAND]
+`starcoin` [OPTIONS] [SUBCOMMAND]
 
 在操作系统命令行终端中直接运行 `starcoin` 命令会在前台启动一个节点并尝试加入主网。
 

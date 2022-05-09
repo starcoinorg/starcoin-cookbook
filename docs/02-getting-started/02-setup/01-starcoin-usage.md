@@ -6,7 +6,7 @@
 
 ## Usage
 
-`starcoin` [FLAGS] [OPTIONS] [SUBCOMMAND]
+`starcoin` [OPTIONS] [SUBCOMMAND]
 
 FLAGS:
 - --disable-file-log Disable std error log output

@@ -151,7 +151,7 @@ Accumulator 在 KvStore 中的存储中提到，Column BLOCK_ACCUMULATOR 保存�
 
 ## Accumulator 在 KvStore 中改进想法
 
-这里感觉可以改进为按照`(NodeIndex, HashValue)`方式存储，只存储 Merkle Tree 中 Frozen 的节点， Not Frozen 节点通过获取其左孩子节点值和 PlaceHolder 值拼接计算
+这里感觉可以改进为按照`(NodeIndex, HashValue)`方式存储，只存储 Merkle Tree 中 Frozen 的节点， Frozen 的节点 直接通过 KvStore 获取，Not Frozen 节点通过获取其左孩子节点值和右节点值拼接计算
 获取。这种设计下，后面 API 接口中批量获取 Leaf 可以使用 KvStore 的 multiple_get 提升读取性能。
 
 ## Accumulator 的幂等性

@@ -6,14 +6,14 @@
 
 ## Usage
 
-`starcoin` [OPTIONS] [SUBCOMMAND]
+```
+Starcoin
 
-FLAGS:
-- --disable-file-log Disable std error log output
-- --disable-seed Disable seed for seed node
+USAGE:
+    starcoin [OPTIONS] [SUBCOMMAND]
+```
 
-
-Run `starcon` to set up a node and join the main network.
+Run `starcoin` to set up a node and join the main network.
 
 ```bash
 $ starcoin
@@ -34,7 +34,7 @@ $ starcoin -n dev
 Waiting SIGINT or SIGTERM ...
 ```
 
-The local dev mode will use a temporary directory by default, all the data will be reset each time restart the network. After dev network is started,we can connect to the node through IPC (inter-process communication) file to execute commands, such as:
+The local dev mode will use a temporary directory by default, all the data will be reset each time restart the network. Once the dev network is started, we can connect to the node through IPC (inter-process communication) file to execute commands, such as:
 
 ```bash
 $ starcoin -c /var/folders/_4/1ghtd3z15qjcw8yj905dcql40000gn/T/.tmph3EJ8S/dev/starcoin.ipc chain info
@@ -46,7 +46,7 @@ $ starcoin -c /var/folders/_4/1ghtd3z15qjcw8yj905dcql40000gn/T/.tmph3EJ8S/dev/st
 $ starcoin.exe --connect \\.\pipe\dev\starcoin.ipc console
 ```
 
-Connect through WebSocket the RPC interface:
+Connect through the WebSocket RPC interface:
 
 ```bash
 $ starcoin -c ws://127.0.0.1:9870 chain info
@@ -55,13 +55,13 @@ $ starcoin -c ws://127.0.0.1:9870 chain info
 Or connect to a remote seed node through the RPC interface:
 
 ```
-$ starcoin --c ws://main.seed.starcoin.org:9870 chain info
+$ starcoin -c ws://main.seed.starcoin.org:9870 chain info
 ```
 
 
-## 控制台的使用
+## Start CLI console
 
-`starcoin` has a special sub command `console`, through wich you can get into an interactive console.
+Get into an interactive console by running the subcommand `console`.
 
 ```bash
 $ starcoin -n dev console
@@ -147,7 +147,7 @@ starcoin% chain info
 }
 ```
 
-Getting into the console in this way, a `starcoin` node will be set up if there's no other node exists. The console communicates with the node through IPC(inter-process communication).  In this way, the node lifecycle is bound to the console's, and the node will exit automatically when the console exit.
+Getting into the console in this way, a `starcoin` node will be set up if there's no other node exists. The console communicates with the node through IPC(inter-process communication).  In this way, the node's lifecycle is bound to the console's, and the node will exit automatically when the console exit.
 
 Connect to a node through IPC or WebSocket RPC:
 
@@ -157,8 +157,7 @@ $ starcoin -c ~/.starcoin/main/starcoin.ipc console
 $ starcoin -c ws://main.seed.starcoin.org:9870 console
 ```
 
-但如果是通过远程方式连接的 RPC 接口，默认情况下，账号相关的接口不对远程开放，所以账号相关的命令（account）也无法使用。这种情况下，可以通过本地的账号数据库和远程接口接合的方式来使用控制台。例如：
-If connected to a remote seed node through RPC, the methods related to the account is not availabel. You cat set the `--local-account-dir` option and import an account to use the account sub-command.
+If connected to a remote seed node through RPC, the methods related to the account is not availabel. You cat set the `--local-account-dir` option and import an account to use the account methods.
 
 ```bash
 $ starcoin --connect ws://main.seed.starcoin.org:9870 --local-account-dir ~/.starcoin/main/account_vaults console
@@ -169,10 +168,10 @@ starcoin% account import -i <private-key> -p <your-password>
 
 ### How to use CLI with pipeline?
 
-`starcoin` output log to stderr and result to stdout, so you can use the pipeline as other Linux shell command. For example, you can use `jq` to get the latest block number.
+`starcoin` output log to stderr and result to stdout, so you can use the pipeline as other Linux shell commands. For example, you can use `jq` to get the latest block number.
 
 ```bash
-starcoin -c ws://main.seed.starcoin.org:9870 chain info|jq '.ok.head.number'
+starcoin -c ws://main.seed.starcoin.org:9870 chain info | jq '.ok.head.number'
 ```
 
 

@@ -283,7 +283,6 @@ Test result: OK. Total tests: 3; passed: 3; failed: 0
 ```
 
 #### `-g` or `--state-on-error`
-These flags will print the global state for any test failures. e.g., if we added the following (failing) test to the `MyModule` example:
 
 这个参数将打印任何测试失败的全局状态。
 

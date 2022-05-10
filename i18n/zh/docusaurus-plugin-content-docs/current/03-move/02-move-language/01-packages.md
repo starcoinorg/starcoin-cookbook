@@ -213,14 +213,6 @@ NamedAddr = "_"
 NamedAddr = "0xC0FFEE"
 ```
 
-## Usage, Artifacts, and Data Structures
-
-The Move package system comes with a command line option as part of the Move
-CLI `move package <package_flags> <command> <command_flags>`. Unless a
-particular path is provided, all package commands will run in the current working
-directory. The full list of commands and flags for the Move Package CLI can be found by
-running `move package --help`.
-
 ## 用法，工件和数据结构
 
 Move 包系统带有命令行选项，作为 Move 客户端的一部分：`move package <package_flags> <command> <command_flags>`。

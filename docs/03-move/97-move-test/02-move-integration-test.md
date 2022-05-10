@@ -17,64 +17,76 @@ All actions are wrapped into transactions.
 
 All integration test files should be in `integration-tests` dir under the package root path.
 
-integration test file contains test directives seperated by empty newlines.
 
-directives works like a command line, you provide command name and command arguments,
+Integration testing for Move adds new annotations to the Move source files. These annotations start with `//#`, and are separated by an empty line. 
+
+Directives works like a command line, you provide command name and command arguments,
 and move pacakge manager executes the directives like OS executes cli commands.
 
-
 ```
+$ mpm integration-test --help
 mpm-integration-test
-Datatest-harness for running data-driven tests
+Run integration tests in tests dir
 
 USAGE:
-    mpm integration-test [FLAGS] [OPTIONS] [--] [filter]
-
-FLAGS:
-        --bench                   NO-OP: unsupported option, exists for compatibility with the default test harness
-    -d, --dev                     Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used
-                                  if this flag is set. This flag is useful for development of packages that expose named
-                                  addresses that are not set to a specific value
-        --ensure-time             NO-OP: unsupported option, exists for compatibility with the default test harness
-        --exclude-should-panic    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --exact                   Exactly match filters rather than by substring
-        --force                   Force recompilation of all packages
-        --force-run-in-process    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --abi                     Generate ABIs for packages
-        --doc                     Generate documentation for packages
-    -h, --help                    Prints help information
-        --ignored                 List or run ignored tests (always empty: it is currently not possible to mark tests as
-                                  ignored)
-        --include-ignored         NO-OP: unsupported option, exists for compatibility with the default test harness
-        --list                    List all tests
-        --nocapture               NO-OP: unsupported option, exists for compatibility with the default test harness
-    -q, --quiet                   Output minimal information
-        --show-output             NO-OP: unsupported option, exists for compatibility with the default test harness
-        --test                    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --ub                      update test baseline
-    -V, --version                 Prints version information
-    -v                            Print additional diagnostics if available
-
-OPTIONS:
-        --color <color>                  NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --format <format>                Configure formatting of output: pretty = Print verbose output; terse = Display
-                                         one character per test; (json is unsupported, exists for compatibility with the
-                                         default test harness) [default: Pretty]  [possible values: Pretty, Terse, Json]
-        --install-dir <install-dir>      Installation directory for compiled artifacts. Defaults to current directory
-        --logfile <logfile>              NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-    -p, --path <package-path>            Path to a package which the command should be run with respect to [default: .]
-        --report-time <report-time>      NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --skip <skip>...                 NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --test-threads <test-threads>    Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=]
-                                         [default: 32]
+    mpm integration-test [OPTIONS] [FILTER]
 
 ARGS:
-    <filter>    The FILTER string is tested against the name of all tests, and only those tests whose names contain
-                the filter are run
+    <FILTER>    The FILTER string is tested against the name of all tests, and only those tests
+                whose names contain the filter are run
+
+OPTIONS:
+        --abi
+            Generate ABIs for packages
+
+    -d, --dev
+            Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if
+            this flag is set. This flag is useful for development of packages that expose named
+            addresses that are not set to a specific value
+
+        --doc
+            Generate documentation for packages
+
+        --exact
+            Exactly match filters rather than by substring
+
+        --force
+            Force recompilation of all packages
+
+        --format <FORMAT>
+            Configure formatting of output: pretty = Print verbose output; terse = Display one
+            character per test; (json is unsupported, exists for compatibility with the default test
+            harness) [default: pretty] [possible values: pretty, terse]
+
+    -h, --help
+            Print help information
+
+        --install-dir <INSTALL_DIR>
+            Installation directory for compiled artifacts. Defaults to current directory
+
+        --list
+            List all tests
+
+    -p, --path <PACKAGE_PATH>
+            Path to a package which the command should be run with respect to [default: .]
+
+    -q, --quiet
+            Output minimal information
+
+        --test
+            Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used
+            along with any code in the 'test' directory
+
+        --test-threads <TEST_THREADS>
+            Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=] [default:
+            32]
+
+        --ub
+            update test baseline
+
+    -v
+            Print additional diagnostics if available
+
 ```
 
 ### Integration Test Directives

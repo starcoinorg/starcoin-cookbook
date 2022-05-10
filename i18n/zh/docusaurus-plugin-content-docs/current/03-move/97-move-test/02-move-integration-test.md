@@ -11,65 +11,77 @@
 
 所有的动作都被包装成事务。所有的集成测试文件应该在软件包根路径下的`integration-tests`目录中。
 
-集成测试文件包含测试指令，用空的换行符隔开。指令的工作方式类似于命令行，你提供命令名称和命令参数。
-mpm 执行指令，就像操作系统执行 cli 命令一样。
-
+集成测试是在源码文件添加注解来表示测试指令。注解以`//#`开头，用空的换行符隔开。指令的工作方式类似于命令行，开发者提供命令名称和命令参数，
+mpm 将会自动执行指令，就像系统执行命令行执行CLI命令一样。
 
 ```
+$ mpm integration-test --help
 mpm-integration-test
-Datatest-harness for running data-driven tests
+Run integration tests in tests dir
 
 USAGE:
-    mpm integration-test [FLAGS] [OPTIONS] [--] [filter]
-
-FLAGS:
-        --bench                   NO-OP: unsupported option, exists for compatibility with the default test harness
-    -d, --dev                     Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used
-                                  if this flag is set. This flag is useful for development of packages that expose named
-                                  addresses that are not set to a specific value
-        --ensure-time             NO-OP: unsupported option, exists for compatibility with the default test harness
-        --exclude-should-panic    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --exact                   Exactly match filters rather than by substring
-        --force                   Force recompilation of all packages
-        --force-run-in-process    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --abi                     Generate ABIs for packages
-        --doc                     Generate documentation for packages
-    -h, --help                    Prints help information
-        --ignored                 List or run ignored tests (always empty: it is currently not possible to mark tests as
-                                  ignored)
-        --include-ignored         NO-OP: unsupported option, exists for compatibility with the default test harness
-        --list                    List all tests
-        --nocapture               NO-OP: unsupported option, exists for compatibility with the default test harness
-    -q, --quiet                   Output minimal information
-        --show-output             NO-OP: unsupported option, exists for compatibility with the default test harness
-        --test                    NO-OP: unsupported option, exists for compatibility with the default test harness
-        --ub                      update test baseline
-    -V, --version                 Prints version information
-    -v                            Print additional diagnostics if available
-
-OPTIONS:
-        --color <color>                  NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --format <format>                Configure formatting of output: pretty = Print verbose output; terse = Display
-                                         one character per test; (json is unsupported, exists for compatibility with the
-                                         default test harness) [default: Pretty]  [possible values: Pretty, Terse, Json]
-        --install-dir <install-dir>      Installation directory for compiled artifacts. Defaults to current directory
-        --logfile <logfile>              NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-    -p, --path <package-path>            Path to a package which the command should be run with respect to [default: .]
-        --report-time <report-time>      NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --skip <skip>...                 NO-OP: unsupported option, exists for compatibility with the default test
-                                         harness
-        --test-threads <test-threads>    Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=]
-                                         [default: 32]
+    mpm integration-test [OPTIONS] [FILTER]
 
 ARGS:
-    <filter>    The FILTER string is tested against the name of all tests, and only those tests whose names contain
-                the filter are run
+    <FILTER>    The FILTER string is tested against the name of all tests, and only those tests
+                whose names contain the filter are run
+
+OPTIONS:
+        --abi
+            Generate ABIs for packages
+
+    -d, --dev
+            Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if
+            this flag is set. This flag is useful for development of packages that expose named
+            addresses that are not set to a specific value
+
+        --doc
+            Generate documentation for packages
+
+        --exact
+            Exactly match filters rather than by substring
+
+        --force
+            Force recompilation of all packages
+
+        --format <FORMAT>
+            Configure formatting of output: pretty = Print verbose output; terse = Display one
+            character per test; (json is unsupported, exists for compatibility with the default test
+            harness) [default: pretty] [possible values: pretty, terse]
+
+    -h, --help
+            Print help information
+
+        --install-dir <INSTALL_DIR>
+            Installation directory for compiled artifacts. Defaults to current directory
+
+        --list
+            List all tests
+
+    -p, --path <PACKAGE_PATH>
+            Path to a package which the command should be run with respect to [default: .]
+
+    -q, --quiet
+            Output minimal information
+
+        --test
+            Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used
+            along with any code in the 'test' directory
+
+        --test-threads <TEST_THREADS>
+            Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=] [default:
+            32]
+
+        --ub
+            update test baseline
+
+    -v
+            Print additional diagnostics if available
+
 ```
 
 ###  编写 test 指令
+
 
 #### `init` 指令
 
@@ -93,14 +105,7 @@ OPTIONS:
 
 `init` 指令用来声明某个集成测试的的初始状态。
 
-You can either start from a fresh blockchain state by providing arg `-n test`,
-or fork from a remote state snapshot like `--rpc http://main.seed.starcoin.org:9850 --block-number 100000`.
-`--address <named-addresses>` can be used to declare additional named addressed which will be used in the integration test later.
-
-你可以申明测试从一个创世块开始（通过参数 `-n test` ），
-或者从一个远程状态快照开始，比如`--rpc http://main.seed.starcoin.org:9850 --block-number 100000`。
-
-`--address <named-addresses>` 可以用来声明额外的命名地址，这将在后面的集成测试中使用。
+你可以申明测试从一个创世块开始（通过参数 `-n test` ），或者从一个远程状态快照开始，比如`--rpc http://main.seed.starcoin.org:9850 --block-number 100000`。`--address <named-addresses>` 可以用来声明额外的命名地址，这将在后面的集成测试中使用。
 
 例子:
 
@@ -137,14 +142,7 @@ OPTIONS:
 `block` 指令申明一个新区块产生。
 
 
-Every directives between this block directive and next block directive are running in this block.
-You can pass custom `--author`, `--timestamp`, `--uncles` to fit your need.
-
-If no block directive specified, transactions will run on default block whose block number is the next block number of initial state.
-If you fork from a remote state of block number `h`, then the next block's number is `h+1`.
-
-这个 `block` 指令和下一个 `block` 指令之间的其他指令都在这个区块中运行。
-你可以自定义 区块的 `--author`，`--timestamp`，`--uncles`。
+这个 `block` 指令和下一个 `block` 指令之间的其他指令都在这个区块中运行。你可以自定义区块的 `--author`，`--timestamp`，`--uncles`。
 
 如果没有 `block` 指令，事务将在默认的块上运行，其块号是初始状态的下一个块号。
 

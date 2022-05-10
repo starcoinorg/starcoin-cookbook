@@ -66,5 +66,13 @@
   "sidebar.tutorialSidebar.category.CLI": {
     "message": "CLI",
     "description": "The label for category CLI in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Move Language": {
+    "message": "Move 语言",
+    "description": "The label for category Move Language in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Starcoin Move Framework": {
+    "message": "Starcoin Move Framework",
+    "description": "The label for category Starcoin Move Framework in sidebar tutorialSidebar"
   }
 }

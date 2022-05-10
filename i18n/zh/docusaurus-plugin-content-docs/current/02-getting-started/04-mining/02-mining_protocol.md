@@ -5,7 +5,9 @@ Starcoin pow hash 算法为 cryptonight-rs
 * [Python library](https://pypi.org/project/py-cryptonight/)
 * 或参考 [xmrig](https://github.com/xmrig/xmrig)
 #### 计算 hash
-[源码实现]( https://github.com/starcoinorg/starcoin/blob/master/consensus/src/cn.rs#L22)
+[rust reference](https://github.com/starcoinorg/starcoin/blob/master/consensus/src/cn.rs#L29-L39)
+
+
 minting_blob 为76字节的数组。 (35..39] 4个字节为可修改的扩展字段, (39..43] 4个字节为 nonce 。
 ``` rust
 fn calculate_pow_hash(minting_blob: [u8;76], nonce: u32, extra: [u8;4]) -> Hash{
@@ -16,21 +18,18 @@ fn calculate_pow_hash(minting_blob: [u8;76], nonce: u32, extra: [u8;4]) -> Hash{
 }
 ``` 
 #### 难度校验
-[源码实现](https://github.com/starcoinorg/starcoin/blob/master/consensus/src/consensus.rs#L85)
-``` rust
-fn verify_difficulty(pow_hash:u256,difficulty:u256) -> bool{
-    let target = U256::max_value()/difficulty;
-    return pow_hash<=target
-}
-```
+[rust reference](https://github.com/starcoinorg/starcoin/blob/master/consensus/src/consensus.rs#L85-#L117)
+
 ### 获取出块任务
 #### Pubsub json rpc
 支持 websocket or tcp
 ``` bash
+# wsc is a WebSocket client for the terminal
 $wsc ws://localhost:9870
 > {"jsonrpc": "2.0", "method": "starcoin_subscribe", "params": [{"type_name":"newMintBlock"}], "id": 1}
 ```
-```json
+
+``` json
 {
   "jsonrpc": "2.0",
   "method": "starcoin_subscription",
@@ -103,15 +102,18 @@ params 中的三个参数分别为 minting_blob, nonce, extra
 ```bash
 reward = coinbase + 0.1 * coinbase * uncle_number + gas_fee
 ```
-实现参考: 
-[get_block_reward](https://github.com/starcoinorg/starcoin-sdk-python/blob/master/starcoin/sdk/client.py#L192)
+
+[python reference](https://github.com/starcoinorg/starcoin-sdk-python/blob/master/starcoin/sdk/client.py#L192-L217)
+
 
 ### 转账,查询余额
 1. 利用节点进行签名, http api封装进行交易发起，请参考 [example](https://github.com/fikgol/starcoin-py2-example/blob/master/p2p_transfer.py)
 2. 使用 sdk 发起交易
    * [python3](https://github.com/starcoinorg/starcoin-sdk-python/blob/master/examples/p2p_transfer.py)
    * [starcoin.js](https://github.com/starcoinorg/starcoin.js)
-3. [查询余额](https://github.com/starcoinorg/starcoin-sdk-python/blob/master/starcoin/sdk/client.py#L146)
+3. 查询余额
+   [python reference](https://github.com/starcoinorg/starcoin-sdk-python/blob/master/starcoin/sdk/client.py#L146-L155)
+
 4. 默认挖矿地址为节点default address, 可倒入只读账号作为 default address
     ```bash
     starcoin% account import-readonly --help

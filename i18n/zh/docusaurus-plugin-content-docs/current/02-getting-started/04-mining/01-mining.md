@@ -7,15 +7,24 @@ starcoin miner 为 starcoin 提供的挖矿客户端。
 
 `starcoin_miner` [OPTIONS]
 
+USAGE:
+    starcoin_miner [OPTIONS] --user <user>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
 OPTIONS:
-- -a, --server <server> , 指定要连接到的 starcoin node 的 rpc 地址，默认值为 127.0.0.1:9870
-- -n, --thread-num <thread-num>，线程数，默认为 1。
+    -p, --plugin-path <plugin-path>
+    -a, --server <server>               [default: 127.0.0.1:9870]
+    -n, --thread-num <thread-num>       [default: 1]
+    -u, --user <user>
 
 ### 连接到节点利用 cpu 进行挖矿
-当本地启动了 starcoin node 时，我们可以运行如下命令，启动4个线程连接到本地节点进行挖矿。
+当本地启动了 starcoin node 时，我们可以运行如下命令，指定挖矿用户 alice 启动 4 个线程连接到本地节点进行挖矿。
 
 ```shell
-starcoin_miner -n 4
+starcoin_miner --user alice -n 4
 ```
 启动后可以看到 console 中有如下信息:
 
@@ -51,7 +60,7 @@ stc-box 为 starcoin 目前主流矿机。不需要安装额外的客户端或�
 * 该客户端软件暂时仅支持 windows 系统, 非 windows 系统用户使用此矿机请参考：[starcoin mint usb solver](https://github.com/fikgol/usbsolver)
 
 # 矿池相关
-starcoin 的矿池协议参考 starcoin stratum 协议。
+starcoin 的矿池协议参考 [starcoin stratum protocol](https://github.com/starcoinorg/starcoin/blob/master/stratum/stratum_mining_protocol.md)。
 ## 加入矿池
 * 设置 [可乐矿池(推荐)](https://www.yuque.com/docs/share/5c5ae94a-3ed4-4dab-98ca-62baf17891e0)
 * 连接 [币印矿池 (推荐)](https://help.poolin.com/hc/zh-cn/articles/360060982092)
@@ -67,5 +76,5 @@ starcoin node 内部实现了一个 stratum server ，用户可以通过其实�
 如
 
 ``` shell
- ./starcoin -n main --stratum-port 9999 --stratum-address 127.0.0.1
+ ./starcoin -n main --stratum-port 9880 --stratum-address 127.0.0.1
 ```

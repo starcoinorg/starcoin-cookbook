@@ -1,6 +1,6 @@
 # How to debug Move module and troubleshooting
 
->There are two test methods for move, unit test and spec test.  
+>There are two test methods for move, unit test and integration test.  
 Using the two test methods separately can cover almost 90% of the usage scenarios.  
 We can usually test some functional modules in unit tests as simple verification.  
 However, many test scenarios require that we must initiate transactions on the block to debug the correctness of the module, and unit testing cannot meet these requirements.  
@@ -192,18 +192,18 @@ Congratulations! The test has passed, you can find the error of the algorithm th
 
 You can print certain values in unit tests, and you can also call functions in modules, but keep in mind that unit tests are very limited, and if you need a signature, you can use spectest  
 
-### Spectest  Debug
+### Integration-test  Debug
 Unit testing can only meet the needs of a small range of tests.   
 More often, we want to simulate the execution of the code on the block during the testing phase,   
 because many problems occur after the block is executed.   
 
-At this time, spectest is the best.     
-#### Create a new spectest directory and add mycake_test.move
+At this time, integration-test is the best.     
+#### Create a new integration-tests directory and add mycake_test.move
 ```
-mkdir spectests
+mkdir integration-tests
 ```
 ```
-vi spectests/mycake.move
+vi integration-test/mycake.move
 ```
 ```
 //# init -n test --public-keys Chef=0x98826ab91a9a5d85dec536418090aa6342991bc8f947613721c8165e7102b132 
@@ -256,10 +256,10 @@ script {
 }
 // check: EXECUTED
 ```
-#### Run Spectest
+#### Run integration-test
 
 ```
-mpm spectest
+mpm integration-test
 ```
 **The following will be output on the command line**  
 We can see that most of the tests are as we expected  
@@ -353,9 +353,9 @@ Fix it
         Account::deposit<Cake>(to, cake);
     }
 ```
-Ok, let's rerun spectest  
+Ok, let's rerun integration-test  
 ```
-mpm spectest
+mpm integration-test
 ```
 **We didn't find any errors in the test items, but the test still failed. What's going on?**  
 ```
@@ -411,9 +411,9 @@ test result: FAILED. 0 passed; 1 failed; 0 filtered out
 #### Execution update test baseline  
 **This is because we need to update test baseline**  
 ```
-mpm spectest --ub
+mpm integration-test --ub
 ```
-An exp file with the same name as the test file will appear in the spectests directory  
+An exp file with the same name as the test file will appear in the integration-tests directory  
 The result of the simultaneous test results is a pass  
 ```
 BUILDING StarcoinFramework
@@ -425,7 +425,7 @@ test transactional-test::mycake_test.move ... ok
 
 test result: ok. 1 passed; 0 failed; 0 filtered out
 ```
-When you need to modify test items, remember to execute mpm spectest --ub after all test items are within the expected range  
+When you need to modify test items, remember to execute mpm integration-test --ub after all test items are within the expected range  
 
 ### Correct Code  
 #### Move.toml

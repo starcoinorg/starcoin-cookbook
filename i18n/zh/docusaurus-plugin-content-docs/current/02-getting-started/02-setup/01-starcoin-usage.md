@@ -1,20 +1,25 @@
-# Starcoin 命令行工具使用说明
+# 如何使用 Starcoin CLI
 
-`starcoin` 命令行工具可以用来启动节点，运行本地网络，加入测试网络或者主网，也可以直接连接到远程节点的接口上，纯粹作为命令行客户端工具使用。
+`starcoin` 命令可以用来启动节点，运行本地网络，加入测试网络或者主网络，也可以直接连接到远程节点的接口上，纯粹作为命令行客户端工具使用。
+运行本地网络或者加入测试网络可以方便地测试用户的智能合约代码，`starcoin` 的子命令 `dev` 可以编译，执行和发布智能合约。
 
 当你按照前面的教程安装好 `starcoin` 后，可以运行 `starcoin -h` 查看帮助。
 
 ## 使用方法
 
-`starcoin` [OPTIONS] [SUBCOMMAND]
+`starcoin [OPTIONS] [SUBCOMMAND]`
 
-在操作系统命令行终端中直接运行 `starcoin` 命令会在前台启动一个节点并尝试加入主网。
+### 加入主网络
+
+在命令行中直接运行 `starcoin` 命令，默认会在前台启动一个节点并尝试加入主网。
 
 ```bash
 $ starcoin
 ```
 
-如果你想加入其他的网络，可以用 `-n|--net` 选项来指定，比如启动一个本地的 dev 网络节点。
+### 启动本地网络节点
+
+如果你想加入其他的网络，可以用 `-n` 或 `--net` 选项来指定，比如启动一个本地的 `dev` 网络节点。
 
 ```
 $ starcoin -n dev
@@ -29,13 +34,16 @@ $ starcoin -n dev
 Waiting SIGINT or SIGTERM ...
 ```
 
-本地的 dev 开发模式默认使用一个临时目录，每次重启都会重置数据。dev 节点启动后，会在日志中打印 IPC 文件路径，我们通过 IPC（进程间通信）文件可以连接到节点执行命令，比如：
+### 查看链的信息
+
+本地的 dev 模式默认使用一个临时目录，每次重启都会重置数据。
+dev 节点启动后，会在日志中打印 IPC 文件路径，我们通过 IPC（进程间通信）文件可以连接到节点执行命令，比如：
 
 ```bash
 $ starcoin -c /var/folders/_4/1ghtd3z15qjcw8yj905dcql40000gn/T/.tmph3EJ8S/dev/starcoin.ipc chain info
 ```
 
-注: Windows 下的 ipc 文件路径不一样，需要通过以下方式(中间的 dev 需要根据连接的网络改变):
+注：Windows 下的 IPC 文件路径不一样，需要通过以下方式（中间的 dev 需要根据连接的网络改变）：
 
 ``` shell
 $ starcoin.exe --connect \\.\pipe\dev\starcoin.ipc console
@@ -49,15 +57,14 @@ $ starcoin -c ws://127.0.0.1:9870 chain info
 
 或者直接连接到远程种子节点的 RPC 接口进行操作：
 
+```shell
+# 查看主链的信息
+$ starcoin -c ws://main.seed.starcoin.org:9870 chain info
 ```
-$ starcoin --c ws://main.seed.starcoin.org:9870 chain info
-```
-
-
 
 ## 控制台的使用
 
-`starcoin` 有一个特殊的子命令 `console`, 执行这个命令后，会进入一个交互式的控制台。
+`starcoin` 有一个特殊的子命令 `console`，执行这个命令后，会进入一个交互式的控制台。
 
 ```bash
 $ starcoin -n dev console
@@ -94,7 +101,7 @@ $ starcoin -n dev console
 starcoin%
 ```
 
-然后直接在控制台执行命令，比如：
+此时可以直接在控制台执行命令，比如：
 
 ```bash
 starcoin% chain info
@@ -143,7 +150,8 @@ starcoin% chain info
 }
 ```
 
-像上面这样进入控制台，如果发现当前尚未启动 starcoin 节点，会在后台启动了一个 `starcoin` 的节点，控制台和它在进程内通信。这样的节点声明周期和控制台的声明周期绑定，从控制台退出后，节点也会自动退出。
+像上面这样进入控制台，如果发现当前尚未启动 Starcoin 节点，则会自动在后台启动一个节点，控制台和节点在进程内通信。
+这样的节点生命周期和控制台的生命周期绑定，从控制台退出后，节点也会自动退出。
 
 当然也可以通过 IPC 或者 WebSocket RPC 的方式连接，然后进入控制台。
 
@@ -159,19 +167,15 @@ $ starcoin -c ws://main.seed.starcoin.org:9870 console
 $ starcoin --connect ws://main.seed.starcoin.org:9870 --local-account-dir ~/.starcoin/main/account_vaults console
 ```
 
-
-
 ## 常见问题
 
 ### 如何配合管道使用命令行工具？
 
-`starcoin` 的命令行输出的日志部分在 stderr，结果在 stdout，所以可以直接通过管道来将结果重定向给其他命令处理，比如以下命令通过 `jq` 来获取最新的区块高度：
+`starcoin` 命令输出的日志部分在 stderr，结果在 stdout，所以可以直接通过管道来将结果重定向给其他命令处理，比如以下命令通过 `jq` 来获取最新的区块高度：
 
 ```bash
 starcoin -c ws://main.seed.starcoin.org:9870 chain info|jq '.ok.head.number'
 ```
-
-
 
 ## 选项说明
 
@@ -385,7 +389,7 @@ starcoin -c ws://main.seed.starcoin.org:9870 chain info|jq '.ok.head.number'
 ```
 
 
-### CLI 选项 
+### CLI 选项
 
 ```text
 -c, --connect <connect>                                                       Connect and attach to a node

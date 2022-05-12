@@ -1,4 +1,4 @@
-# How to use starcoin CLI
+# How to use Starcoin CLI
 
 `starcoin` is used to start a local network or join a starcoin network. Running a local network or join test network makes it easier to test and debug your code changes. You can use the CLI command dev to compile, publish, and execute Move programs on your local network or test network. 
 

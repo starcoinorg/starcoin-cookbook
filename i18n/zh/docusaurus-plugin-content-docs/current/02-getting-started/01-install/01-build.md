@@ -144,3 +144,19 @@ sudo dnf install gcc cmake
     rpm -e --nodeps llvm-private-6.0.1-2.el7.x86_64 # 卸载查找到的包
     ```
 - 每次编译出错后，解决后，需要 cargo clean，清除之前已编译的目标文件，再重新编译。
+
+### GitHub 网络问题
+
+如果在开始构建时出现以下错误消息：
+
+```shell
+error: failed to get `xxx` as a dependency of package `...`
+...
+...
+  fatal: couldn't find remote ref HEAD
+```
+
+您可能需要为 `GitHub` 设置代理服务器：
+```shell
+git config --global http.https://github.com.proxy [protocol://][user[:password]@]proxyhost[:port]
+```

@@ -44,6 +44,8 @@ After compiling, you can find the corresponding starcoin program in the target d
 
 ### WSL
 
+#### Q1:
+
 Compiling with WSL2 may give the following error message:
 
 ```shell
@@ -64,6 +66,25 @@ This is because the swap memory of WSL2 is not set, or is less than the maximum 
     ```
 - Execute `wsl --shutdown` in cmd to close WSL2, and then reopen it.
 
+#### Q2:
+
+**Why do I compile for so long?**
+
+This situation usually occurs on users with low computer configuration. Here are two feasible suggestions:
+
+1. Upgrade computer configuration.
+
+2. Controls the number of jobs Cargo compiles with.
+
+For low-profile machines, controlling the number of cores is the key to greatly improving compilation efficiency.
+
+For example:
+
+```shell
+cargo build -j 1
+```
+
+For specific test cases, see the discussion in [[bug] Excessive swap may result in slower builds #70](https://github.com/starcoinorg/starcoin-cookbook/issues/70).
 
 ### CentOS
 
@@ -77,7 +98,7 @@ yum install devtoolset-7
 
 ### Common troubleshooting
 
-#### Q1
+#### Q1:
 
 The following error message appears when compiling with Cargo:
 
@@ -109,7 +130,7 @@ sudo pacman -S gcc cmake
 sudo dnf install gcc cmake
 ```
 
-#### Q2
+#### Q2:
 
 - If the error message `Could not find directory of OpenSSL installation` appears, you need to install the OpenSSL library.
 - If the error ```Unable to find libclang: "the `libclang` shared library at /usr/lib64/clang-private/libclang.so.6.0"``` appears, it may be the cause of `llvm-private`. The solution is to uninstall it:

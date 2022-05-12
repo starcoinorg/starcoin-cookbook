@@ -44,6 +44,8 @@ cargo build --release
 
 ### WSL
 
+#### Q1:
+
 使用 WSL2 进行编译可能会出现下面的报错信息：
 
 ```shell
@@ -64,6 +66,24 @@ error: linking with `cc` failed: exit status: 1
     ```
 - 在 cmd 执行 wsl --shutdown 关闭 WSL2，再重新打开即可。
 
+#### Q2:
+
+**为什么我的编译时间这么久？**
+
+这种情况通常会在电脑配置比较低的用户身上出现，下面提供两个可行的建议：
+
+1. 升级电脑配置。
+
+2. 控制 Cargo 编译时的 job 数量。
+
+对于低配置机器来说，控制核心数是大幅提高编译效率的关键。例如：
+
+```shell
+cargo build -j 1
+```
+
+具体的测试案例，请参见 [[bug] Excessive swap may result in slower builds #70](https://github.com/starcoinorg/starcoin-cookbook/issues/70) 中的讨论。
+
 ### CentOS
 
 如果操作系统是 CentOS，则需要使用如下命令，单独安装相关开发工具：
@@ -83,7 +103,7 @@ rpm -e --nodeps llvm-private-6.0.1-2.el7.x86_64 # 卸载查找到的包，实际
 
 ### 常见问题排查
 
-#### Q1
+#### Q1:
 
 使用 Cargo 编译时出现如下错误信息：
 
@@ -115,7 +135,7 @@ sudo pacman -S gcc cmake
 sudo dnf install gcc cmake
 ```
 
-#### Q2
+#### Q2:
 
 - 若出现 `Could not find directory of OpenSSL installation` 的报错信息，则需要安装 OpenSSL 库。
 - 若出现 ```Unable to find libclang: "the `libclang` shared library at /usr/lib64/clang-private/libclang.so.6.0"``` 字样错误，则可能是 `llvm-private` 的原因，解决方法是卸载它：

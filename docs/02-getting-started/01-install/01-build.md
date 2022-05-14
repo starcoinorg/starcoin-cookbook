@@ -40,7 +40,27 @@ After compiling, you can find the corresponding starcoin program in the target d
 - The debug version is in the `target/debug/starcoin` directory
 - The release version is in the `target/release/starcoin` directoryg
 
-## Troublehooting
+## Troubleshooting
+
+### Windows
+
+If the following error information appears during the compilation process in Windows:
+
+```text
+'Unable to find libclang: "couldn't find any valid shared libraries matching: ['clang.dll', 'libclang.dll'], set the `LIBCLANG_PATH` environment variable to a path where one of these files can be found (invalid: [])"'
+```
+
+This is because the `LIBCLANG_PATH` environment variable is not set.
+
+**Solution:**
+
+Set the value of `LIBCLANG_PATH` to the `bin` directory of LLVM compilation tool set.
+
+Set according to your specific installation location, for example:
+
+```text
+C:\Program Files\LLVM\bin
+```
 
 ### WSL
 
@@ -140,3 +160,19 @@ sudo dnf install gcc cmake
     ```
 - After each compilation error, after solving, you need to `cargo clean`, remove the previously compiled object files, and then recompile.
 
+### GitHub network issue
+
+If the following error message shows up at start of building:
+
+```shell
+error: failed to get `xxx` as a dependency of package `...`
+...
+...
+  fatal: couldn't find remote ref HEAD
+```
+
+You may need to set up a proxy server for `GitHub`:
+
+```shell
+git config --global http.https://github.com.proxy [protocol://][user[:password]@]proxyhost[:port]
+```

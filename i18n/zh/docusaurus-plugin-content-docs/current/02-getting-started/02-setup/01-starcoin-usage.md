@@ -401,11 +401,11 @@ starcoin -c ws://main.seed.starcoin.org:9870 chain info|jq '.ok.head.number'
 ### 子命令
 
 * account
-*  state
+* state
 * node
 * chain
-*  txpool
-*  dev
+* txpool
+* dev
 * contract
 * console
 

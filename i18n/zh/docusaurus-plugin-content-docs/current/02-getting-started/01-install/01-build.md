@@ -42,6 +42,26 @@ cargo build --release
 
 ## 问题排查
 
+### Windows
+
+如果在 Windows 的编译过程中出现以下错误信息：
+
+```text
+'Unable to find libclang: "couldn't find any valid shared libraries matching: ['clang.dll', 'libclang.dll'], set the `LIBCLANG_PATH` environment variable to a path where one of these files can be found (invalid: [])"'
+```
+
+这是因为没有设置 `LIBCLANG_PATH` 环境变量。
+
+**解决方案：**
+
+将 `LIBCLANG_PATH` 的值设置为 LLVM 编译工具集的 `bin` 目录。
+
+根据你的具体安装位置来设置，例如：
+
+```text
+C:\Program Files\LLVM\bin
+```
+
 ### WSL
 
 #### Q1:
@@ -54,7 +74,7 @@ error: linking with `cc` failed: exit status: 1
 
 这是因为 WSL2 的交换内存（swap）未设置，或者小于 WSL2 的最大内存。
 
-**解决方案**：
+**解决方案：**
 
 - 打开 Windows 资源管理器，在地址栏输入 `%UserProfile%` 回车。
 - 在该目录下创建一个文件，名字为 `.wslconfig`
@@ -144,3 +164,19 @@ sudo dnf install gcc cmake
     rpm -e --nodeps llvm-private-6.0.1-2.el7.x86_64 # 卸载查找到的包
     ```
 - 每次编译出错后，解决后，需要 cargo clean，清除之前已编译的目标文件，再重新编译。
+
+### GitHub 网络问题
+
+如果在开始构建时出现以下错误消息：
+
+```shell
+error: failed to get `xxx` as a dependency of package `...`
+...
+...
+  fatal: couldn't find remote ref HEAD
+```
+
+您可能需要为 `GitHub` 设置代理服务器：
+```shell
+git config --global http.https://github.com.proxy [protocol://][user[:password]@]proxyhost[:port]
+```

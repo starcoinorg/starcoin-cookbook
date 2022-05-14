@@ -42,6 +42,26 @@ After compiling, you can find the corresponding starcoin program in the target d
 
 ## Troublehooting
 
+### Windows
+
+If the following error information appears during the compilation process in Windows:
+
+```text
+'Unable to find libclang: "couldn't find any valid shared libraries matching: ['clang.dll', 'libclang.dll'], set the `LIBCLANG_PATH` environment variable to a path where one of these files can be found (invalid: [])"'
+```
+
+This is because the `LIBCLANG_PATH` environment variable is not set.
+
+**Solution:**
+
+Set the value of `LIBCLANG_PATH` to the `bin` directory of LLVM compilation tool set.
+
+Set according to your specific installation location, for example:
+
+```text
+C:\Program Files\LLVM\bin
+```
+
 ### WSL
 
 #### Q1:

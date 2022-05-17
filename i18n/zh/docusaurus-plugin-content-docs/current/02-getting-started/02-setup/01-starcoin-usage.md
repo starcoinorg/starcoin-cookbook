@@ -177,6 +177,12 @@ $ starcoin --connect ws://main.seed.starcoin.org:9870 --local-account-dir ~/.sta
 starcoin -c ws://main.seed.starcoin.org:9870 chain info|jq '.ok.head.number'
 ```
 
+### Node exit for an unexpected error: file limit the maximum number of open file descriptors is too small, got xxxx, expect greater or equal to 45056
+
+出现这个错误的原因是因为ubuntu系统默认的可打开的最大数量文件描述符不够。
+通过一下步骤，将系统的可打开的最大数量文件描述设置为65536即可。
+首先，将`DefaultLimitNOFILE=65536`添加到文件`/etc/systemd/system.conf` 和 `/etc/systemd/user.conf`的最末段，然后重启系统即可，最后可以通过`ulimit -n`命令来检查可打开的最大数量文件描述符限制
+
 ## 选项说明
 
 ### 区块链链相关的选项

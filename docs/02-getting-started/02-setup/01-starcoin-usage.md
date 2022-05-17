@@ -173,8 +173,15 @@ starcoin% account import -i <private-key> -p <your-password>
 ```bash
 starcoin -c ws://main.seed.starcoin.org:9870 chain info | jq '.ok.head.number'
 ```
+### Node exit for an unexpected error: file limit the maximum number of open file descriptors is too small, got xxxx, expect greater or equal to 45056
 
+The reason for this error is that the default maximum number of file descriptors that can be opened by the ubuntu is not enough.
 
+this step will help you set the Max file descriptors to 65535
+
+you just nedd add `DefaultLimitNOFILE=65536` to the end of `/etc/systemd/system.conf` and `/etc/systemd/user.conf`,then `reboot` the ubuntu
+
+finally,you can use `ulimit -n` to check the max file descriptors limitation
 
 ## Options
 

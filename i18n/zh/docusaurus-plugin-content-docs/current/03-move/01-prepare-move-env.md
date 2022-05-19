@@ -33,7 +33,7 @@ USAGE:
     mpm [OPTIONS] <SUBCOMMAND>
   ...
 ```
-# 设计Move Prover环境
+# 设置 Move Prover 环境
 
 1. 运行 starcoin-framework 下的 dev_setup.sh（自动化安装脚本）
 

@@ -50,6 +50,11 @@ cd /tmp/.tmpORwKTS/dev/
 starcoin -c starcoin.ipc dev get-coin -v 100STC
 ```
 
+## 工作方式
+
+`dev` 网络的出块模式跟主网和测试网不一样，`dev` 网络是按需出块，没有交易就不出块。
+`dev` 网络上的时间不自动流逝，需要通过出块的方式让时间变化。如果想快速跳过时间，进行测试，可以用 `sleep` 命令。
+
 ## 技巧
 
 如果操作与账户相关的命令，建议连接到 Starcoin 控制台来简化操作：
@@ -58,3 +63,11 @@ starcoin -c starcoin.ipc dev get-coin -v 100STC
 cd /tmp/.tmpORwKTS/dev/
 starcoin -c starcoin.ipc console
 ```
+
+### 在控制台获取 dev 网络的 STC
+
+```shell
+starcoin% dev get-coin -v 100STC
+```
+
+相比直接在 CLI 获取 STC 的方式，在控制台操作更方便。

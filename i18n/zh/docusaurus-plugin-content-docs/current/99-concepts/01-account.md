@@ -21,3 +21,11 @@
 
 1. [sip-21 receipt_identifier](https://developer.starcoin.org/zh/sips/sip-21/)
 2. [rotate key 例子](https://github.com/starcoinorg/starcoin-sdk-python/blob/master/examples/rotate_auth_key.py)
+
+### 序列号
+
+- 一个账户的序列号表示从该账户提交到区块链上的交易的数量。每次从该账户发送的交易被执行或中止时，它都会被递增，并存储在区块链中。
+- 只有当交易与发送者账户的当前序列号相匹配时才会被执行。这有助于对来自同一发件人的多个交易进行排序，并防止重放攻击。
+- 如果一个账户A的当前序列号是X，那么账户A上的交易T只有在T的序列号是X时才会被执行。
+- 序列号大于账户序列号的交易将被保存在mempool中，直到它们的账户序列号增加到与交易序列号匹配（或直到它们过期）。
+- 当交易被执行时，该账户的序列号将变成X+1。账户的序列号是严格增加的。

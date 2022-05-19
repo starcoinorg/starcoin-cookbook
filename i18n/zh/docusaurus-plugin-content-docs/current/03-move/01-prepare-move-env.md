@@ -33,6 +33,13 @@ USAGE:
     mpm [OPTIONS] <SUBCOMMAND>
   ...
 ```
+# 设置 Move Prover 环境
 
-TODO
-- Set up env for move prover.
+1. 运行 starcoin-framework 下的 dev_setup.sh（自动化安装脚本）
+
+```
+./scripts/dev_setup.sh -ypt
+```
+当上面的命令执行完毕时，输入 `boogie /version`，如果输出类似 "Boogie program verifier version X.X.X"，那么安装已经成功。
+
+注意，目前 Move Prover 只能在 UNIX 系操作系统下运行（例如 Linux、macOS）。 Windows 用户可以通过安装 WSL 来运行。

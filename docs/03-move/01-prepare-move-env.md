@@ -34,5 +34,15 @@ USAGE:
   ...
 ```
 
-TODO
-- Set up env for move prover.
+
+# Set up env for move prover.
+
+1. Run [`dev_setup.sh`](https://github.com/starcoinorg/starcoin-framework/blob/main/scripts/dev_setup.sh)(automated installation script) of starcoin-framework
+```
+./scripts/dev_setup.sh -ypt
+```
+
+When the above command is executed, type `boogie /version` and if the output is similar to "Boogie program verifier version X.X.X", then the installation has been successful.
+
+Note that currently Move Prover can only run under UNIX-based operating systems (e.g. Linux, macOS). Windows users can run it by installing WSL.
+

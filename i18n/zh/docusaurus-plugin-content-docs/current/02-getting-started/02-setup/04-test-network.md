@@ -9,7 +9,7 @@ Starcoin 总共有三个测试网络，分别是 `Halley`，`Proxima` 和 `Barna
   - 含义：`Halley` 这个名字的灵感来自[哈雷彗星](https://zh.wikipedia.org/wiki/%E5%93%88%E9%9B%B7%E5%BD%97%E6%98%9F)，官方命名为 `1P/Halley`，它是一颗短周期彗星，每隔 75~76 年就可以从地球上看到一次。
 
 - Proxima
-  - 简介：是 Starcoin 的一个长期运行测试网络，发布于 2020 年第三季度。
+  - 简介：是 Starcoin 的一个长期运行测试网络，发布于 2020 年第三季度。主网每次进行重大的协议升级时，比如 `starcoin-framework` 的升级，会先重置该网络，然后升级新的 `starcoin-framework`。
   - 含义：`Proxima` 这个名字的灵感来自[比邻星](https://zh.wikipedia.org/wiki/%E6%AF%94%E9%82%BB%E6%98%9F)，它是一颗小型的低质量恒星，位于半人马座南部，距离太阳 4.246 光年（1.302 pc）。
 
 - Barnard

@@ -11,7 +11,7 @@ Starcoin has a total of three testnets, `Halley`, `Proxima` and `Barnard`.
   - Meaning: The name `Halley` is inspired by [Halley's Comet](https://en.wikipedia.org/wiki/Halley%27s_Comet), officially named `1P/Halley`, a short-period comet that can be seen from Earth every 75-76 years.
 
 - Proxima
-  - Introduction: It is a long-running test network for Starcoin, released in the third quarter of 2020.
+  - Introduction: It is a long-running test network for Starcoin, released in the third quarter of 2020. Every time a major protocol upgrade is performed on the mainnet, such as the upgrade of `starcoin-framework`, the network will be reset first, and then the new `starcoin-framework` will be upgraded.
   - Meaning: The name `Proxima` is inspired by [Proxima Centauri](https://en.wikipedia.org/wiki/Proxima_Centauri), a small, low-mass star located 4.246 light-years (1.302 pc) from the Sun in the southern constellation Centaurus.
 
 - Barnard

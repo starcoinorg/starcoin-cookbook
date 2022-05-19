@@ -50,6 +50,13 @@ cd /tmp/.tmpORwKTS/dev/
 starcoin -c starcoin.ipc dev get-coin -v 100STC
 ```
 
+## Way of working
+
+The block generation mode of the `dev` network is different from that of the main network and the test network.
+The `dev` network generates blocks on demand, and no blocks are generated without transactions.
+The time on the `dev` network does not automatically pass, and the time needs to be changed by generating blocks.
+If you want to quickly skip time and test, you can use the `sleep` command.
+
 ## Tips
 
 If the operation is related to the account, it is recommended to connect to the Starcoin console to simplify the operation:
@@ -58,3 +65,11 @@ If the operation is related to the account, it is recommended to connect to the 
 cd /tmp/.tmpORwKTS/dev/
 starcoin -c starcoin.ipc console
 ```
+
+### Get the STC of the dev network in the console
+
+```shell
+starcoin% dev get-coin -v 100STC
+```
+
+Compared with obtaining STC directly from the CLI, it is more convenient to operate on the console.

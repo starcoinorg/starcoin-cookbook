@@ -385,8 +385,8 @@ error: post-condition does not hold
    =         _witness = <generic>
 ```
 
-It is unexpectedly unexpected. Prover prompts that the rear conditions are not satisfied, indicating that the behavior described in the previous spec block is not exactly the same as the `transfer` function.
-Why is this so? Let's look down again: the parameters that are not satisfied with the rear conditions are `from = signer{0x0}` and `to = 0x0`. We should know the reason: when the account transfers money to itself, both `to` and `from` point to the same address, so the balance does not change.
+It is somewhat out of our expectation. Prover prompts that the postconditions are not satisfied, indicating that the behavior described in the previous spec block is not exactly the same as the `transfer` function.
+Why is this so? Let's look down again: the parameters that make the postconditions are not satisfied are `from = signer{0x0}` and `to = 0x0`. We should know the reason: when the account transfers money to itself, both `to` and `from` point to the same address, so the balance does not change.
 
 There are two solutions now:
 
@@ -418,7 +418,7 @@ That is to say, the end of the second way of writing actually represents this lo
 ensures (addr_from == to  ===>  eq_post) && (addr_from != to  ===> ne_post);
 ```
 
-scilicet:
+that is:
 
 ```rust
 ensures (addr_from != to || eq_post) && (addr_from == to  || ne_post);

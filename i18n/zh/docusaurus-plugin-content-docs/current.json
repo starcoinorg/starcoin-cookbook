@@ -74,5 +74,9 @@
   "sidebar.tutorialSidebar.category.Starcoin Move Framework": {
     "message": "Starcoin Move Framework",
     "description": "The label for category Starcoin Move Framework in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.mining": {
+    "message": "mining",
+    "description": "The label for category mining in sidebar tutorialSidebar"
   }
 }

@@ -22,7 +22,7 @@ starcoin.exe --net main ^
 - `--net`：指定网络。
 - `--disable-metrics`：是否要禁用指标监控服务，`true` 禁用，`false` 不禁用。
 - `--miner-thread`：挖矿线程数，默认值为 `1`。若不挖矿，可设置为 `0`。
-- `--node-name`：节点名称，仅用于显示。若不指定，则随机生成。
+- `--node-name`：节点名称，仅用于显示，可根据自己的喜好取个有特色的名字。若不指定，则随机生成。
 - `--data-dir`：数据存放目录，建议选择一个容易查找的路径。
 - `--logger-disable-file`：是否要禁用文件日志采集器，`true` 禁用，`false` 不禁用。
 - `--stratum-address`：指定矿池地址，默认为 `0.0.0.0`。

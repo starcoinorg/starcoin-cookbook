@@ -22,7 +22,7 @@ starcoin.exe --net main ^
 - `--net`: Specifies the network.
 - `--disable-metrics`: Whether to disable the metrics monitoring service, `true` to disable, `false` not to disable.
 - `--miner-thread`: The number of mining threads, the default value is `1`. If not mining, it can be set to `0`.
-- `--node-name`: Node name, for display only. If not specified, it will be randomly generated.
+- `--node-name`: The node name is only used for display. You can choose a unique name according to your own preferences. If not specified, it will be randomly generated.
 - `--data-dir`: The data storage directory, it is recommended to choose a path that is easy to find.
 - `--logger-disable-file`: Whether to disable the file log collector, `true` to disable, `false` not to disable.
 - `--stratum-address`: Specify the address of the mining pool, the default is `0.0.0.0`.

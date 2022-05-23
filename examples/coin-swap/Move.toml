@@ -4,9 +4,11 @@ version = "0.0.0"
 
 [addresses]
 CoinSwap = "0xC5"
+GoldCoin = "0xC5"
+SilverCoin = "0xC5"
+PoolToken = "0xC5"
 BasicCoin = "0xBC"
-GoldCoin = "0x9C"
-SilverCoin = "0x5C"
+StarcoinFramework = "0x01"
 
 [dependencies]
 StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}

@@ -5,6 +5,7 @@ starcoin miner 为 starcoin 提供的挖矿客户端。
 连接 stc-mini 矿机挖矿的能力。
 ### 使用方法
 
+```shell
 `starcoin_miner` [OPTIONS]
 
 USAGE:
@@ -19,6 +20,8 @@ OPTIONS:
     -a, --server <server>               [default: 127.0.0.1:9870]
     -n, --thread-num <thread-num>       [default: 1]
     -u, --user <user>
+```
+
 
 ### 连接到节点利用 cpu 进行挖矿
 当本地启动了 starcoin node 时，我们可以运行如下命令，指定挖矿用户 alice 启动 4 个线程连接到本地节点进行挖矿。

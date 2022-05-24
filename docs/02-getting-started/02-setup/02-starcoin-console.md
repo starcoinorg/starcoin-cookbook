@@ -81,7 +81,7 @@ Refer to [the second method in the startup console](#method-two).
 Note: In Windows, the path to the IPC file is different.
 
 ```shell
-starcoin.exe -c \\.\\pipe\starcoin\dev\starcoin.ipc console
+starcoin.exe -c \\.\pipe\starcoin\dev\starcoin.ipc console
 ```
 
 ### via WebSocket

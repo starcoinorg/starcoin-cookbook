@@ -12,7 +12,6 @@
 ```shell
 starcoin.exe --net main ^
     --disable-metrics true ^
-    --miner-thread 2 ^
     --node-name starcoin-main ^
     --data-dir D:\starcoin\data ^
     --logger-disable-file true ^
@@ -21,7 +20,6 @@ starcoin.exe --net main ^
 
 - `--net`：指定网络。
 - `--disable-metrics`：是否要禁用指标监控服务，`true` 禁用，`false` 不禁用。
-- `--miner-thread`：挖矿线程数，默认值为 `1`。若不挖矿，可设置为 `0`，主网络默认禁用挖矿客户端。
 - `--node-name`：节点名称，仅用于显示，可根据自己的喜好取个有特色的名字。若不指定，则随机生成。
 - `--data-dir`：数据存放目录，建议选择一个容易查找的路径。
 - `--logger-disable-file`：是否要禁用文件日志采集器，`true` 禁用，`false` 不禁用。

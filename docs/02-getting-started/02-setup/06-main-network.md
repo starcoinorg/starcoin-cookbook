@@ -12,7 +12,6 @@ This is a milestone moment, which means that the ship Starcoin has officially se
 ```shell
 starcoin.exe --net main ^
     --disable-metrics true ^
-    --miner-thread 2 ^
     --node-name starcoin-main ^
     --data-dir D:\starcoin\data ^
     --logger-disable-file true ^
@@ -21,7 +20,6 @@ starcoin.exe --net main ^
 
 - `--net`: Specifies the network.
 - `--disable-metrics`: Whether to disable the metrics monitoring service, `true` to disable, `false` not to disable.
-- `--miner-thread`: The number of mining threads, the default value is `1`. If not mining, it can be set to `0`, and the mining client is disabled by default on the main network.
 - `--node-name`: The node name is only used for display. You can choose a unique name according to your own preferences. If not specified, it will be randomly generated.
 - `--data-dir`: The data storage directory, it is recommended to choose a path that is easy to find.
 - `--logger-disable-file`: Whether to disable the file log collector, `true` to disable, `false` not to disable.

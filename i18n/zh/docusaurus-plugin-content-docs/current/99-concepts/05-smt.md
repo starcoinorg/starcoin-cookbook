@@ -230,15 +230,9 @@ pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerklePr
 ```rust
 let buf = hex::decode(
 "0xfa000000000000007b161ceeef010000000000000000000000000000000000000000000000000000"
-.strip_prefix("0x")
-.ok_or_else(|| format_err!("strip_prefix error"))?,
-)?;
+.strip_prefix("0x").unwrap()
+).unwrap();
 let blob = Blob::from(buf);
-let hash = blob.crypto_hash();
-
-let name = starcoin_crypto::_serde_name::trace_name::<Blob>()
-.expect("The `CryptoHasher` macro only applies to structs and enums");
-assert_eq!(name, "Blob");
 let salt_prefix: &[u8] = b"STARCOIN::Blob";
 let ser = bcs::to_bytes(&blob)?;
 let salt = [
@@ -246,8 +240,7 @@ HashValue::sha3_256_of(salt_prefix).as_slice(),
 ser.as_slice(),
 ]
 .concat();
-let hash1 = HashValue::sha3_256_of(&salt[..]);
-assert_eq!(hash, hash1);
+let hash = HashValue::sha3_256_of(&salt[..]);
 ```
 
 ### 参考文档

@@ -17,7 +17,7 @@ Starcoin 中状态是一颗2级的 SMT 树，如下图所示。
 在 Starcoin 中 `AccountAddress` 不同于以太坊个人账户和合约账户是分开的，合约是部署在个人账户下。`AccountState` 分为两部分，分别是合约代码 ( `Code` ) 和 资源 ( `Resource`  )。
 `Code` 就是账号下合约代码， `Resource` 就是类似有哪些 Token (比如 STC )。
 新 `Block` 执行， `Code` 状态和 `Resource` 状态都可能会改变。
-这样 `Code` 状态用了一颗 SMT 记为 `Code SMT`, `Resource` 状态用了一棵 SMT 记为 `Resource SMT`。
+这样 `Code` 状态用了一棵 SMT 记为 `Code SMT`, `Resource` 状态用了一棵 SMT 记为 `Resource SMT`。
 `AccountState` 状态分为 `Code SMT` 和 `Rescoure SMT`，这样每次执行新 `Block` 后，先存储 `Code SMT` 和 `Resource SMT`， `AccountState` 只用存储 `Code SMT` 和 `Resource SMT` 的根节点。
 在图中分别为 `Code_Root_Hash1` 和 `Res_Root_Hash1`。
 当然这应该是一个事务的过程。
@@ -155,7 +155,7 @@ pub struct AccessPath {
 }
 fn get(&self, access_path: &AccessPath) -> Result<Option<Vec<u8>>>;
 ```
-给 `vm` 提供状态信息查询相关接口，  `AccountAddress` 查找对应的 `AccountStateObject`，再生成
+给 `vm` 提供状态信息查询接口，  `AccountAddress` 查找对应的 `AccountStateObject`，再生成
 `Code Tree` 和 `Resource Tree`, `AccessPath` 成员 `path` 对应为 `ModuleName` 由 `Code Tree` 提供查找，
 否则 `Resource Tree` 提供查找。
 

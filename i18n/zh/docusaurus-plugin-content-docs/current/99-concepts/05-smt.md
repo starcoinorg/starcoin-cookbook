@@ -25,7 +25,7 @@ State 包括合约代码( CODE )和资源( RESOURCE )，余额相关信息都在
 
 #### Merkle Tree 到SMT
 
-在 Starcoin中 Hash 的计算都是基于 sha3_256 计算来的， 所以这颗树是2的256次方个元素
+在 Starcoin 中 Hash 的计算都是基于 sha3_256 计算来的， 所以这颗树是2的256次方个元素
 下图显示了 Merkle Tree到 SMT的两个优化
 ![three_smt](../../../../../static/img/smt/three_smt.png)
 图1是一个 Merkle Tree，图2优化将空子树用 PlaceHolder (方格)代替， 节省了空间，

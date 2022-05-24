@@ -63,31 +63,107 @@ struct AccountStateObject {
 可见 Starcoin 中状态是一个2级的 SMT 结构，`ChainStateDB` 对应一级 SMT ， `AccountStateObject` 对应两个二级 SMT 。
 
 
-### 解释 API
+## StateTree API 说明
 
-### 解释 update, commit , flush, dump 介绍
-
-
-### StateView 相关
-
-
-
-首先看下状态定义
+### new
 ```rust
-pub struct AccountStateSet(Vec<Option<StateSet>>);
-
-pub struct StateSet(Vec<(Vec<u8>, Vec<u8>)>);
+pub fn new(state_storage: Arc<dyn StateNodeStore>, state_root_hash: Option<HashValue>) -> Self
 ```
+创建 `StateTree`， 这里 `state_storage` 对应 `KvStore`，`state_root_hash` 对应 `SMT` 的根节点， 后面的更新查找都是基于这个根节点的 SMT 。
 
-还有AccountStateSet
+### put
+```rust
+pub fn put(&self, key: K, value: Vec<u8>);
+pub struct StateTree<K: RawKey> {
+    storage: Arc<dyn StateNodeStore>,
+    storage_root_hash: RwLock<HashValue>,
+    updates: RwLock<BTreeMap<K, Option<Blob>>>,
+    cache: Mutex<StateCache<K>>,
+}
+```
+将要更新的 `（key, value)` 缓存在 `StateTree` 的成员 `updates` ，这里并没有参与 `SMT` 的计算
 
-get_proof_with
+### remove
+```rust
+pub fn remove(&self, key: &K)
+```
+一种 `value` 为 `NONE` 的特殊的 `put` 操作。
 
-StateProof为什么这么定义
-ChainStateReader
+### commit
+```rust
+ pub fn commit(&self) -> Result<HashValue>
+```
+将缓存于 `updates` 的 `(key, value)` 取出，参与到 SMT 更新中，并计算新的根节点。
+这里会将新产生的 `SMT Node`, 生成的 `(Hash(Node), Encode(Node))` 缓存在 `StateTree` 的
+成员 `cache` 中。
 
-StateView相关
+### flush
+```rust
+ pub fn flush(&self) -> Result<()> 
+```
+将 `StateTree` 成员 `cache` 中的 `(Hash(Node), Encode(Node))` 写到 `KvStore` 中。
 
-AccessPath如何定义
+### get
+```rust
+pub fn get(&self, key: &K) -> Result<Option<Vec<u8>>>
+```
+查找 `StateTree` 中 `key` 对应 `value`。 先检查 `StateTree` 成员 `update` 缓存中是否有，有直接返回。
+没有按照 `SMT` 中 `get_with_proof` 流程。
 
-幂等性相关
+### get_with_proof
+```rust
+pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerkleProof)> {
+```
+获取 `proof`[proof](07-proof.md) 待补充
+
+## ChainStateDB API 说明
+
+### new
+```rust
+pub fn new(store: Arc<dyn StateNodeStore>, root_hash: Option<HashValue>) -> Self
+```
+类似 `StateTree new` 生成根节点为 `root_hash` 的 `SMT`。
+
+### get_account_state_object
+```rust
+ fn get_account_state_object(
+    &self,
+    account_address: &AccountAddress,
+    create: bool,
+) -> Result<Arc<AccountStateObject>> {
+```
+获取 `account_address` 对应的 `Code SMT` 和 `Resource SMT`。
+先根据 `Account SMT` 获取 `account_address` 对应的 `AccountState`，
+再根据 `AccountState` 的 `Code_Root_Hash` 和 `Res_Root_Hash` 生成对应的 `Code SMT` 和 `Resource SMT`。
+
+### get_with_proof
+```rust
+fn get_with_proof(&self, access_path: &AccessPath) -> Result<StateWithProof>
+```
+获取 `proof`, [proof](07-proof.md) 待补充
+
+## StateView 相关
+
+```rust
+pub enum DataPath {
+    Code(#[schemars(with = "String")] ModuleName),
+    Resource(#[schemars(with = "String")] StructTag),
+}
+
+pub struct AccessPath {
+    pub address: AccountAddress,
+    pub path: DataPath,
+}
+fn get(&self, access_path: &AccessPath) -> Result<Option<Vec<u8>>>;
+```
+给 `vm` 提供状态信息查询相关接口，  `AccountAddress` 查找对应的 `AccountStateObject`，再生成
+`Code Tree` 和 `Resource Tree`, `AccessPath` 成员 `path` 对应为 `ModuleName` 由 `Code Tree` 提供查找，
+否则 `Resource Tree` 提供查找。
+
+## 幂等性相关
+`StateTree` 幂等性由 `SMT` 保证， `ChainStateDB` 幂等性由 `StateTree` 保证。
+
+
+## 资源
+
+[draw.io](../../../../../static/state.drawio)

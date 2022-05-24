@@ -2,19 +2,19 @@
 
 需要先理解 [smt](05-smt.md) 的原理。
 
-##状态的实现
+## 状态的实现
 
 在 Starcoin 中，区块 ( `Block` ) 由一些交易 （ `Transaction` ) 组成，对一个区块的执行就是对区块内交易的执行。
 交易执行的结果由状态表示。这里采用的全局状态，包含链上所有账户的最新状态和历史状态。
-状态实际上就是账号地址 ( `AccountAddress` ) 到账户状态 ( `AccountState` ) 的映射。
-Starcoin 中状态是一颗2层的 SMT 树，如下图所示。
+状态实际上就是账户地址 ( `AccountAddress` ) 到账户状态 ( `AccountState` ) 的映射。
+Starcoin 中状态是一颗2级的 SMT 树，如下图所示。
 
 ![two_level_state.png](../../../../../static/img/state/two_level_state.png)
 
 状态是 `AccountAddress` 到 `AccountState` 的映射，随着新的 `Block` 的执行 ， `AccountState` 会变化，由于需要保留历史状态相关的证明，这里使用了 SMT 这一数据结构。
-为了方便这里把 `AccountAddress` 到 `AccountState` 的状态称为 `Account SMT`。这里 `(AccountAddress, AccountState)` 存储在 `Account SMT` 的 `Leaf` 节点上。
+为了方便这里把 `AccountAddress` 到 `AccountState` 的状态称为 `Account SMT`。如图中显示这里 `(AccountAddress, AccountState)` 存储在 `Account SMT` 的 `Leaf` 节点上。
 在图中就是 `Account SMT` 的根节点是 `Root_Hash`，这里对应 `BlockHeader` 中的 `state_root`。
-在 Starcoin 中 `AccountAddress` 不同于以太坊个人账户和合约账户是分开的，合约是部署在个人账户下。`AccountState` 被分为两部分，分别是合约代码 ( Code ) 和 资源 ( Resource)。
+在 Starcoin 中 `AccountAddress` 不同于以太坊个人账户和合约账户是分开的，合约是部署在个人账户下。`AccountState` 分为两部分，分别是合约代码 ( `Code` ) 和 资源 ( `Resource`发  )。
 Code 就是账号下合约代码， Resource 就是你有哪些 Token (比如 STC )。
 新 `Block` 执行， Code 状态和 Resource 状态都可能会改变。
 这样 Code 状态用了一颗 SMT 记为 `Code SMT`, Resource 状态用了一棵 SMT 记为 `Resource SMT`。
@@ -24,7 +24,7 @@ Code 就是账号下合约代码， Resource 就是你有哪些 Token (比如 ST
 
 ## 状态在 Starcoin 中对应代码
 
-在 Starcoin 中 `Account SMT` 定义为`ChainStateDB`
+在 Starcoin 中 `Account SMT` 定义为 `ChainStateDB`
 ```rust
 pub struct ChainStateDB {
     store: Arc<dyn StateNodeStore>,
@@ -52,10 +52,15 @@ struct AccountStateObject {
     store: Arc<dyn StateNodeStore>,
 }
 ```
-这里 `store` 对应存储的 `KvStore`， `ChainStateDB` 的 `state_tree` 代表 `AccountAddreee` -> `AccountState`对应的 `SMT` 树。
-这里 `StateTree` 成员 `storage_root_hash` 是一个 `HashValue` 对应 `SMT` 中的根节点。
-`AccountState` 有2个 `HashValue` 元素，对应图中 `Code_Root_Hash1` 和 `Res_Root_Hash1`，也是 `AccountStateObject` 中的 `code_tree` 和 `resource_tree` 的根节点。
-Starcoin 中状态是一个2级的 SMT 结构，`ChainStateDB` 对应一级， `AccountStateObject` 对应二级。
+这里 `store` 对应存储的 `KvStore`， `ChainStateDB` 的成员 `state_tree` 对应 `AccountAddreee` -> `AccountState` 的 `Account SMT` 树。
+`StateTree` 的成员 `storage_root_hash` 对应 `SMT` 的根节点。
+`AccountState` 有2个 `HashValue` 元素，对应图中 `Code_Root_Hash1` 和 `Res_Root_Hash1`，也就是 `AccountStateObject` 中的 `code_tree` 和 `resource_tree` 的根节点。
+`AccountStateObject` 的成员 `code_tree` 对应 `ModuleName` -> `Vec<u8>` 的 `Code SMT` 。。
+`AccountStateObject` 的成员 `resource_tree` 对应 `StructTag` -> `Vec<u8>` 的 `Resource SMT` 。
+`ModuleName` 类似于 `Account1` (对应 starcoin-framework 里面的模块 https://github.com/starcoinorg/starcoin-framework/tree/v11/sources)。
+`struct_tag` 类似于 `0x00000000000000000000000000000001::Account::Account`。
+
+可见 Starcoin 中状态是一个2级的 SMT 结构，`ChainStateDB` 对应一级 SMT ， `AccountStateObject` 对应两个二级 SMT 。
 
 
 ### 解释 API

@@ -49,6 +49,12 @@ If you want to know the progress of the node synchronization data, you can open 
 starcoin.exe -c \\.\pipe\starcoin\main\starcoin.ipc console
 ```
 
+In the Starcoin console enter:
+
+```shell
+node sync status
+```
+
 Some key information can be found in the output JSON data.
 The synchronization is completed when `chain_status.head.number` and `state.Synchronizing.target.number` are equal.
 
@@ -70,6 +76,149 @@ account export <ADDRESS>
 Note: Please keep the private key safe!
 
 **6. Exit the console**
+
+```shell
+exit
+```
+
+## Linux joins main network (recommendation)
+
+**1. Start**
+
+```shell
+starcoin
+```
+
+The `starcoin` command uses the `main` network by default, the mining client is disabled by default, the mining pool is not listened by default, and the data directory defaults to `.starcoin/main` under the main directory.
+
+```shell
+# Data directory, ubuntu is the username of the demo, please change it according to your actual situation
+2022-05-24T10:07:29.069207121+08:00 INFO - Final data-dir is : "/home/ubuntu/.starcoin/main"
+
+# IPC file path
+2022-05-24T10:07:29.061062410+08:00 INFO - Ipc file path: "/home/ubuntu/.starcoin/main/starcoin.ipc"
+```
+
+**2. View node synchronization progress**
+
+Open a new command line window and enter:
+
+```shell
+starcoin -c ~/.starcoin/main/starcoin.ipc console
+```
+
+In the Starcoin console enter:
+
+```shell
+node sync status
+```
+
+Some key information can be found in the output JSON data.
+The synchronization is completed when `chain_status.head.number` and `state.Synchronizing.target.number` are equal.
+
+**3. View default account**
+
+Each newly started node is initialized with a default account with an empty password.
+
+```shell
+# View the default account and find the account address
+account default
+```
+
+**4. Export the private key of the default account**
+
+```shell
+account export <ADDRESS>
+```
+
+Note: Please keep the private key safe!
+
+**5. Exit the console**
+
+```shell
+exit
+```
+
+## Docker joins main network
+
+**1. Pull the [Docker image](https://hub.docker.com/r/starcoin/starcoin/)**
+
+```shell
+docker pull starcoin/starcoin:latest
+```
+
+If you want to use a specific version, you can change the pull tag, such as `v1.11.9`:
+
+```shell
+docker pull starcoin/starcoin:v1.11.9
+```
+
+**2. Start**
+
+The `starcoin` binaries are in the `/starcoin` directory in the mirror.
+
+```shell
+docker run --name starcoin -v ~/.starcoin/:/root/.starcoin/ --network host starcoin/starcoin:latest /starcoin/starcoin
+```
+
+- `--name`: Specifies the container name.
+- `-v`: Bind mounted volume for persisting data in Docker.
+- `--network`: Let the network of the Docker container be attached to the host, and the two can communicate with each other.
+
+**3. Connect to the Starcoin console via Docker**
+
+Open a new command line window and enter:
+
+```shell
+docker run --rm -it -v ~/.starcoin/:/root/.starcoin/ starcoin/starcoin:latest /starcoin/starcoin -c /root/.starcoin/main/starcoin.ipc console
+```
+
+- `--rm`: Automatically remove the container when exiting the Starcoin console.
+- `-it`: Enter the container interactively, assigning a pseudo terminal.
+
+If you don't want to start a new container, you can directly access the container that started Starcoin:
+
+```shell
+docker container exec -it starcoin bash
+
+/starcoin/starcoin -c /root/.starcoin/main/starcoin.ipc console
+```
+
+**4. View node synchronization progress**
+
+Open a new command line window and enter:
+
+```shell
+starcoin -c ~/.starcoin/main/starcoin.ipc console
+```
+
+In the Starcoin console enter:
+
+```shell
+node sync status
+```
+
+Some key information can be found in the output JSON data.
+The synchronization is completed when `chain_status.head.number` and `state.Synchronizing.target.number` are equal.
+
+**5. View default account**
+
+Each newly started node is initialized with a default account with an empty password.
+
+```shell
+# View the default account and find the account address
+account default
+```
+
+**6. Export the private key of the default account**
+
+```shell
+account export <ADDRESS>
+```
+
+Note: Please keep the private key safe!
+
+**7. Exit the console**
 
 ```shell
 exit

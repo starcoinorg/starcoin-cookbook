@@ -25,7 +25,7 @@ State 包括合约代码( CODE )和资源( RESOURCE )，余额相关信息都在
 
 #### Merkle Tree 到SMT
 
-在 Starcoin中 Hash 的计算都是基于 sha3_256 计算来的， 所以这颗树是2的256次方个元素
+在 Starcoin 中 Hash 的计算都是基于 sha3_256 ( Hash Struct 会加入 prefix 文末会给出示例代码) 计算来的， 所以这颗树是2的256次方个元素
 下图显示了 Merkle Tree到 SMT的两个优化
 ![three_smt](../../../../../static/img/smt/three_smt.png)
 图1是一个 Merkle Tree，图2优化将空子树用 PlaceHolder (方格)代替， 节省了空间，
@@ -223,10 +223,32 @@ StaleNodeIndex 中 stale_since_version 是这次新产生的根节点 Hash， no
 ```rust
 pub fn get_with_proof(&self, key: &K) -> Result<(Option<Vec<u8>>, SparseMerkleProof)>
 ```
-获取 Key 对应的 Value 的值，如果存在并返回对应的 Merkle Proof 证明
+获取 Key 对应的 Value 的值，如果存在并返回对应的 Merkle Proof 证明。
+[proof](07-proof.md) 待补充。
 
-参考文档:
+### Starcoin 中 sha3_256  Struct 示例代码
+```rust
+let buf = hex::decode(
+"0xfa000000000000007b161ceeef010000000000000000000000000000000000000000000000000000"
+.strip_prefix("0x").unwrap()
+).unwrap();
+let blob = Blob::from(buf);
+let salt_prefix: &[u8] = b"STARCOIN::Blob";
+let ser = bcs::to_bytes(&blob)?;
+let salt = [
+HashValue::sha3_256_of(salt_prefix).as_slice(),
+ser.as_slice(),
+]
+.concat();
+let hash = HashValue::sha3_256_of(&salt[..]);
+```
+
+### 参考文档
+
 https://developers.diem.com/papers/jellyfish-merkle-tree/2021-01-14.pdf
+
 https://westar.io/blog/jellyfish-merkle-tree-in-libra/
 
-相关资源[draw.io](../../../../../static/smt.drawio)
+### 相关资源
+
+[draw.io](../../../../../static/smt.drawio)

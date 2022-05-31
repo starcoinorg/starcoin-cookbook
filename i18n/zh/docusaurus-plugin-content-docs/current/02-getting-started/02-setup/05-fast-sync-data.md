@@ -60,6 +60,23 @@ mkdir ~/bak
 - `-n` 指定网络。
 - `-o` 指定节点的数据目录。
 
+### 使用脚本导入区块数据（推荐）
+
+`starcoin` 的仓库中提供了 [`import_block.sh`](https://github.com/starcoinorg/starcoin/blob/master/scripts/import_block.sh) 脚本，预编译版本也打包有相应的脚本。
+使用脚本导入区块数据会更加便利，而不必手动导出和导入。
+
+```shell
+./import_block.sh main ~/.starcoin/main
+```
+
+这个脚本接收两个参数，参数1指定网络名称，例如 `main`, `barnard`, `proxima` 或 `halley`，参数2指定数据存储的目录，例如 `~/.starcoin/main` 或任意自定义的路径。
+这个脚本会跳过已经有的区块，每获取一个区块都会自动更新进度，中断脚本后再执行会接着原来的高度继续导入。
+
+执行脚本后，就会自动下载主网区块数据到 `~/.starcoin/main` 目录并导入。
+等待下载并导入完成，就可以使用这些区块数据运行新的节点了。
+
+注意：使用这个脚本必须保证 `starcoin_db_exporter` 和 `import_block.sh` 在同一路径下。
+
 ## 同步链的状态
 
 `starcoin_db_exporter` 命令提供了离线导出导入 `main, barnard, proxima, halley` 网络的快照功能，便于快速的搭建区块链网络。
@@ -103,3 +120,15 @@ mkdir ~/snapshot
 - `-i` 指定存放快照的目录。
 - `-n` 指定网络。
 - `-o` 指定节点的数据目录。
+
+### 使用脚本导入快照
+
+`starcoin` 的仓库中提供了 [`import_snapshot.sh`](https://github.com/starcoinorg/starcoin/blob/master/scripts/import_snapshot.sh) 脚本，预编译版本也打包有相应的脚本。
+
+```shell
+./import_snapshot.sh main ~/snapshot/ ~/.starcoin/main
+```
+
+这个脚本需要传递3个参数，参数1指定网路的名称，参数2指定快照的存储路径，参数3指定节点的数据目录。
+
+注意：使用这个脚本必须保证 `starcoin_db_exporter` 和 `import_snapshot.sh` 在同一路径下。

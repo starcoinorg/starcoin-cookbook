@@ -39,13 +39,19 @@ $ yarn start
 $ yarn build
 ```
 
+默认构建出的文档的 BaseUrl 是 `/starcoin-cookbook`, 如果你想改变它，可以在 build 之前通过环境变量指定。
+
+```
+$ export BASE_URL='/'
+```
+
 （2）运行以下命令，将在本地启动一个 Web 服务：
 
 ```bash
 $ yarn serve 
 ```
 
-在浏览器中打开地址 `http://localhost:3000/starcoin-cookbook/`，就可以看到完整的文档。
+在浏览器中打开地址 `http://localhost:3000/starcoin-cookbook/`，就可以看到完整的文档。如果你指定了 BASE_URL 环境变量为 `/`，地址将是：`http://localhost:3000/`。
 
 5. 提交 Pull Request
 

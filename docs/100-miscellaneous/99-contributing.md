@@ -37,11 +37,22 @@ This command generates static content into the `/build` directory and can be ser
 $ yarn build
 ```
 
-Then run serve to serving build directory at http://localhost:3000/starcoin-cookbook/
+The default BaseUrl is `/starcoin-cookbook`, if you want to change it, you can specify it via environment variable before build.
+
+```
+$ export BASE_URL='/'
+```
+
+(2) Run the following command, which will start a web service locally.
+
+Then run serve to serving build directory at `http://localhost:3000/starcoin-cookbook/`. 
+
 
 ```bash
 $ yarn serve
 ```
+
+If you specify the BASE_URL environment variable as `/`, the address will be: `http://localhost:3000/`.
 
 ## Guidelines
 

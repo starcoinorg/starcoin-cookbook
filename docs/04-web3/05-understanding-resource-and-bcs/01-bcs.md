@@ -1,18 +1,18 @@
-## Binary Canonical Serialization (BCS)
+# Binary Canonical Serialization (BCS)
 
 BCS (formerly "Libra Canonical Serialization" or LCS) is a serialization format developed
 in the context of the [Diem](https://diem.com) blockchain.
 
 BCS was designed with the following main goals in mind:
+
 * provide good performance and concise (binary) representations;
 * support a rich set of data types commonly used in Rust;
-* enforce canonical serialization, meaning that every value of a given type should have
-a single valid representation.
+* enforce canonical serialization, meaning that every value of a given type should have a single valid representation.
 
 BCS also aims to mitigate the consequence of malicious inputs by enforcing well-defined limits
 on large or nested containers during (de)serialization.
 
-### Rust Implementation
+## Rust Implementation
 
 This crate provides a Rust implementation of BCS as an encoding format for the [Serde library](https://serde.rs).
 As such, this implementation covers most data types supported by Serde -- including user-defined structs,
@@ -20,12 +20,13 @@ tagged variants (Rust enums), tuples, and maps -- excluding floats, single unico
 
 BCS is also available in other programming languages, thanks to the separate project [serde-reflection](https://github.com/novifinancial/serde-reflection).
 
-### Application to Cryptography
+## Application to Cryptography
 
 The BCS format guarantees canonical serialization, meaning that for any given data type, there
 is a one-to-one correspondance between in-memory values and valid byte representations.
 
 In the context of a cryptographic application, canonical serialization has several benefits:
+
 * It provides a natural and reliable way to associate in-memory values to cryptographic hashes.
 * It allows the signature of a message to be defined equivalently as the signature of the serialized bytes or as the signature of the in-memory value.
 
@@ -33,15 +34,15 @@ Note that BCS ensures canonical serialization for each data type separately. The
 must be enforced by the application itself. This requirement is typically fulfilled
 using unique hash seeds for each data type. (See [Diem's cryptographic library](https://github.com/diem/diem/blob/master/crypto/crypto/src/hash.rs) for an example.)
 
-### Backwards Compatibility
+## Backwards Compatibility
 
 By design, BCS does not provide implicit versioning or backwards/forwards compatibility, therefore
 applications must carefully plan in advance for adhoc extension points:
-* Enums may be used for explicit versioning and backward compatibility (e.g. extensible query interfaces).
-* In some cases, data fields of type `Vec<u8>` may also be added to allow (future) unknown payloads
-in serialized form.
 
-### Detailed Specifications
+* Enums may be used for explicit versioning and backward compatibility (e.g. extensible query interfaces).
+* In some cases, data fields of type `Vec<u8>` may also be added to allow (future) unknown payloads in serialized form.
+
+## Detailed Specifications
 
 BCS supports the following data types:
 
@@ -57,12 +58,12 @@ BCS supports the following data types:
 * Externally tagged enumerations (aka "enums")
 * Maps
 
-BCS is not a self-describing format. As such, in order to deserialize a message, one must
-know the message type and layout ahead of time.
+BCS is not a self-describing format.
+As such, in order to deserialize a message, one must know the message type and layout ahead of time.
 
 Unless specified, all numbers are stored in little endian, two's complement format.
 
-#### Recursion and Depth of BCS Data
+### Recursion and Depth of BCS Data
 
 Recursive data-structures (e.g. trees) are allowed. However, because of the possibility of stack
 overflow during (de)serialization, the *container depth* of any valid BCS data cannot exceed the constant
@@ -73,6 +74,7 @@ This definition aims to minimize the number of operations while ensuring that
 (de)serialization of a known BCS format cannot cause arbitrarily large stack allocations.
 
 As an example, if `v1` and `v2` are values of depth `n1` and `n2`,
+
 * a struct value `Foo { v1, v2 }` has depth `1 + max(n1, n2)`;
 * an enum value `E::Foo { v1, v2 }` has depth `1 + max(n1, n2)`;
 * a pair `(v1, v2)` has depth `max(n1, n2)`;
@@ -80,7 +82,7 @@ As an example, if `v1` and `v2` are values of depth `n1` and `n2`,
 
 All string and integer values have depths `0`.
 
-#### Booleans and Integers
+### Booleans and Integers
 
 |Type                       |Original data          |Hex representation |Serialized bytes        |
 |---                        |---                    |---                |---                     |
@@ -94,7 +96,7 @@ All string and integer values have depths `0`.
 |64-bit signed integer      |-1311768467750121216   |0xEDCBA98754321100 |00 11 32 54 87 A9 CB ED |
 |64-bit unsigned integer    |1311768467750121216    |0x12345678ABCDEF00 |00 EF CD AB 78 56 34 12 |
 
-#### ULEB128-Encoded Integers
+### ULEB128-Encoded Integers
 
 The BCS format also uses the [ULEB128 encoding](https://en.wikipedia.org/wiki/LEB128) internally
 to represent unsigned 32-bit integers in two cases where small values are usually expected:
@@ -120,7 +122,7 @@ integer and be in canonical form. For instance, the following values are rejecte
 * 80 80 80 80 10 (2^33) is too large.
 * 80 00 is not a minimal encoding of 0.
 
-#### Optional Data
+### Optional Data
 
 Optional or nullable data either exists in its full representation or does not. BCS represents
 this as a single byte representing the presence `0x01` or absence `0x00` of data. If the data
@@ -134,7 +136,7 @@ let no_data: Option<u8> = None;
 assert_eq!(to_bytes(&no_data)?, vec![0]);
 ```
 
-#### Fixed and Variable Length Sequences
+### Fixed and Variable Length Sequences
 
 Sequences can be made of up of any BCS supported types (even complex structures) but all
 elements in the sequence must be of the same type. If the length of a sequence is fixed and
@@ -155,7 +157,7 @@ let large_variable_length: Vec<()> = vec![(); 9_487];
 assert_eq!(to_bytes(&large_variable_length)?, vec![0x8f, 0x4a]);
 ```
 
-#### Strings
+### Strings
 
 Only valid UTF-8 Strings are supported. BCS serializes such strings as a variable length byte
 sequence, i.e. length prefixed with a ULEB128-encoded unsigned integer followed by the byte
@@ -171,7 +173,7 @@ let expecting = vec![
 assert_eq!(to_bytes(&utf8_str)?, expecting);
 ```
 
-#### Tuples
+### Tuples
 
 Tuples are typed composition of objects: `(Type0, Type1)`
 
@@ -186,7 +188,7 @@ assert_eq!(to_bytes(&tuple)?, expecting);
 ```
 
 
-#### Structures
+### Structures
 
 Structures are fixed length sequences consisting of fields with potentially different types.
 Each field within a struct is serialized in the order specified by the canonical structure
@@ -228,7 +230,7 @@ expecting.append(&mut vec![1, b'b']);
 assert_eq!(w_bytes, expecting);
 ```
 
-#### Externally Tagged Enumerations
+### Externally Tagged Enumerations
 
 An enumeration is typically represented as a type that can take one of potentially many
 different variants. In BCS, each variant is mapped to a variant index, a ULEB128-encoded 32-bit unsigned
@@ -256,9 +258,9 @@ assert_eq!(to_bytes(&v2)?, vec![2, 1, b'e']);
 
 If you need to serialize a C-style enum, you should use a primitive integer type.
 
-#### Maps (Key / Value Stores)
+### Maps (Key / Value Stores)
 
-Maps are represented as a variable-length, sorted sequence of (Key, Value) tuples. Keys must be
+Maps are represented as a variable-length, sorted sequence of `(Key, Value)` tuples. Keys must be
 unique and the tuples sorted by increasing lexicographical order on the BCS bytes of each key.
 The representation is otherwise similar to that of a variable-length sequence. In particular,
 it is preceded by the number of tuples, encoded in ULEB128.

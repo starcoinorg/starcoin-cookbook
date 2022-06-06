@@ -13,7 +13,7 @@ cd starcoin-cookbook
 
 2. 安装
 
-你的机器上需要预先安装好 nodejs 以及 yarn，安装方式请参看 [yarnpkg](https://yarnpkg.com/getting-started/install)。
+你的机器上需要预先安装好 Node.js 以及 yarn，安装方式请参看 [yarnpkg](https://yarnpkg.com/getting-started/install)。
 
 然后在项目目录下运行：
 

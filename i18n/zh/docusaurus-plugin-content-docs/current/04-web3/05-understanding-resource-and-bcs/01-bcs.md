@@ -41,17 +41,17 @@ BCS 格式保证规范的序列化，这意味着对于任何给定的数据类�
 
 BCS 支持以下数据类型：
 
-* 布尔值
-* 有符号 8 位、16 位、32 位、64 位和 128 位整数
-* 无符号 8 位、16 位、32 位、64 位和 128 位整数
-* 选项
-* 单位（空值）
-* 固定和可变长度序列
+* 布尔值（Booleans）
+* 有符号 8 位（Signed 8-bit）、16 位、32 位、64 位和 128 位整数（integers）
+* 无符号 8 位（Unsigned 8-bit）、16 位、32 位、64 位和 128 位整数（integers）
+* 选项（Option）
+* 单位（Unit）（空值）
+* 固定和可变长度序列（Fixed and variable length sequences）
 * UTF-8 编码字符串
-* 元组
-* 结构（又名“structs”）
-* 外部标记的枚举（又名“enums”）
-* 映射
+* 元组（Tuples）
+* 结构（Structures）（又名“structs”）
+* 外部标记的枚举（Externally tagged enumerations）（又名“enums”）
+* 映射（Maps）
 
 BCS 不是一种自我描述的格式。
 

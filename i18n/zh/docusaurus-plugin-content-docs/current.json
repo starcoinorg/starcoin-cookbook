@@ -78,5 +78,9 @@
   "sidebar.tutorialSidebar.category.mining": {
     "message": "mining",
     "description": "The label for category mining in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.understanding-resource-and-bcs": {
+    "message": "understanding-resource-and-bcs",
+    "description": "The label for category understanding-resource-and-bcs in sidebar tutorialSidebar"
   }
 }

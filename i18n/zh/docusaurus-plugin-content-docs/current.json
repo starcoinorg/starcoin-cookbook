@@ -4,7 +4,7 @@
     "description": "The label for version current"
   },
   "sidebar.tutorialSidebar.category.Getting Started": {
-    "message": "入门",
+    "message": "新手入门",
     "description": "The label for category Getting Started in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Download and Install": {
@@ -19,53 +19,13 @@
     "message": "理解和管理账号",
     "description": "The label for category Understanding and manage accounts in sidebar tutorialSidebar"
   },
+  "sidebar.tutorialSidebar.category.mining": {
+    "message": "挖矿",
+    "description": "The label for category mining in sidebar tutorialSidebar"
+  },
   "sidebar.tutorialSidebar.category.Move and SmartContract Development": {
     "message": "Move 和智能合约开发",
     "description": "The label for category Move and SmartContract Development in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Advance Move Development": {
-    "message": "Advance Move Development",
-    "description": "The label for category Advance Move Development in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Move Spec Language and Move Prover": {
-    "message": "Move Spec Language and Move Prover",
-    "description": "The label for category Move Spec Language and Move Prover in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Web3 and DApp Development": {
-    "message": "Web3 and DApp Development",
-    "description": "The label for category Web3 and DApp Development in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Concepts": {
-    "message": "Concepts",
-    "description": "The label for category Concepts in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.How to test Move Module": {
-    "message": "How to test Move Module",
-    "description": "The label for category How to test Move Module in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.More Move Examples": {
-    "message": "More Move Examples",
-    "description": "The label for category More Move Examples in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Move Specification Language and Move Prover": {
-    "message": "Move 规范语言和 Move Prover",
-    "description": "The label for category Move Specification Language and Move Prover in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Miscellaneous": {
-    "message": "杂项",
-    "description": "The label for category Miscellaneous in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.Reference": {
-    "message": "Reference",
-    "description": "The label for category Reference in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.StarcoinFramework": {
-    "message": "StarcoinFramework",
-    "description": "The label for category StarcoinFramework in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.CLI": {
-    "message": "CLI",
-    "description": "The label for category CLI in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Move Language": {
     "message": "Move 语言",
@@ -75,12 +35,48 @@
     "message": "Starcoin Move Framework",
     "description": "The label for category Starcoin Move Framework in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.mining": {
-    "message": "mining",
-    "description": "The label for category mining in sidebar tutorialSidebar"
+  "sidebar.tutorialSidebar.category.How to test Move Module": {
+    "message": "How to test Move Module",
+    "description": "The label for category How to test Move Module in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.More Move Examples": {
+    "message": "More Move Examples",
+    "description": "The label for category More Move Examples in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Advance Move Development": {
+    "message": "Advance Move Development",
+    "description": "The label for category Advance Move Development in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Move Specification Language and Move Prover": {
+    "message": "Move 规范语言和 Move Prover",
+    "description": "The label for category Move Specification Language and Move Prover in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Web3 and DApp Development": {
+    "message": "Web3 and DApp Development",
+    "description": "The label for category Web3 and DApp Development in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.understanding-resource-and-bcs": {
-    "message": "understanding-resource-and-bcs",
+    "message": "理解 resource 和 BSC",
     "description": "The label for category understanding-resource-and-bcs in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Reference": {
+    "message": "参考",
+    "description": "The label for category Reference in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.CLI": {
+    "message": "命令行界面（CLI）",
+    "description": "The label for category CLI in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.StarcoinFramework": {
+    "message": "StarcoinFramework",
+    "description": "The label for category StarcoinFramework in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Concepts": {
+    "message": "概念",
+    "description": "The label for category Concepts in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Miscellaneous": {
+    "message": "杂项",
+    "description": "The label for category Miscellaneous in sidebar tutorialSidebar"
   }
 }

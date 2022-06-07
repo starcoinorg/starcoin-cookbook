@@ -36,15 +36,15 @@
     "description": "The label for category Starcoin Move Framework in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.How to test Move Module": {
-    "message": "How to test Move Module",
+    "message": "如何测试 Move Module",
     "description": "The label for category How to test Move Module in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.More Move Examples": {
-    "message": "More Move Examples",
+    "message": "更多 Move 例子",
     "description": "The label for category More Move Examples in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Advance Move Development": {
-    "message": "Advance Move Development",
+    "message": "Move 高级开发",
     "description": "The label for category Advance Move Development in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Move Specification Language and Move Prover": {
@@ -52,12 +52,8 @@
     "description": "The label for category Move Specification Language and Move Prover in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Web3 and DApp Development": {
-    "message": "Web3 and DApp Development",
+    "message": "Web3 和 DApp 开发",
     "description": "The label for category Web3 and DApp Development in sidebar tutorialSidebar"
-  },
-  "sidebar.tutorialSidebar.category.understanding-resource-and-bcs": {
-    "message": "理解 resource 和 BSC",
-    "description": "The label for category understanding-resource-and-bcs in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Reference": {
     "message": "参考",
@@ -78,5 +74,9 @@
   "sidebar.tutorialSidebar.category.Miscellaneous": {
     "message": "杂项",
     "description": "The label for category Miscellaneous in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Understanding resource and BCS": {
+    "message": "理解 resource 和 BCS",
+    "description": "The label for category Understanding resource and BCS in sidebar tutorialSidebar"
   }
 }

@@ -19,10 +19,6 @@
     "message": "理解和管理账号",
     "description": "The label for category Understanding and manage accounts in sidebar tutorialSidebar"
   },
-  "sidebar.tutorialSidebar.category.mining": {
-    "message": "挖矿",
-    "description": "The label for category mining in sidebar tutorialSidebar"
-  },
   "sidebar.tutorialSidebar.category.Move and SmartContract Development": {
     "message": "Move 和智能合约开发",
     "description": "The label for category Move and SmartContract Development in sidebar tutorialSidebar"
@@ -78,5 +74,9 @@
   "sidebar.tutorialSidebar.category.Understanding resource and BCS": {
     "message": "理解 resource 和 BCS",
     "description": "The label for category Understanding resource and BCS in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Mining": {
+    "message": "挖矿",
+    "description": "The label for category Mining in sidebar tutorialSidebar"
   }
 }

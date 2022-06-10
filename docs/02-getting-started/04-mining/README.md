@@ -1,3 +1,3 @@
-#  挖矿并了解挖矿协议
+# Mining and understanding the mining protocol
 
-这个章节你可以了解如何使用 starcoin 的命令行工具，矿机，矿池进行挖矿。以及挖矿的相关协议。
+In this chapter, you can learn how to use Starcoin's command-line tools, mining machines, mining pools for mining, and mining related protocols.

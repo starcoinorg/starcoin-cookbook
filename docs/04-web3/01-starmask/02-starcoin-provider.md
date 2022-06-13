@@ -101,7 +101,7 @@ In practice, if a method has any `params`, they are almost always of type `Array
 If the request fails for any reason, the Promise will reject with an [Starcoin RPC Error](#errors).
 
 StarMask supports most standardized Starcoin RPC methods, in addition to a number of methods that may not be supported by other wallets.
-See the StarMask [RPC API documentation](./02-rpc-api.md) for details.
+See the StarMask [RPC API documentation](./03-rpc-api.md) for details.
 
 #### Example
 

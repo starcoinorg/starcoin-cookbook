@@ -15,7 +15,7 @@ cd starcoin-cookbook
 
 你的机器上需要预先安装好 Node.js 以及 yarn，安装方式请参看 [yarnpkg](https://yarnpkg.com/getting-started/install)。
 
-然后在项目目录下运行：
+然后在项目目录下运行下面的语句安装依赖：
 
 ```bash
 $ yarn
@@ -28,6 +28,16 @@ $ yarn
 ```bash
 $ yarn start
 ```
+
+这样子默认是启动英文版。如果想热加载其他语言版本，比如中文zh，可以
+
+```bash
+$ yarn start --locale zh
+```
+
+:::tip 提示
+可选的 locales 标识在 `docusaurus.config.js` 中定义。
+:::
 
 此命令将自动打开浏览器并跳转到文档首页，当你编写或者修改文档时浏览器会自动刷新。
 

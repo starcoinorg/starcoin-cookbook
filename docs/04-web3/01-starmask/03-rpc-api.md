@@ -14,10 +14,6 @@ Starcoin Methods
 Visit our [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/)
 :::
 
-## Table of Contents
-
-[[toc]]
-
 <!--
 ## Starcoin JSON-RPC Methods
 

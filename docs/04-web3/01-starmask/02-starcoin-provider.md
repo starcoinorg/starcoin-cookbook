@@ -23,10 +23,6 @@ if (!isStarMaskInstalled()) {
 
 The Starcoin JavaScript provider API is specified by [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193).
 
-## Table of Contents
-
-[[toc]]
-
 ## Basic Usage
 
 For any non-trivial Starcoin web application — a.k.a. dapp, web3 site etc. — to work, you will have to:

@@ -78,5 +78,9 @@
   "sidebar.tutorialSidebar.category.Mining": {
     "message": "挖矿",
     "description": "The label for category Mining in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.StarMask Docs": {
+    "message": "StarMask Docs",
+    "description": "The label for category StarMask Docs in sidebar tutorialSidebar"
   }
 }

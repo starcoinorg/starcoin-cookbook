@@ -1,6 +1,6 @@
 # Starcoin Json RPC
 
-> `account.*` and `node_manager.*` is not public on Main/Barnard/Proxima/Halley networks. They are only accessable while you enable `public` on your local node.
+> `account.*` 和 `node_manager.*` 在 主网和 Barnard/Proxima/Halley 等测试网上不可访问。 只有你自己搭建的节点启动时设置了 public 才能访问。
 
 ## [account](https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/starcoinorg/starcoin/master/rpc/generated_rpc_schema/account.json)
 

@@ -1,1 +1,0 @@
-# Starcoin json rpc

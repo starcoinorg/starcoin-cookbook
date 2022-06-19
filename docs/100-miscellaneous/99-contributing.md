@@ -29,6 +29,16 @@ $ yarn start
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
+English locale is used by default. Start your localized site in dev mode, using the locale of your choice:
+
+```bash
+$ yarn start --locale zh
+```
+
+:::tip Tip
+Available locales defined in `docusaurus.config.js`.
+:::
+
 ### 4. Build
 
 This command generates static content into the `/build` directory and can be served using any static contents hosting service.

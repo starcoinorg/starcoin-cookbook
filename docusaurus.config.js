@@ -62,7 +62,7 @@ const config = {
         title: 'Starcoin Cookbook',
         logo: {
           alt: 'Starcoin Cookbook',
-          src: '/img/logo.png',
+          src: '/img/logo.svg',
         },
         items: [
           {

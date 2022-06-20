@@ -2,49 +2,13 @@
 
 在这个小教程中，我们实现一个简单的计数器，来展示Move如何通过代码来管理资源的。这篇文档涉及的内容包括背景知识、写代码、如何编译、如何发布到链上、如何调用。完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
 
-
 提前准备：
 1. 需要按照 [如何设置本地开发网络](./02-getting-started/02-setup/03-dev-network.md) 搭建 dev 网络、通过 console 链接到 dev 网络。
 2. 按照 [账号管理](./02-getting-started/03-accounts/1.account-manage.md) 创建一个账号活着使用已有账号，并且给账号里转一点 STC。
 3. 通过 [第一笔链上交易](./02-getting-started/03-accounts/2.first-transaction.md) 对 transaction 有基本理解。
 
-在开始之前，先简单介绍一点背景知识，说明一下 Move 代码的存储以及用户数据的读写方式。
+下面先介绍一下必备的工具和项目结构。
 
-## 代码的执行、资源与存储
-
-我们知道在传统应用的开发中，最核心的就是数据的存储、更新与展示，业务逻辑也是为此服务的。数据一般会存储在中心化的数据库中，比如MySQL、Redis等。请求是交给在某一台服务器上的一个进程实例来执行的（分布式系统也是最终落到一个实例上的）。
-
-在 Move 的世界里，数据的存储以及代码的执行略有不同。Move 代码被编译为字节码，保存在区块链上。对于一个新的代码调用请求（其实是提交了一个 transaction，包含了调用者、函数名和参数），依托于区块链系统，请求会被广播到区块链网络上，成百上千个去中心化 nodes 上的 `Move虚拟机`一起来执行代码，将数据的变更写到 node 本地的 `global storage(全局存储)` 中（可以理解为一个数据库）。这个去中心化网络有一套自己的共识机制，每当一个新区块产生后，网络会采纳生产区块的 node 的上的 `global storage` 是正确的系统状态。
-
-Move 程序的主要目的就是读写 `global storage`。除此之外，Move程序不能访问文件系统、网络等等除了 `global storage` 之外的资源。`global storage` 是一个树状结构，用伪代码表示的话：
-
-```
-struct GlobalStorage {
-  resources: Map<(address, ResourceType), ResourceValue>
-  modules: Map<(address, ModuleName), ModuleBytecode>
-}
-```
-
-也就是说全局存储分为两部分，资源和 module 代码，可以先简单的用键值对来理解：resources 的键是 (地址+资源类型) 二元组，值是这个地址下的这个类型的资源的值，具体一点可以理解为一枚硬币、一幅画、一个 NFT。modules 的键是 (地址+module名称) 二元组，值是编译后的module字节码。从这里可以推导出，
-1. 资源和module代码都保存在拥有者的地址下
-2. 一个地址对于一种资源类型，最多只能拥有一个资源值
-3. 一个地址对于一个module名，只会存在一份 module 代码。
-
-:::info 扩展
-在 Starcoin 中，global storage 实现为双层的稀疏默克尔树作为 [全局状态树](https://starcoin.org/zh/overview/technology_whitepaper/)。可以点击链接进一步了解。
-:::
-
-下面我们再了解一下 Move 代码的存在形式。
-
-## Module 和 Script
-
-Move 代码以两种形式存在：`module` 和 `script`。
-
-`module` 是定义**结构体类型**和操作结构体的**函数**的库。`module` 会被发布到一个地址下。`module` 的结构体类型描述了数据是怎么在 *Move全局存储*（Move's global storage）中存储的，`module` 中的函数定义了更新存储数据的方法。
-
-`script` 是可执行代码的入口，类似常见编程语言的main函数。一个 `script` 函数接收任意数量的参数，并且没有返回值，主要的功能是调用已发布的 `module` 的 public func 来更新全局存储。`script`只有成功执行才会变更全局存储，如果失败了，所有的变更都会被丢弃。
-
-下面我们用一个简单的 Counter 例子，来具体说明。我们先定一个名为 MyCounter 的 module —— 包含定义 Counter 以及操作计数器的方法。发布这个 module 后，我们调用 script 函数来和计数器交互。
 
 ## mpm 命令行工具以及项目结构
 
@@ -55,7 +19,7 @@ Move 代码以两种形式存在：`module` 和 `script`。
 现在，可以通过 mpm 创建一个新项目
 
 ``` shell
-mpm package new my-counter
+$ mpm package new my-counter
 ```
 
 可以看到生成的目录结构
@@ -64,8 +28,14 @@ my-counter
 ├── Move.toml
 └── sources/
 ```
-`sources/` - 存放 modules 的目录<br />
+`sources/` - 存放 Move 模块（`module`）的目录<br />
 `Move.toml` - manifest 文件：定义包的元数据、依赖，以及命名地址
+
+:::tip Move 模块
+`module` 是定义**结构体类型**和操作结构体的**函数**的库。*（可以借助其他编程语言的“类 class”概念来帮助理解）*。
+
+`module` 会被发布到发布者的地址下，`module` 中的入口方法(entry functions) 可以被大家调用执行。*（可以借助函数计算平台——如 AWS Lambda ——上发布函数、调用函数来帮助理解）*
+:::
 
 有 Move.toml 文件和 sources/ 目录的项目，会被认为是一个 [Move 包（Move Package）](./02-move-language/01-packages.md)。
 
@@ -141,11 +111,15 @@ module MyCounter::MyCounter {
 }
 ```
 
-这里的 `move_to<T>(&signer,T)` 是一个内置方法，作用是将类型为`T`的资源添加到账号`signer`的地址下。（尖括号在这里是范型）。
+这里的 `move_to<T>(&signer,T)` 是一个内置方法，作用是将类型为`T`的资源添加到账号`signer`的地址下的存储空间。（尖括号在这里是范型）。
+
+:::info 更多信息
+这里的存储空间是 `GlobalState`，可以先简单理解为 存放账号的`资源`和`module代码`的地方。更多信息可以查阅[概念-状态](../99-concepts/04-state.md)。也可以跳过这里。
+:::
 
 在第6行的 init 函数的参数 `account: &signer`，中的 signer 是 Move 的内置类型。想要将资源放到调用者的账户地址下，需要将 &signer 参数传递给函数。`&signer` 数据类型代表当前 transaction 的发起者（函数的调用者，可以是任何账户）。
 
-:::note 帮你理解——signer
+:::info 帮你理解——signer
 `signer` 就像是 linux 下的 uid 一样的东西。登陆 linux 系统后，你输入的所有命令，都被认为是“这个已登陆的**经过认证**的用户”操作的。关键来了，这个认证过程不是在运行的命令、程序中做的，而是开机后由操作系统完成的。
 
 对应到 Move 中，这个认证过程就是和其他区块链系统类似的、我们熟知的“私钥签名 公钥验证”的过程。在带有 `&signer` 参数的函数执行时，发起者的身份已经被 Starcoin 区块链认证过了。
@@ -183,6 +157,8 @@ Move语言是面向资源的语言，核心是资源的管理。针对资源拥�
 * store: 表示该值是否可以被存储到全局状态
 
 通过给资源赋予不同的能力，Move 虚拟机可以从根本上保证「资源」只能转移(move)，至于能否拷贝、修改、丢弃，看资源的具体能力。如果强行拷贝、修改或者丢弃，代码编译会出错，根本没有机会运行。
+
+更多信息可以参考：[认识 Ability](./03-understanding-ability.md) 章节。
 :::
 
 一般来说我们认为，**有 `key` ability 的结构体，就是资源**。
@@ -243,9 +219,9 @@ StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.gi
 ```
 
 
-第16行有个新方法 `borrow_global_mut`，和前文的 `move_to` 一样，都是操作操作 `global storage` 上资源的内置方法。
+第16行有个新方法 `borrow_global_mut`，和前文的 `move_to` 一样，都是操作操作账户地址的存储空间上资源的内置方法。
 
-:::tip 加油站 —— global storage 的操作方法
+:::tip 加油站 —— 资源的操作方法
 1. `move_to<T>(&signer, T)`: 发布、添加类型为 T 的资源到 signer 的地址下
 2. `move_from<T>(address): T`: 从地址下删除类型为 T 的资源并返回这个资源。
 3. `borrow_global<T>(address): &T`: 返回地址 address 下类型为 T 的资源的不可变引用(immutable reference)
@@ -277,7 +253,7 @@ error[E04020]: missing acquires annotation
 这里我们引入 `acquire` 的概念。
 
 :::tip 概念
-当一个函数用 move_from、borrow_global、borrow_global_mut 访问资源时，函数必须要显示声明需要“获取”那种资源。这会被 Move 的类型系统确保对 `global storage` 中的资源的引用是安全的、不存在悬空引用。
+当一个函数用 `move_from()`、`borrow_global()`、`borrow_global_mut()` 访问资源时，函数必须要显示声明需要“**获取**”那种资源。这会被 Move 的类型系统确保对资源的引用是安全的、不存在悬空引用。
 :::
 
 修改后的代码如下
@@ -303,27 +279,26 @@ module MyCounter::MyCounter {
 
 现在可以编译通过了。
 
-下面我们添加 Script 代码，script function 可以被发布到链上，然后发起 transaction 来调用。
+下面我们编写可以通过控制台直接调用执行的函数。
 
-### 编写可调用的 script 函数
+### 编写可调用的 script function
 
-函数有可见性，比如前面定义的两个 init 和 incr 方法，可以被任一 module 和 script 调用。
+前面编写的两个 `public fun` init 和 incr 两个函数是不能直接在控制台中调用执行的。需要使用 入口方法（entry function）来调用。
 
-有一种类型的函数叫 `script function`，见名知意，这个函数是一段脚本，是可执行代码的入口。script function 属于 module，所以也会和 module 一起保存在 `global storage` 中。
-script function 可以被用户发起一个 transaction 的方式来调用执行。
+目前在 Move 中，入口方法是通过 `script function` 来实现的，写作`public(script) fun`。
 
-这里引入了函数可见性，不过可以先跳过。
+这里引入了函数可见性（visibility）的概念，不同的可见性决定了函数可以从何处被调用。（下面的 概念tip 可以先跳过）
 
 :::tip 概念——函数可见性
 | 可见性          | 写做                | 说明 |
 | -------------- | ------------------ | ----------- |
 | internal       | fun                | 也可以叫 private，只能在同一个 module 内调用 |
-| public         | public fun         | 可以被任一 module/script 内的函数调用 |
-| **public script**  | public(script) fun | 和 module 保存在同一地址的 script function，可以**通过控制台发起一个transaction 来调用**，就像本地执行脚本一样（不过代码已经被存在了链上的 module 地址下）。 |
+| public         | public fun         | 可以被任一 module 内的函数调用 |
+| **public script**  | public(script) fun | script function 是 module 中的入口方法 ，可以**通过控制台发起一个transaction 来调用**，就像本地执行脚本一样（不过代码已经被存在了链上的 module 地址下）。 |
 | public friend  | public(friend) fun | 可以被同一 module 内调用，可以被加入到 `friend list` 的可信任 module 调用 |
 :::
 
-下面，我们编写对应 init 和 incr 函数的 public script function。
+下面，我们编写对应 init 和 incr 函数的 script function。
 
 ```move title="my-counter/sources/MyCounter.move" {18-24}
 module MyCounter::MyCounter {
@@ -428,6 +403,9 @@ starcoin% state list code 0xcada49d6a37864931afb639203501695
 ```
 可以看到 0xcada49d6a37864931afb639203501695 地址下只有 MyCounter 这一个 code。
 
+:::note state 命令
+state 命令是用来查看账户地址下的数据的。可以在控制台中输入 `state --help` 查看更多帮助。
+:::
 
 ### 调用 init_counter 初始化资源
 
@@ -527,26 +505,30 @@ starcoin% state get resource 0x012ABC 0xcada49d6a37864931afb639203501695::MyCoun
 
 
 :::info 历史——script 和 script function
-大家可能会对前面有时用 script 有时用 script function 有些迷惑。这里简单说一下历史由来。
+为了防止大家在别处看的教程中有 `script` 出现而搞迷惑，这里简单说一下历史由来。*这部分内容可以跳过*。
 
 我们用 Python 的 pip 或者 Node.js 的 npm 来辅助理解。
 
 在 pip 和 npm 这样的中心化包管理托管平台出现之前，我们想安装一个包，需要 `setup.py install /path/to/package`。
 这样子当然不便于包的分发传播与索引。后来有了 pip 我们是怎么做的呢，包作者先将自己的包打包上传到 pip 仓库，pip会存储包并建立索引。普通用户只需要 `pip install package_name` 即可。pip 工具会帮你根据 package_name 下载源码，然后执行安装。这两种方式安装包其实是一样的。
 
-现在对应到 Move 的 script function。在 script function 出现之前是只有 script 的，script 写在和 sources/ 平级的 scripts/ 目录下。
+现在对应到 Move 中。在 script function 出现之前是只有 script 的，script 写在和 sources/ 平级的 scripts/ 目录下。
 
-script 就像是本地的 python包，script可以被编译为字节码，要调用 script 时，需要创建一个 transaction，payload 中带上编译好的字节码，script就可以被 node 上的 Move虚拟机执行了。对应在 starcoin控制台中是
+script 就像是本地的 python包，script可以被编译为字节码，要调用 script 时，需要创建一个 transaction，payload 中带上编译好的字节码，script就可以被 node 上的 Move虚拟机执行了。对应在 starcoin 控制台中是
 ```
 starcoin% account execute-script </path/to/mv_file>
 ```
 
-script function 作为一种新方式，[被添加到了 Move 语言中](https://github.com/move-language/move/commit/e0a3acb7d5e3f5dbc07ee76b47dd05229584d4d0)，类比于保存在 pip 仓库中的软件包。script function 会和 module 一起发布到一个地址下（就像包作者把软件包发布在pip中一样），此时，要调用script，需要创建一个transaction，payload 中指向已经发布的代码的地址即可。对应到starcoin控制台中是
+`script function` 作为 `script` 的替代，[被添加到了 Move 语言中](https://github.com/move-language/move/commit/e0a3acb7d5e3f5dbc07ee76b47dd05229584d4d0)。类比于保存在 pip 仓库中的软件包。script function 会在 module 中一起发布到一个地址下（就像包作者把软件包发布在pip中一样）。此时，要调用script，需要创建一个transaction，payload 中指向已经发布的代码的地址即可。对应到starcoin控制台中是
 ```
 starcoin% account execute-function --function  <0x地址>::<模块>::<函数>  --arg xxx
 ```
 
 当然， Move也是一门正在演进的语言，`public(script) fun` [正在被 `public entry` 取代](https://github.com/move-language/move/pull/186)，让我们拭目以待。
+
+总结一下：
+1. `script` 可能会被废弃，推荐用 `script function` 做入口方法。
+2. 下个版本的 Move 会用 `public entry fun` 替代 `public(script) fun`
 :::
 
 ## 何去何从

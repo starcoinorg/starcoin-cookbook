@@ -1,50 +1,56 @@
-# Onboarding Library
+# 入门库
 
-As an Starcoin enabled site developer, sending users offsite to install StarMask presents challenges. Most notably, you must inform the user to return to your site and refresh their browser after the installation. Your site will detect the user's newly installed StarMask extension only after that refresh. We at StarMask care deeply about user experience, and we knew that this workflow needed to be improved.
+作为支持 Starcoin 的网站开发人员，将用户发送到异地安装 StarMask 会带来挑战。
+最值得注意的是，您必须通知用户在安装后返回您的站点并刷新他们的浏览器。
+只有在刷新之后，您的站点才会检测到用户新安装的 StarMask 扩展。
+我们 StarMask 非常关心用户体验，我们知道这个工作流程需要改进。
 
-StarMask now provides a [starmask-onboarding library](https://github.com/starcoinorg/starmask-onboarding) designed to improve and simplify the onboarding experience. The new library exposes an API to initiate the onboarding process. In the process, it registers your site as the origin of the onboarding request. StarMask will check for this origin after the user completes the onboarding flow. If it finds an origin, the final confirmation button of the StarMask onboarding flow will indicate that the user will be redirected back to your site.
+StarMask 现在提供了一个 starmask 入门库，旨在改善和简化入门体验。
+新库公开了一个 API 来启动入门流程。在此过程中，它将您的站点注册为入门请求的来源。
+StarMask 将在用户完成入门流程后检查此来源。
+如果找到来源，StarMask 入门流程的最终确认按钮将指示用户将被重定向回您的站点。
 
-## Getting Started
+## 开始使用
 
-1. Install `@starcoin/starmask-onboarding` using npm or yarn.
+1. 使用 npm 或 yarn 安装 `@starcoin/starmask-onboarding`。
 
-2. Import the Onboarding Library or include it in your page.
+2. 导入入门库或将其包含在您的页面中。
 
 ```javascript
-// As an ES6 module
+// 作为一个 ES6 模块
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
-// Or as an ES5 module
+// 或者作为一个 ES5 模块
 const StarMaskOnboarding = require("@starcoin/starmask-onboarding");
 ```
 
-If you'd prefer you can instead include the prebuilt ES5 bundle that ships with the library:
+如果您愿意，可以改为包含库附带的预构建 ES5 包：
 
 ```html
 <script src="./starmask-onboarding.bundle.js"></script>
 ```
 
-3. Create a new instance of the Onboarding library
+3. 创建 Onboarding 库的新实例
 
 ```javascript
 const onboarding = new StarMaskOnboarding();
 ```
 
-4. Start the onboarding process in response to a user event (e.g. a button click).
+4. 响应用户事件（例如，单击按钮）启动入门流程。
 
 ```javascript
 onboarding.startOnboarding();
 ```
 
-## Examples
+## 例子
 
-### Basic Usage
+### 基本用法
 
 ```javascript
 const onboarding = new StarMaskOnboarding();
 onboarding.startOnboarding();
 ```
 
-### Using React
+### 使用 React
 
 ```jsx
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
@@ -111,21 +117,21 @@ export function OnboardingButton() {
 }
 ```
 
-### Using TypeScript
+### 使用 TypeScript
 
-We ship our TypeScript types with `@starcoin/starmask-onboarding`.
-Modifying the above example to get type safety when using the `onboarding` library is simple:
+我们使用 `@starcoin/starmask-onboarding` 发布我们的 TypeScript 类型。
+在使用 `onboarding` 库时修改上面的示例以获得类型安全很简单：
 
 ```jsx
   -const onboarding = React.useRef();
   +const onboarding = React.useRef<StarMaskOnboarding>();
 ```
 
-Doing this step will give you editor auto-completion for the methods exposed by the library, and helpful documentation.
+执行此步骤将为您提供库公开的方法的编辑器自动完成功能，并提供有用的文档。
 
-![Editor Highlighting](../../../static/img/onboarding-library-1.png)
+![Editor Highlighting](../../../../../../static/img/onboarding-library-1.png)
 
-### Using Vanilla Javascript + HTML
+### 使用 Vanilla Javascript + HTML
 
 ```html
 <!DOCTYPE html>
@@ -181,6 +187,6 @@ Doing this step will give you editor auto-completion for the methods exposed by 
 
 ## Onboarding Diagram
 
-Here is a diagram of the interactions between the onboarding library, the forwarder, and the extension:
+这是载入库、转发器和扩展程序之间的交互图：
 
-![Onboarding Library Diagram](../../../static/img/onboarding-diagram.png)
+![Onboarding Library Diagram](../../../../../../static/img/onboarding-diagram.png)

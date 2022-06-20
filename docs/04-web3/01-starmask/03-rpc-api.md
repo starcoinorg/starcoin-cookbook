@@ -400,7 +400,8 @@ StarMask will automatically reject the request under the following circumstances
 
 ::: tip Tip
 As an API consumer, you are unlikely to have to call this method yourself.
-Please see the [Onboarding Library documentation](./01-onboarding-library.md) for more information.
+<!-- Please see the [Onboarding Library documentation](./01-onboarding-library.md) for more information. -->
+TODO: fix some bugs, until translate zh
 :::
 
 #### Returns

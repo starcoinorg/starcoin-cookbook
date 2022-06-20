@@ -129,7 +129,7 @@ export function OnboardingButton() {
 
 执行此步骤将为您提供库公开的方法的编辑器自动完成功能，并提供有用的文档。
 
-<!-- ![Editor Highlighting](../../../static/img/onboarding-library-1.png) -->
+![Editor Highlighting](../../../../../../static/img/onboarding-library-1.png)
 
 ### 使用 Vanilla Javascript + HTML
 
@@ -189,4 +189,4 @@ export function OnboardingButton() {
 
 这是载入库、转发器和扩展程序之间的交互图：
 
-<!-- ![Onboarding Library Diagram](../../../static/img/onboarding-diagram.png) -->
+![Onboarding Library Diagram](../../../../../../static/img/onboarding-diagram.png)

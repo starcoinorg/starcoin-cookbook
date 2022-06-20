@@ -1,11 +1,14 @@
 # 快速开始
 
-在这个小教程中，我们实现一个简单的计数器，来展示Move如何通过代码来管理资源的。这篇文档涉及的内容包括背景知识、写代码、如何编译、如何发布到链上、如何调用。完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
+在这个小教程中，我们实现一个简单的计数器，来展示 Move 如何通过代码来管理资源的。
+这篇文档涉及的内容包括背景知识、写代码、如何编译、如何发布到链上、如何调用。
+完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
 
 提前准备：
-1. 需要按照 [如何设置本地开发网络](./02-getting-started/02-setup/03-dev-network.md) 搭建 dev 网络、通过 console 链接到 dev 网络。
-2. 按照 [账号管理](./02-getting-started/03-accounts/1.account-manage.md) 创建一个账号活着使用已有账号，并且给账号里转一点 STC。
-3. 通过 [第一笔链上交易](./02-getting-started/03-accounts/2.first-transaction.md) 对 transaction 有基本理解。
+
+1. 需要按照[如何设置本地开发网络](./02-getting-started/02-setup/03-dev-network.md)搭建 dev 网络、通过 console 链接到 dev 网络。
+2. 按照[账号管理](./02-getting-started/03-accounts/1.account-manage.md)创建一个账号活着使用已有账号，并且给账号里转一点 STC。
+3. 通过[第一笔链上交易](./02-getting-started/03-accounts/2.first-transaction.md)对 transaction 有基本理解。
 
 下面先介绍一下必备的工具和项目结构。
 
@@ -14,7 +17,7 @@
 
 在开始写代码之前，我们先安装 mpm（Move Package Manager） 命令行工具，并且简单介绍一下 Move 项目的结构。
 
-安装方法见 [设置 Move 开发环境](./01-prepare-move-env.md).
+安装方法见[设置 Move 开发环境](./01-prepare-move-env.md).
 
 现在，可以通过 mpm 创建一个新项目
 
@@ -202,7 +205,7 @@ module MyCounter::MyCounter {
 
 ```
 
-注意第3行我们引用了一个依赖—— [StarcoinFramwork](https://github.com/starcoinorg/starcoin-framework)。可以认为是Starcoin 的 Stdlib 标准库。我们需要使用库中的 Signer::address_of(&signer) 方法来提取 signer 的地址。
+注意第3行我们引用了一个依赖 —— [StarcoinFramwork](https://github.com/starcoinorg/starcoin-framework)。可以认为是Starcoin 的 Stdlib 标准库。我们需要使用库中的 Signer::address_of(&signer) 方法来提取 signer 的地址。
 
 为了添加依赖到项目中，修改 Move.toml 文件
 ```toml title="my-counter/Move.toml" {6,9-10}
@@ -538,7 +541,7 @@ starcoin% account execute-function --function  <0x地址>::<模块>::<函数>  -
 完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
 
 接下来，
-* 你可以通过[Move语言](./move-language/)系统的学习 Move 语言
+* 你可以通过 [Move 语言](./move-language/)系统的学习 Move 语言
 * 查看[更多 Move 例子]
 * 了解[如何 Debug/测试 Move module](./97-move-test/01-move-unit-test.md)
 * 了解 [Starcoin Move Framework](./starcoin-framework/)

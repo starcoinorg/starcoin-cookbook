@@ -46,7 +46,7 @@ USAGE:
 ## Install IDE plugin
 
 ### VS Code
-Search `starcoin-id` in Extensions.
+Search `starcoin-ide` in Extensions.
 
 ## Set up env for move prover
 

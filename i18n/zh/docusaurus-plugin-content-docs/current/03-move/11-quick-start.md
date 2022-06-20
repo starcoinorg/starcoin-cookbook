@@ -1,7 +1,3 @@
----
-sidebar_position: 1.5
----
-
 # 快速开始
 
 在这个小教程中，我们实现一个简单的计数器，来展示Move如何通过代码来管理资源的。这篇文档涉及的内容包括背景知识、写代码、如何编译、如何发布到链上、如何调用。完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
@@ -29,15 +25,13 @@ struct GlobalStorage {
 }
 ```
 
-也就是说全局存储分为两部分，资源和 module 代码，可以先简单的用键值对来理解：resources 的键是 (地址+资源类型) 二元组，值是这个地址下的这个类型的资源的值，具体一点可以理解为一枚硬币、一幅画、一个nft。modules 的键是 (地址+module名称) 二元组，值是编译后的module字节码。从这里可以推导出，
+也就是说全局存储分为两部分，资源和 module 代码，可以先简单的用键值对来理解：resources 的键是 (地址+资源类型) 二元组，值是这个地址下的这个类型的资源的值，具体一点可以理解为一枚硬币、一幅画、一个 NFT。modules 的键是 (地址+module名称) 二元组，值是编译后的module字节码。从这里可以推导出，
 1. 资源和module代码都保存在拥有者的地址下
 2. 一个地址对于一种资源类型，最多只能拥有一个资源值
 3. 一个地址对于一个module名，只会存在一份 module 代码。
 
 :::info 扩展
 在 Starcoin 中，global storage 实现为双层的稀疏默克尔树作为 [全局状态树](https://starcoin.org/zh/overview/technology_whitepaper/)。可以点击链接进一步了解。
-
-![GlobalState](./img/global-state.png)
 :::
 
 下面我们再了解一下 Move 代码的存在形式。
@@ -76,7 +70,6 @@ my-counter
 有 Move.toml 文件和 sources/ 目录的项目，会被认为是一个 [Move 包（Move Package）](./02-move-language/01-packages.md)。
 
 ## 创建 MyCounter 模块
-
 
 我们将要创建的 module 命名为 MyCounter，在本文中，使用笔者本地dev网络的一个账户地址 0xcada49d6a37864931afb639203501695 来演示，我们会将 MyCounter 发布到这个地址。
 
@@ -491,6 +484,7 @@ Fully Qualified Name(FQN) 是一种计算机术语，是在一个调用上下文
 
 
 ### 调用 incr_counter 递增计数器
+
 下面调用另一个函数 incr_counter 尝试对计数器加一。
 
 ```starcoin title="starcoin控制台" {1}
@@ -572,14 +566,3 @@ starcoin% account execute-function --function  <0x地址>::<模块>::<函数>  -
 
 或者，你可以直接进入 Dapp 的世界，
 * [Web3 和 DApp 开发](../web3/)
-
-## 参考
-
-1. [Move官方文档 move-language.github.io](https://move-language.github.io/move/)
-2. [Move编程语言-中译版](https://move-book.com/cn/)
-3. [Starcoin技术白皮书](https://starcoin.org/zh/overview/technology_whitepaper/)
-4. [部署Move合约-starcoin.org](https://starcoin.org/zh/developer/tutorials/deploy_move_contract/)
-5. [StarcoinFramework-Account文档](https://github.com/starcoinorg/starcoin-framework/blob/main/build/StarcoinFramework/docs/Account.md#0x1_Account_deposit)
-6. [Starcoin为何使用Move语言-starcoin.org](https://starcoin.org/zh/developers/others/starcoin_move_resource/)
-7. [Dapp开发指南-starcoin.org](https://starcoin.org/zh/developer/how_to_dapp/how_to_dapp/)
-8. [Aptos Tutorial-pontem.network](https://docs.pontem.network/02.-tutorials/aptos-tutorial)

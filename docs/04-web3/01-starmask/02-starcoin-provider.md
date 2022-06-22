@@ -1,6 +1,6 @@
 # Starcoin Provider API
 
-::: tip Recommended Reading
+:::tip Recommended Reading
 We recommend that all web3 site developers read the [Basic Usage](#basic-usage) section.
 :::
 
@@ -8,7 +8,7 @@ StarMask injects a global API into websites visited by its users at `window.star
 This API allows websites to request users' Starcoin accounts, read data from blockchains the user is connected to, and suggest that the user sign messages and transactions.
 The presence of the provider object indicates an Starcoin user.
 
-We recommend using [`@starcoin/starmask-onboarding`](https://npmjs.com/package/@starcoin/starmask-onboarding) to detect our provider injected at`window.starcoin`, on any platform or browser.
+We recommend using [`@starcoin/starmask-onboarding`](https://npmjs.com/package/@starcoin/starmask-onboarding) to detect our provider injected at `window.starcoin`, on any platform or browser.
 
 ```javascript
 // This function detects most providers injected at window.starcoin
@@ -51,7 +51,7 @@ These are the IDs of the Starcoin chains that StarMask supports by default.
 
 ### starcoin.isStarMask
 
-::: warning Note
+:::warning Note
 This property is non-standard. Non-StarMask providers may also set this property to `true`.
 :::
 
@@ -61,7 +61,7 @@ This property is non-standard. Non-StarMask providers may also set this property
 
 ### starcoin.isConnected()
 
-::: tip Tip
+:::tip Tip
 Note that this method has nothing to do with the user's accounts.
 
 You may often encounter the word "connected" in reference to whether a web3 site can access the user's accounts.
@@ -178,7 +178,7 @@ starcoin.on('disconnect', handler: (error: ProviderRpcError) => void);
 The StarMask provider emits this event if it becomes unable to submit RPC requests to any chain.
 In general, this will only happen due to network connectivity issues or some unforeseen error.
 
-Once `disconnect` has been emitted, the provider will not accept any new requests until the connection to the chain has been re-restablished, which requires reloading the page.
+Once `disconnect` has been emitted, the provider will not accept any new requests until the connection to the chain has been re-established, which requires reloading the page.
 You can also use the [`starcoin.isConnected()` method](#starcoin-isconnected) to determine if the provider is disconnected.
 
 ### accountsChanged
@@ -196,7 +196,7 @@ This means that `accountsChanged` will be emitted whenever the user's exposed ac
 
 ### chainChanged
 
-::: tip Tip
+:::tip Tip
 See the [Chain IDs section](#chain-ids) for StarMask's default chains and their chain IDs.
 :::
 

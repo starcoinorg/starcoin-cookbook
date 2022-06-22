@@ -4,12 +4,12 @@ StarMask uses the [`starcoin.request(args)` method](./02-starcoin-provider.md#st
 
 The API is based on an interface exposed by all Starcoin clients, along with a growing number of methods that may or may not be supported by other wallets.
 
-::: tip Tip
+:::tip Tip
 All RPC method requests can return errors.
 Make sure to handle errors for every call to `starcoin.request(args)`.
 :::
 
-::: tip Try
+:::tip Try
 Starcoin Methods
 Visit our [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/)
 :::
@@ -54,7 +54,7 @@ If you're interested in learning more about the theory behind this _capability_-
 
 ### `stc_requestAccounts`
 
-::: tip EIP-1102
+:::tip EIP-1102
 This method is specified by [EIP-1102](https://eips.ethereum.org/EIPS/eip-1102).
 
 Under the hood, it calls [`wallet_requestPermissions`](#wallet-requestpermissions) for the `stc_accounts` permission.
@@ -270,7 +270,7 @@ const encryptedMessage = stcUtil.bufferToHex(
 
 ### `wallet_addStarcoinChain`
 
-::: tip EIP-3085
+:::tip EIP-3085
 This method is specified by [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085).
 :::
 
@@ -354,7 +354,7 @@ try {
 
 ### `wallet_switchStarcoinChain`
 
-::: tip EIP-3326
+:::tip EIP-3326
 This method is specified by [EIP-3326](https://ethereum-magicians.org/t/eip-3326-wallet-switchethereumchain).
 :::
 
@@ -378,7 +378,7 @@ If the error code (`error.code`) is `4902`, then the requested chain has not bee
 
 #### Description
 
-::: tip Tip
+:::tip Tip
 See [above](#usage-with-wallet-switchstarcoinchain) for how to use this method with `wallet_addStarcoinChain`.
 :::
 
@@ -394,7 +394,7 @@ StarMask will automatically reject the request under the following circumstances
 
 ### `wallet_registerOnboarding`
 
-::: tip Tip
+:::tip Tip
 As an API consumer, you are unlikely to have to call this method yourself.
 <!-- Please see the [Onboarding Library documentation](./01-onboarding-library.md) for more information. -->
 TODO: fix some bugs, until translate zh
@@ -417,7 +417,7 @@ Instead of calling this method directly, you should use the [`@starcoin/starmask
 
 ### `wallet_watchAsset`
 
-::: tip EIP-747
+:::tip EIP-747
 This method is specified by [EIP-747](https://eips.ethereum.org/EIPS/eip-747).
 :::
 

@@ -95,7 +95,7 @@ export function OnboardingButton() {
         .then(handleNewAccounts);
       window.starcoin.on("accountsChanged", handleNewAccounts);
       return () => {
-        window.starcoin.off("accountsChanged", handleNewAccounts);
+        window.starcoin.removeListener("accountsChanged", handleNewAccounts);
       };
     }
   }, []);

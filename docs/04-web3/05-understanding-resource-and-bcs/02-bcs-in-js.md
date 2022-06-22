@@ -58,7 +58,7 @@ console.log(tokenHex);
 */
 ```
 
-the Uint8Array of `se.getBytes()` has one element `44` at first position more than the Uint8Array of `tokenUint8Array`, which is the length of the later. and the hex of `44` is `2c`.
+the Uint8Array of `se.getBytes()` has one element `44` at first position more than the Uint8Array of `tokenUint8Array`(length=44), and the hex of `44` is `2c`.
 
 ### `string`
 
@@ -72,7 +72,7 @@ console.log(token);
 0x00000000000000000000000000000001::STC::STC
 */
 const se = new BcsSerializer();
-se.serializeStr(tokenUint8Array);
+se.serializeStr(token);
 console.log(se.getBytes());
 /*
 Uint8Array(45) [

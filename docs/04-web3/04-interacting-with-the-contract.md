@@ -191,6 +191,9 @@ let timer = setInterval(async () => {
   }
 }, 3000);
 ```
+:::tip Tip
+If StarMask connect to a dev network, you may need to generate new blocks manually. Run dev gen-block in console up to MAX_CONFIRMED_NODES times and see what happens.
+:::
 
 ## Reference
 

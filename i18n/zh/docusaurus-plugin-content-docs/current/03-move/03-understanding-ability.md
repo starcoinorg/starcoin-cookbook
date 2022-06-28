@@ -1,28 +1,29 @@
-# 认识 Abilities
+# 认识 Ability
 
-Move 的类型系统非常灵活，每种类型都可以被四种限制符所修饰。
-这四种限制符我们称之为能力（Abilities），它们定义了类型的值是否可以被复制、丢弃和存储。
+Move 具有独特的类型系统 —— 非常灵活和可定制，每种类型最多可以拥有4种能力（Ability）。
+这4种能力分别被4个限定符所修饰，它们定义了类型的值是否可以被复制、丢弃和存储。
 
-这四种能力（Abilities）的限制符分别是：Copy，Drop，Store 和 Key，
+> 这四种能力（Ability）的限制符分别是：`copy`，`drop`，`store` 和 `key`，
 
 它们的功能分别是：
 
-- Copy - 被修饰的值可以被复制。
-- Drop - 被修饰的值在作用域结束时可以被丢弃。
-- Key - 被修饰的值可以作为键值对全局状态进行访问。
-- Store - 被修饰的值可以被存储到全局状态。
+- `copy` - 被修饰的值可以被复制。
+- `drop` - 被修饰的值在作用域结束时可以被丢弃。
+- `key` - 被修饰的值可以作为键值对全局状态进行访问。
+- `store` - 被修饰的值可以被存储到全局状态。
 
 ## Abilities 语法
 
 基本类型和内建类型的能力是预先定义好的并且不可改变：integers，vector，addresses 和 boolean 类型的值先天具有 copy，drop 和 store 能力。
 
-然而，结构体的能力（ability）可以由开发者按照下面的语法进行添加：
+然而，结构体的能力可以由开发者按照下面的语法进行添加：
 
 ```
 struct NAME has ABILITY [, ABILITY] { [FIELDS] }
 ```
 
 下面是一些例子：
+
 ```
 module Library {
 
@@ -42,7 +43,7 @@ module Library {
 }
 ```
 
-不带 Abilities 限制符的结构体
+## 不带能力限定符的结构体
 
 在进入能力的具体用法之前，我们不妨先来看一下，如果结构体不带任何能力会发生什么？
 
@@ -52,7 +53,7 @@ module Country {
         id: u8,
         population: u64
     }
-    
+
     public fun new_country(id: u8, population: u64): Country {
         Country { id, population }
     }
@@ -65,7 +66,7 @@ script {
 
     fun main() {
         Country::new_country(1, 1000000);
-    }   
+    }
 }
 ```
 
@@ -83,7 +84,7 @@ error:
 方法 `Country::new_country()` 创建了一个值，这个值没有被传递到任何其它地方，所以它应该在函数结束时被丢弃。
 但是 Country 类型没有 Drop 能力，所以运行时报错了。现在让我们加上 Drop 限制符试试看。
 
-## Drop
+## drop
 
 按照 Abilities 语法我们为这个结构体增加 drop 能力，这个结构体的所有实例将可以被丢弃。
 
@@ -105,16 +106,16 @@ script {
 
     fun main() {
         Country::new_country(1, 1000000); // value is dropped
-    }   
+    }
 }
 ```
 
-注意 Destructuring 并不需要 Drop ability.
+注意 Destructuring 并不需要 drop 能力。
 
-## Copy
+## copy
 
 我们学习了如何创建一个结构体 Country 并在函数结束时丢弃它。
-但是如果我们想要复制一个结构体呢？缺省情况下结构体是按值传递的，制造一个结构体的副本需要借助关键字 copy (我们会在 下一章 更加深入的学习)：
+但是如果我们想要复制一个结构体呢？默认情况下结构体是按值传递的，制造一个结构体的副本需要借助关键字 copy (我们会在 下一章 更加深入的学习)：
 
 ```
 script {
@@ -135,7 +136,7 @@ script {
    │
 ```
 
-正如所料，缺少 copy ability 限制符的类型在进行复制时会报错：
+正如所料，缺少 copy 能力限定符的类型在进行复制时会报错：
 
 ```
 module Country {

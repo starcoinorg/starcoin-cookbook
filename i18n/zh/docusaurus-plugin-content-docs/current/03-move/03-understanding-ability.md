@@ -12,7 +12,7 @@ Move 具有独特的类型系统 —— 非常灵活和可定制，每种类型�
 - `key` - 被修饰的值可以作为键值对全局状态进行访问。
 - `store` - 被修饰的值可以被存储到全局状态。
 
-## Abilities 语法
+## Ability 语法
 
 基本类型和内建类型的能力是预先定义好的并且不可改变：integers，vector，addresses 和 boolean 类型的值先天具有 copy，drop 和 store 能力。
 
@@ -86,7 +86,7 @@ error:
 
 ## drop
 
-按照 Abilities 语法我们为这个结构体增加 drop 能力，这个结构体的所有实例将可以被丢弃。
+按照能力（Ability）的语法我们为这个结构体增加 drop 能力，这个结构体的所有实例将可以被丢弃。
 
 ```
 module Country {

@@ -61,7 +61,7 @@ $ export BASE_URL='/'
 $ yarn serve 
 ```
 
-在浏览器中打开地址 `http://localhost:3000/starcoin-cookbook/`，就可以看到完整的文档。如果你指定了 BASE_URL 环境变量为 `/`，地址将是：`http://localhost:3000/`。
+在浏览器中打开地址 `http://localhost:3000/starcoin-cookbook/`，就可以看到完整的文档。如果你指定了 `BASE_URL` 环境变量为 `/`，地址将是：`http://localhost:3000/`。
 
 5. 提交 Pull Request
 
@@ -87,7 +87,7 @@ GitHub Action 会自动触发构建任务，检查文档。待文档被 Review �
 
 ### 内容规范
 
-参考[中文技术文档写作规范](https://github.com/ruanyf/document-style-guide)
+请参考[Starcoin 技术文档的写作规范](https://github.com/starcoinorg/starcoin-document-style-guide)
 
 ## 常见问题
 

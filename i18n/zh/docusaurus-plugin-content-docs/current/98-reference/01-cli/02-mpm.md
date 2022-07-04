@@ -59,7 +59,8 @@ mpm [OPTIONS] <SUBCOMMAND>
 
 ## 子命令
 
-    check-compatibility    Check compatibility of modules comparing with remote chain chate
+    check-compatibility    Check compatibility of modules comparing with remote chain state
+    deploy                 Deploy package to chain
     experimental           (Experimental) Run static analyses on Move source or bytecode
     help                   Print this message or the help of the given subcommand(s)
     integration-test       Run integration tests in tests dir
@@ -204,19 +205,19 @@ mpm release [OPTIONS]
   - 如果功能用，将打印额外的诊断信息。
 
 
-### `mpm-integration-test` 详述
+### `mpm deploy` 详述
 
-在测试目录（`integration-tests`）运行集成测试。
+将编译好的二进制包部署到区块链上。
 
 **用法：**
 
 ```shell
 # mpm integration-test 选项 过滤器
-mpm integration-test [OPTIONS] [FILTER]
+mpm deploy [OPTIONS] --rpc <rpc> <mv-or-package-file>
 
-- `<FILTER>`
- - The FILTER string is tested against the name of all tests, and only those tests whose names contain the filter are run
- - 过滤字符串是针对所有测试的名称进行测试的，并且只有那些包含过滤器的名称的测试才能运行。
+- `<mv-or-package-file>`
+ - move bytecode file path or package binary path
+ - Move 字节码文件或包（package）的二进制文件
 ```
 
 **选项：**
@@ -228,10 +229,13 @@ mpm integration-test [OPTIONS] [FILTER]
   - 选项原文描述
   - 选项通俗解释
 ```
-
 - `--abi`
   - Generate ABIs for packages
   - 为包生成应用程序二进制接口（ABI），即两个程序模块之间的接口。
+
+- `-b, --blocking`
+  - blocking wait transaction(txn) mined
+  - 提交交易时阻塞线程，等待交易被打包执行。
 
 - `d, --dev`
   - Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if this flag is set. This flag is useful for development of packages that expose named addresses that are not set to a specific value
@@ -241,17 +245,25 @@ mpm integration-test [OPTIONS] [FILTER]
   - Generate documentation for packages
   - 为包生成文档。
 
-- `--exact`
-  - Exactly match filters rather than by substring
-  - 完全匹配过滤器，而不是子字符串。
+- `--dry-run`
+  - dry-run mode, only get transaction output, do not change chain state
+  - 演练模式，模拟执行交易，获取交易输出，但不改变链上状态。
+
+- `--expiration-time-secs <expiration-time-secs>`
+  - how long(in seconds) the txn stay alive from now
+  - 交易从提交开始的存活时间（单位：秒）。
 
 - `--force`
   - Force recompilation of all packages
   - 强制重新编译所有的包。
 
-- `--format <FORMAT>`
-  - Configure formatting of output: pretty = Print verbose output; terse = Display one character per test; (json is unsupported, exists for compatibility with the default test harness) [default: pretty] [possible values: pretty, terse]
-  - 输出的配置格式：`pretty` 打印详细输出；`terse` 每个测试显示一个字符；（不支持 json，存在与默认测试安全带的兼容），默认值为 `pretty`。
+- `--from-env`
+  - Read private from env variable `STARCOIN_PRIVATE_KEY`
+  - 从环境变量 `STARCOIN_PRIVATE_KEY` 中读取私钥。
+
+- `--gas-unit-price <price of gas unit>`
+  - gas price used to deploy the module
+  - 部署该模块愿意支付的 gas 价格。
 
 - `-h, --help`
   - Print help information
@@ -261,29 +273,43 @@ mpm integration-test [OPTIONS] [FILTER]
   - Installation directory for compiled artifacts. Defaults to current directory
   - 为手动编译的程序指定安装目录，默认为当前目录。
 
-- `--list`
-  - List all tests
-  - 列出所有测试。
+- `--local-account-dir <ACCOUNT_DIR>`
+  - Path to the local account provider dir, load the accounts from local dir path
+  - 本地钱包的路径。部署模块需要签名交易，指定该参数后，通过本地钱包来获取账户并签名。
+
+- `--password <ACCOUNT_PASSWD>` 
+  - 本地钱包账号的密码，用来解锁账号。仅在使用 `--local-account-dir` 时有效。 
+
+- `--max-gas-amount <MAX_GAS_AMOUNT>`
+  - max gas used to deploy the module
+  - 部署该模块愿意支付的最大 gas。
 
 - `-p, --path <PACKAGE_PATH>`
   - Path to a package which the command should be run withrespect to [default: .]
   - 指定命令应该运行的包的路径，默认为当前路径，即 `[default: .]`。
 
-- `-q, --quiet`
-  - Output minimal information
-  - 输出最小信息。
+- `--rpc <rpc>`
+  - use remote starcoin rpc as initial state
+  - 远程 RPC 地址。
+
+- `-s, --sender <SENDER>`
+  - the account address for signing transaction, if `sender` is absent, use default account
+  - 用来签名交易的账号地址。如果为空，则使用默认账号，或者从私钥中导出账号。
+            
+- `--secret-file <SECRET_FILE>`
+  - file path of private key
+  - 私钥文件。指定该参数后，从私钥文件中读取私钥，文件中仅有一行，无额外前缀、后缀。
+
+- `--sequence-number <SEQUENCE_NUMBER>`
+  - transaction's sequence_number if a transaction in the pool, you want to replace it, can
+    use this option to set transaction's sequence_number otherwise please let cli to auto
+    get sequence_number from onchain and txpool
+  - 交易的序列号。如果想要覆盖之前的交易，则可以指定与之相同的序列号。否则，让命令行自动从
+    链上和交易池中获取序列号即可。
 
 - `--test`
   - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
   - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
-
-- `--test-threads <TEST_THREADS>`
-  - Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=] [default: 32]
-  - 指定用于并行测试的线程数量，默认值为 `32`，通过环境变量指定：`RUST_TEST_THREADS=32`。
-
-- `--ub`
-  - update test baseline
-  - 更新测试基线。
 
 - `-v`
   - Print additional diagnostics if available

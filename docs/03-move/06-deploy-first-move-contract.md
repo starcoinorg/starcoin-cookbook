@@ -80,6 +80,32 @@ It will compile the module, you will get the binary package at `release/my_count
 
 4. Deploy to blockchain
 
+There are two CLI tools to deploy binary package to chain: `mpm deploy` and `starcoin dev deploy`.
+
+- mpm deploy
+
+Account provider is need to signature the deployment transaction. There are three types of account privder for `mpm deploy` command:
+1) local-account-dir; 2) secret-file; 3) environment variable.  
+
+The commands corresponding to the three account provider are as follows:
+```
+$ mpm deploy --rpc ws://127.0.0.1:9871 --local-account-dir /your/local/account/dir --password xxxxx /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+
+$ mpm deploy --rpc ws://127.0.0.1:9871 --secret-file /your/secret/file /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+
+$ mpm deploy --rpc ws://127.0.0.1:9871 --from-env /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+```
+
+You can change `--rpc` option to the Barnard's or Mainnet's RPC address to deploy package to the corresponding chain.
+
+The **secret-file** is a local file storing only the private key content, without any other prefix or suffix.
+
+The key of environment variable is `STARCOIN_PRIVATE_KEY`.
+
+- starcoin dev deploy 
+
+In starcoin console mode, run:
+
 ```bash
 starcoin% dev deploy /your/dev/path/my-counter/release/my_counter.v0.0.1.blob -s 0xb19b07b76f00a8df445368a91c0547cc -b
 txn 0xeb055894f0c4440608246825c238a36683a8a0ad57144e905a12398a02ce806b submitted.

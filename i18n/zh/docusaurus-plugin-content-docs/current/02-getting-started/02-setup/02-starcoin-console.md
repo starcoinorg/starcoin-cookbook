@@ -81,7 +81,7 @@ starcoin -c starcoin.ipc console
 注意：在 Windows 中，IPC 文件所在路径不同。
 
 ```cmd
-starcoin.exe -c \\.\\pipe\starcoin\dev\starcoin.ipc console
+starcoin.exe -c \\.\pipe\starcoin\dev\starcoin.ipc console
 ```
 
 ### 通过 WebSocket

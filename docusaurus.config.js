@@ -4,12 +4,14 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
+const baseUrl = process.env.BASE_URL || '/starcoin-cookbook/';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Starcoin Cookbook',
   tagline: 'How to developing on starcoin',
   url: 'https://starcoinorg.github.io',
-  baseUrl: '/starcoin-cookbook/',
+  baseUrl: baseUrl,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: '/img/favicon.ico',

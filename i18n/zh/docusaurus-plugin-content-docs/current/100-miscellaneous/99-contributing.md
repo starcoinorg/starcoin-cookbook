@@ -13,9 +13,9 @@ cd starcoin-cookbook
 
 2. 安装
 
-你的机器上需要预先安装好 nodejs 以及 yarn，安装方式请参看 [yarnpkg](https://yarnpkg.com/getting-started/install)。
+你的机器上需要预先安装好 Node.js 以及 yarn，安装方式请参看 [yarnpkg](https://yarnpkg.com/getting-started/install)。
 
-然后在项目目录下运行：
+然后在项目目录下运行下面的语句安装依赖：
 
 ```bash
 $ yarn
@@ -29,6 +29,16 @@ $ yarn
 $ yarn start
 ```
 
+这样子默认是启动英文版。如果想热加载其他语言版本，比如中文zh，可以
+
+```bash
+$ yarn start --locale zh
+```
+
+:::tip 提示
+可选的 locales 标识在 `docusaurus.config.js` 中定义。
+:::
+
 此命令将自动打开浏览器并跳转到文档首页，当你编写或者修改文档时浏览器会自动刷新。
 
 4. 完整构建文档并浏览
@@ -39,13 +49,19 @@ $ yarn start
 $ yarn build
 ```
 
+默认构建出的文档的 BaseUrl 是 `/starcoin-cookbook`, 如果你想改变它，可以在 build 之前通过环境变量指定。
+
+```
+$ export BASE_URL='/'
+```
+
 （2）运行以下命令，将在本地启动一个 Web 服务：
 
 ```bash
 $ yarn serve 
 ```
 
-在浏览器中打开地址 `http://localhost:3000/starcoin-cookbook/`，就可以看到完整的文档。
+在浏览器中打开地址 `http://localhost:3000/starcoin-cookbook/`，就可以看到完整的文档。如果你指定了 BASE_URL 环境变量为 `/`，地址将是：`http://localhost:3000/`。
 
 5. 提交 Pull Request
 

@@ -1,0 +1,10 @@
+[package]
+name = "table-test"
+version = "0.0.1"
+
+[addresses]
+StarcoinFramework = "0x1"
+TableTest = "0xABCDE"
+
+[dependencies]
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="525e7a0f06803c521af47957b4598797c754a8df"}

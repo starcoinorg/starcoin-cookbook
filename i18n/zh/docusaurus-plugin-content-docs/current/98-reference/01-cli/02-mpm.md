@@ -133,7 +133,7 @@ mpm package [OPTIONS] <SUBCOMMAND>
 
 ### `mpm release` 详述
 
-这个命令用于发布包。
+将 Move 代码打包成二进制文件。
 
 **用法：**
 
@@ -212,7 +212,7 @@ mpm release [OPTIONS]
 **用法：**
 
 ```shell
-# mpm integration-test 选项 过滤器
+# mpm deploy 选项 --rpc RPC地址 二进制文件
 mpm deploy [OPTIONS] --rpc <rpc> <mv-or-package-file>
 
 - `<mv-or-package-file>`
@@ -310,6 +310,92 @@ mpm deploy [OPTIONS] --rpc <rpc> <mv-or-package-file>
 - `--test`
   - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
   - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
+
+- `-v`
+  - Print additional diagnostics if available
+  - 如果功能用，将打印额外的诊断信息。
+
+
+### `mpm-integration-test` 详述
+
+在测试目录（`integration-tests`）运行集成测试。
+
+**用法：**
+
+```shell
+# mpm integration-test 选项 过滤器
+mpm integration-test [OPTIONS] [FILTER]
+
+- `<FILTER>`
+ - The FILTER string is tested against the name of all tests, and only those tests whose names contain the filter are run
+ - 过滤字符串是针对所有测试的名称进行测试的，并且只有那些包含过滤器的名称的测试才能运行。
+```
+
+**选项：**
+
+```shell
+# 结构描述
+
+- 选项
+  - 选项原文描述
+  - 选项通俗解释
+```
+
+- `--abi`
+  - Generate ABIs for packages
+  - 为包生成应用程序二进制接口（ABI），即两个程序模块之间的接口。
+
+- `d, --dev`
+  - Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if this flag is set. This flag is useful for development of packages that expose named addresses that are not set to a specific value
+  - 在 `dev` 模式下编译。如果设置了此标志（选项），则会使用 `dev-addresses` 和 `dev-dependencies` 字段。这个选项对于公开未设置为特定值的命名地址的包的开发非常有用。
+
+- `--doc`
+  - Generate documentation for packages
+  - 为包生成文档。
+
+- `--exact`
+  - Exactly match filters rather than by substring
+  - 完全匹配过滤器，而不是子字符串。
+
+- `--force`
+  - Force recompilation of all packages
+  - 强制重新编译所有的包。
+
+- `--format <FORMAT>`
+  - Configure formatting of output: pretty = Print verbose output; terse = Display one character per test; (json is unsupported, exists for compatibility with the default test harness) [default: pretty] [possible values: pretty, terse]
+  - 输出的配置格式：`pretty` 打印详细输出；`terse` 每个测试显示一个字符；（不支持 json，存在与默认测试安全带的兼容），默认值为 `pretty`。
+
+- `-h, --help`
+  - Print help information
+  - 打印帮助信息
+
+- `--install-dir <INSTALL_DIR>`
+  - Installation directory for compiled artifacts. Defaults to current directory
+  - 为手动编译的程序指定安装目录，默认为当前目录。
+
+- `--list`
+  - List all tests
+  - 列出所有测试。
+
+- `-p, --path <PACKAGE_PATH>`
+  - Path to a package which the command should be run withrespect to [default: .]
+  - 指定命令应该运行的包的路径，默认为当前路径，即 `[default: .]`。
+
+- `-q, --quiet`
+  - Output minimal information
+  - 输出最小信息。
+
+- `--test`
+  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
+  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
+
+- `--test-threads <TEST_THREADS>`
+  - Number of threads used for running tests in parallel [env: RUST_TEST_THREADS=] [default: 32]
+  - 指定用于并行测试的线程数量，默认值为 `32`，通过环境变量指定：`RUST_TEST_THREADS=32`。
+
+- `--ub`
+  - update test baseline
+  - 更新测试基线。
 
 - `-v`
   - Print additional diagnostics if available

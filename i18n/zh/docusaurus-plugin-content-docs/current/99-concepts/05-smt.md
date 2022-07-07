@@ -76,6 +76,7 @@ pub struct InternalNode {
     //Node's hash cache
     cached_hash: Cell<Option<HashValue>>,
 }
+
 pub trait RawKey: Clone + Ord {
     /// Raw key's hash, will used as tree's nibble path
     /// Directly use origin byte's sha3_256 hash, do not use CryptoHash to add salt.
@@ -108,7 +109,7 @@ pub struct LeafNode<K: RawKey> {
     cached_hash: Cell<Option<HashValue>>,
 }
 ```
-Child 的定义可以看到只存储了 Hash 值，Value 通过 `KvStore.get(Hash)`获取， 然后再反序列化确定是 InternalNode 还是 LeafNode
+Child 的定义可以看到只存储了 Hash 值，Value 通过 `KvStore.get(Hash)`  获取， 然后再反序列化确定是 InternalNode 还是 LeafNode。
 
 下面说明下各个操作流程
 ## 在空树种创建 LeafNode 例子

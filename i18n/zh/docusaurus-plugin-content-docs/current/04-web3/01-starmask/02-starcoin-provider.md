@@ -1,14 +1,14 @@
 # Starcoin Provider API
 
-:::tip Recommended Reading
-We recommend that all Web3 site developers read the [Basic Usage](#basic-usage) section.
+:::tip 推荐阅读
+我们建议所有 web3 站点开发人员阅读[基本用法](#basic-usage)部分。
 :::
 
-StarMask injects a global API into websites visited by its users at `window.starcoin`.
-This API allows websites to request users' Starcoin accounts, read data from blockchains the user is connected to, and suggest that the user sign messages and transactions.
-The presence of the provider object indicates an Starcoin user.
+StarMask 将一个全局 API 注入到其用户在 `window.starcoin` 访问的网站中。
+该 API 允许网站请求用户的 Starcoin 账户，从用户连接的区块链中读取数据，并建议用户签署消息和交易。
+提供程序对象（provider object）的存在表示 Starcoin 用户。
 
-We recommend using [`@starcoin/starmask-onboarding`](https://npmjs.com/package/@starcoin/starmask-onboarding) to detect our provider injected at `window.starcoin`, on any platform or browser.
+我们建议在任何平台或浏览器上使用 [`@starcoin/starmask-onboarding`](https://npmjs.com/package/@starcoin/starmask-onboarding) 来检测我们在 `window.starcoin` 中注入的提供程序。
 
 ```javascript
 // This function detects most providers injected at window.starcoin
@@ -21,24 +21,24 @@ if (!isStarMaskInstalled()) {
 }
 ```
 
-The Starcoin JavaScript provider API is specified by [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193).
+Starcoin JavaScript 提供程序 API 由 [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) 指定。
 
-## Basic Usage
+## 基本用法
 
-For any non-trivial Starcoin web application — a.k.a. DApp, Web3 site etc. — to work, you will have to:
+对于任何重要的 Starcoin 网络应用程序 —— 也就是 DApp、Web3 站点等 —— 要工作，你必须：
 
-- Detect the Starcoin provider (`window.starcoin`)
-- Detect which Starcoin network the user is connected to
-- Get the user's Starcoin account(s)
+- 检测 Starcoin 提供程序（window.starcoin）
+- 检测用户连接到哪个 Starcoin 网络
+- 获取用户的 Starcoin 账户
 
-The snippet at the top of this page is sufficient for detecting the provider.
-You can learn how to accomplish the other two by reviewing the snippet in the [Using the Provider](#using-the-provider) section.
+此页面顶部的代码段足以检测提供程序。
+你可以通过查看[使用提供程序](#using-the-provider)部分中的代码段来了解如何完成其他两个。
 
-The provider API is all you need to create a full-featured Web3 application.
+提供程序 API 是你创建功能齐全的 Web3 应用程序所需的一切。
 
-## Chain IDs
+## 链 ID
 
-These are the IDs of the Starcoin chains that StarMask supports by default.
+这些是 StarMask 默认支持的 Starcoin 链的 ID。
 
 | Hex  | Decimal | Network                         |
 | ---- | ------- | ------------------------------- |
@@ -47,25 +47,26 @@ These are the IDs of the Starcoin chains that StarMask supports by default.
 | 0xfc | 252     | Proxima Test Network            |
 | 0xfd | 253     | Halley Test Network             |
 
-## Properties
+## 属性
 
 ### `starcoin.isStarMask`
 
-:::warning Note
-This property is non-standard. Non-StarMask providers may also set this property to `true`.
+:::warning 注意
+这个属性是非标准的。非 StarMask 提供程序也可以将此属性设置为 `true`。
 :::
 
-`true` if the user has StarMask installed.
+如果用户安装了 StarMask，则为 `true`。
 
-## Methods
+## 方法
 
 ### `starcoin.isConnected()`
 
-:::tip Tip
+:::tip 提示
+请注意，此方法与用户的帐户无关。
 Note that this method has nothing to do with the user's accounts.
 
-You may often encounter the word "connected" in reference to whether a Web3 site can access the user's accounts.
-In the provider interface, however, "connected" and "disconnected" refer to whether the provider can make RPC requests to the current chain.
+您可能经常会遇到“已连接”这个词，指的是 Web3 站点是否可以访问用户的帐户。
+然而，在提供程序接口中，“已连接”和“已断开”是指提供程序是否可以向当前链发出 RPC 请求。
 :::
 
 ```typescript
@@ -76,6 +77,11 @@ Returns `true` if the provider is connected to the current chain, and `false` ot
 
 If the provider is not connected, the page will have to be reloaded in order for connection to be re-established.
 Please see the [`connect`](#connect) and [`disconnect`](#disconnect) events for more information.
+
+如果提供程序连接到当前链，则返回 `true`，否则返回 `false`。
+
+如果提供程序未连接，则必须重新加载页面才能重新建立连接。
+请参阅 [`connect`](#connect) 和 [`disconnect`](#disconnect) 事件以获取更多信息。
 
 ### `starcoin.request(args)`
 
@@ -88,18 +94,18 @@ interface RequestArguments {
 starcoin.request(args: RequestArguments): Promise<unknown>;
 ```
 
-Use `request` to submit RPC requests to Starcoin via StarMask.
-It returns a `Promise` that resolves to the result of the RPC method call.
+使用 `request` 通过 `StarMask` 向 Starcoin 提交 RPC 请求。
+它返回一个解析为 RPC 方法调用结果的 Promise。
 
-The `params` and return value will vary by RPC method.
-In practice, if a method has any `params`, they are almost always of type `Array<any>`.
+参数和返回值会因 RPC 方法而异。
+在实践中，如果一个方法有任何参数，它们几乎总是 `Array<any>` 类型。
 
-If the request fails for any reason, the Promise will reject with an [Starcoin RPC Error](#errors).
+如果请求因任何原因失败，Promise 将拒绝并返回 [Starcoin RPC Error](#错误)。
 
-StarMask supports most standardized Starcoin RPC methods, in addition to a number of methods that may not be supported by other wallets.
-See the StarMask [RPC API documentation](./03-rpc-api.md) for details.
+StarMask 支持大多数标准化的 Starcoin RPC 方法，此外还有一些其他钱包可能不支持的方法。
+<!-- 有关详细信息，请参阅 StarMask [RPC API documentation](./03-rpc-api.md)。 -->
 
-#### Example
+#### 例子
 
 ```javascript
 params: [
@@ -120,11 +126,10 @@ starcoin
   });
 ```
 
-## Events
+## 事件
 
-The StarMask provider implements the [Node.js `EventEmitter`](https://nodejs.org/api/events.html) API.
-This sections details the events emitted via that API.
-There are innumerable `EventEmitter` guides elsewhere, but you can listen for events like this:
+StarMask 提供程序实现了 [Node.js `EventEmitter`](https://nodejs.org/api/events.html) API。
+本节详细介绍了通过该 API 发出的事件。其他地方有无数的 `EventEmitter` 指南，但您可以监听如下事件：
 
 ```javascript
 starcoin.on("accountsChanged", (accounts) => {
@@ -140,7 +145,7 @@ starcoin.on("chainChanged", (chainId) => {
 });
 ```
 
-Also, don't forget to remove listeners once you are done listening to them (for example on component unmount in React):
+另外，一旦你听完监听器，不要忘记删除它们（例如在 React 中卸载组件时）：
 
 ```javascript
 function handleAccountsChanged(accounts) {
@@ -154,7 +159,7 @@ starcoin.on("accountsChanged", handleAccountsChanged);
 starcoin.removeListener("accountsChanged", handleAccountsChanged);
 ```
 
-The first argument of the `starcoin.removeListener` is the event name and the second argument is the reference to the same function which has passed to `starcoin.on` for the event name mentioned in the first argument.
+`starcoin.removeListener` 的第一个参数是事件名称，第二个参数是对第一个参数中提到的事件名称传递给 `starcoin.on` 的同一函数的引用。
 
 ### `connect`
 
@@ -166,8 +171,8 @@ interface ConnectInfo {
 starcoin.on('connect', handler: (connectInfo: ConnectInfo) => void);
 ```
 
-The StarMask provider emits this event when it first becomes able to submit RPC requests to a chain.
-We recommend using a `connect` event handler and the [`starcoin.isConnected()` method](#starcoin-isconnected) in order to determine when/if the provider is connected.
+当 StarMask 提供程序第一次能够向链提交 RPC 请求时，它会发出此事件。
+我们建议使用 `connect` 事件处理程序和 [`starcoin.isConnected()` method](#starcoin-isconnected) 方法来确定何时/是否连接了提供程序。
 
 ### `disconnect`
 
@@ -175,11 +180,11 @@ We recommend using a `connect` event handler and the [`starcoin.isConnected()` m
 starcoin.on('disconnect', handler: (error: ProviderRpcError) => void);
 ```
 
-The StarMask provider emits this event if it becomes unable to submit RPC requests to any chain.
-In general, this will only happen due to network connectivity issues or some unforeseen error.
+如果 StarMask 提供程序无法向任何链提交 RPC 请求，它会发出此事件。
+通常，这只会由于网络连接问题或某些不可预见的错误而发生。
 
-Once `disconnect` has been emitted, the provider will not accept any new requests until the connection to the chain has been re-established, which requires reloading the page.
-You can also use the [`starcoin.isConnected()`](#starcoin-isconnected) method to determine if the provider is disconnected.
+一旦发出断开连接（`disconnect`），提供程序将不会接受任何新请求，直到重新建立与链的连接，这需要重新加载页面。
+您还可以使用 [`starcoin.isConnected()`](#starcoin-isconnected) 方法来确定提供程序是否已断开连接。
 
 ### `accountsChanged`
 
@@ -187,29 +192,29 @@ You can also use the [`starcoin.isConnected()`](#starcoin-isconnected) method to
 starcoin.on('accountsChanged', handler: (accounts: Array<string>) => void);
 ```
 
-The StarMask provider emits this event whenever the return value of the `stc_accounts` RPC method changes.
-`stc_accounts` returns an array that is either empty or contains a single account address.
-The returned address, if any, is the address of the most recently used account that the caller is permitted to access.
-Callers are identified by their URL _origin_, which means that all sites with the same origin share the same permissions.
+每当 `stc_accounts` RPC 方法的返回值发生更改时，StarMask 提供程序都会发出此事件。
+`stc_accounts` 返回一个为空或包含单个帐户地址的数组。
+返回的地址（如果有）是允许调用者访问的最近使用的帐户的地址。
+调用者由其 URL 来源标识，这意味着具有相同来源的所有站点共享相同的权限。
 
-This means that `accountsChanged` will be emitted whenever the user's exposed account address changes.
+这意味着只要用户暴露的帐户地址发生更改，就会发出 `accountsChanged`。
 
 ### `chainChanged`
 
-:::tip Tip
-See the [Chain IDs section](#chain-ids) for StarMask's default chains and their chain IDs.
+:::tip 提示
+有关 StarMask 的默认链及其链 ID，请参阅[链 ID](#链-id) 部分。
 :::
 
 ```typescript
 starcoin.on('chainChanged', handler: (chainId: string) => void);
 ```
 
-The StarMask provider emits this event when the currently connected chain changes.
+当当前连接的链发生变化时，StarMask 提供程序会发出此事件。
 
-All RPC requests are submitted to the currently connected chain.
-Therefore, it's critical to keep track of the current chain ID by listening for this event.
+所有的 RPC 请求都提交到当前连接的链上。
+因此，通过侦听此事件来跟踪当前链 ID 至关重要。
 
-We _strongly_ recommend reloading the page on chain changes, unless you have good reason not to.
+我们_强烈_建议在链更改时重新加载页面，除非您有充分的理由不这样做。
 
 ```javascript
 starcoin.on("chainChanged", (_chainId) => window.location.reload());
@@ -233,9 +238,9 @@ The kind of message is identified by the `type` string.
 RPC subscription updates are a common use case for the `message` event.
 For example, if you create a subscription using `eth_subscribe`, each subscription update will be emitted as a `message` event with a `type` of `eth_subscription`. -->
 
-## Errors
+## 错误
 
-All errors thrown or returned by the StarMask provider follow this interface:
+StarMask 提供程序抛出或返回的所有错误都遵循此接口：
 
 ```typescript
 interface ProviderRpcError extends Error {
@@ -245,8 +250,9 @@ interface ProviderRpcError extends Error {
 }
 ```
 
-The [`starcoin.request(args)` method](#starcoin-request-args) throws errors eagerly.
-You can often use the error `code` property to determine why the request failed.
+[`starcoin.request(args)`](#starcoin-request-args) 方法会急切地抛出错误。
+您通常可以使用错误`代码`属性来确定请求失败的原因。
+
 
 <!--
 Common codes and their meaning include:
@@ -265,13 +271,13 @@ The [`eth-rpc-errors`](https://npmjs.com/package/eth-rpc-errors) package impleme
 :::
 -->
 
-## Using the Provider
+## 使用提供程序（Provider）
 
-This snippet explains how to accomplish the three most common requirements for Web3 sites:
+这段代码解释了如何完成 Web3 网站的三个最常见的要求：
 
-- Detect the Starcoin provider (`window.starcoin`)
-- Detect which Starcoin network the user is connected to
-- Get the user's Starcoin account(s)
+- 检测 Starcoin 提供者（`window.starcoin`）
+- 检测用户连接到哪个 Starcoin 网络
+- 获取用户的 Starcoin 账户
 
 <!-- <<< @/docs/snippets/handleProvider.js -->
 

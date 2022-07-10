@@ -1,6 +1,7 @@
 # RPC API
 
-StarMask uses the [`starcoin.request(args)` method](./02-starcoin-provider.md#starcoin-request-args) to wrap an RPC API.
+TODO: Need to fix a bug -> index
+<!-- StarMask uses the [`starcoin.request(args)` method](./02-starcoin-provider.md#starcoin-request-args) to wrap an RPC API. -->
 
 The API is based on an interface exposed by all Starcoin clients, along with a growing number of methods that may or may not be supported by other wallets.
 

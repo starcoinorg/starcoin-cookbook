@@ -80,6 +80,34 @@ Release done: release/my_counter.v0.0.1.blob, package hash: 0xa7e3c02c102c85708c
 
 4. 部署到区块链
 
+目前有两个命令行工具可以将 Move 二进制包部署到区块链上：
+`mpm deploy` 和 `starcoin dev deploy`。
+
+- mpm deploy
+
+部署模块需要账号进行签名，`mpm deploy` 命令支持三种账号模式：
+1) 本地钱包; 2) 私钥文件; 3) 环境变量。
+
+三种账号模式对应的命令分别如下：
+
+```
+$ mpm deploy --rpc ws://127.0.0.1:9871 --local-account-dir /your/local/account/dir --password xxxxx /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+
+$ mpm deploy --rpc ws://127.0.0.1:9871 --secret-file /your/secret/file /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+
+$ mpm deploy --rpc ws://127.0.0.1:9871 --from-env /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+```
+
+如果要将模块部署到 Barnard 测试网或者主网上，只需将 `--rpc` 选项指定为对应的 RPC 地址即可。
+
+**secret-file** 是一个储存私钥的本地文件，里面只包含一行私钥，无其他前缀，后缀。
+
+环境变量的键值为： `STARCOIN_PRIVATE_KEY`.
+
+- starcoin dev deploy 
+
+在 `starcoin` 控制台模式下，运行命令：
+
 ```bash
 starcoin% dev deploy /your/dev/path/my-counter/release/my_counter.v0.0.1.blob -s 0xb19b07b76f00a8df445368a91c0547cc -b
 txn 0xeb055894f0c4440608246825c238a36683a8a0ad57144e905a12398a02ce806b submitted.

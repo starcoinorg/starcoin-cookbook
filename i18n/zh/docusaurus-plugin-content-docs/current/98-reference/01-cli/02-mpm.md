@@ -59,7 +59,8 @@ mpm [OPTIONS] <SUBCOMMAND>
 
 ## 子命令
 
-    check-compatibility    Check compatibility of modules comparing with remote chain chate
+    check-compatibility    Check compatibility of modules comparing with remote chain state
+    deploy                 Deploy package to chain
     experimental           (Experimental) Run static analyses on Move source or bytecode
     help                   Print this message or the help of the given subcommand(s)
     integration-test       Run integration tests in tests dir
@@ -132,7 +133,7 @@ mpm package [OPTIONS] <SUBCOMMAND>
 
 ### `mpm release` 详述
 
-这个命令用于发布包。
+将 Move 代码打包成二进制文件。
 
 **用法：**
 
@@ -194,6 +195,117 @@ mpm release [OPTIONS]
 - `-t, --type_tag <type-tag>`
   - type tags for the init script function
   - 为初始化脚本函数设置一个标签。
+
+- `--test`
+  - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory
+  - 在 `test` 模式下编译。`dev-addresses` 和 `dev-dependencies` 字段将与 `tests` 目录中的任何代码一起使用。
+
+- `-v`
+  - Print additional diagnostics if available
+  - 如果功能用，将打印额外的诊断信息。
+
+
+### `mpm deploy` 详述
+
+将编译好的二进制包部署到区块链上。
+
+**用法：**
+
+```shell
+# mpm deploy 选项 --rpc RPC地址 二进制文件
+mpm deploy [OPTIONS] --rpc <rpc> <mv-or-package-file>
+
+- `<mv-or-package-file>`
+ - move bytecode file path or package binary path
+ - Move 字节码文件或包（package）的二进制文件
+```
+
+**选项：**
+
+```shell
+# 结构描述
+
+- 选项
+  - 选项原文描述
+  - 选项通俗解释
+```
+- `--abi`
+  - Generate ABIs for packages
+  - 为包生成应用程序二进制接口（ABI），即两个程序模块之间的接口。
+
+- `-b, --blocking`
+  - blocking wait transaction(txn) mined
+  - 提交交易时阻塞线程，等待交易被打包执行。
+
+- `d, --dev`
+  - Compile in 'dev' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used if this flag is set. This flag is useful for development of packages that expose named addresses that are not set to a specific value
+  - 在 `dev` 模式下编译。如果设置了此标志（选项），则会使用 `dev-addresses` 和 `dev-dependencies` 字段。这个选项对于公开未设置为特定值的命名地址的包的开发非常有用。
+
+- `--doc`
+  - Generate documentation for packages
+  - 为包生成文档。
+
+- `--dry-run`
+  - dry-run mode, only get transaction output, do not change chain state
+  - 演练模式，模拟执行交易，获取交易输出，但不改变链上状态。
+
+- `--expiration-time-secs <expiration-time-secs>`
+  - how long(in seconds) the txn stay alive from now
+  - 交易从提交开始的存活时间（单位：秒）。
+
+- `--force`
+  - Force recompilation of all packages
+  - 强制重新编译所有的包。
+
+- `--from-env`
+  - Read private from env variable `STARCOIN_PRIVATE_KEY`
+  - 从环境变量 `STARCOIN_PRIVATE_KEY` 中读取私钥。
+
+- `--gas-unit-price <price of gas unit>`
+  - gas price used to deploy the module
+  - 部署该模块愿意支付的 gas 价格。
+
+- `-h, --help`
+  - Print help information
+  - 打印帮助信息
+
+- `--install-dir <INSTALL_DIR>`
+  - Installation directory for compiled artifacts. Defaults to current directory
+  - 为手动编译的程序指定安装目录，默认为当前目录。
+
+- `--local-account-dir <ACCOUNT_DIR>`
+  - Path to the local account provider dir, load the accounts from local dir path
+  - 本地钱包的路径。部署模块需要签名交易，指定该参数后，通过本地钱包来获取账户并签名。
+
+- `--password <ACCOUNT_PASSWD>` 
+  - 本地钱包账号的密码，用来解锁账号。仅在使用 `--local-account-dir` 时有效。 
+
+- `--max-gas-amount <MAX_GAS_AMOUNT>`
+  - max gas used to deploy the module
+  - 部署该模块愿意支付的最大 gas。
+
+- `-p, --path <PACKAGE_PATH>`
+  - Path to a package which the command should be run withrespect to [default: .]
+  - 指定命令应该运行的包的路径，默认为当前路径，即 `[default: .]`。
+
+- `--rpc <rpc>`
+  - use remote starcoin rpc as initial state
+  - 远程 RPC 地址。
+
+- `-s, --sender <SENDER>`
+  - the account address for signing transaction, if `sender` is absent, use default account
+  - 用来签名交易的账号地址。如果为空，则使用默认账号，或者从私钥中导出账号。
+            
+- `--secret-file <SECRET_FILE>`
+  - file path of private key
+  - 私钥文件。指定该参数后，从私钥文件中读取私钥，文件中仅有一行，无额外前缀、后缀。
+
+- `--sequence-number <SEQUENCE_NUMBER>`
+  - transaction's sequence_number if a transaction in the pool, you want to replace it, can
+    use this option to set transaction's sequence_number otherwise please let cli to auto
+    get sequence_number from onchain and txpool
+  - 交易的序列号。如果想要覆盖之前的交易，则可以指定与之相同的序列号。否则，让命令行自动从
+    链上和交易池中获取序列号即可。
 
 - `--test`
   - Compile in 'test' mode. The 'dev-addresses' and 'dev-dependencies' fields will be used along with any code in the 'tests' directory

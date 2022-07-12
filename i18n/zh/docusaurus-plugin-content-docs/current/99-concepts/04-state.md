@@ -30,11 +30,15 @@ pub struct ChainStateDB {
     store: Arc<dyn StateNodeStore>,
     ///global state tree.
     state_tree: StateTree<AccountAddress>,
+    cache: Mutex<LruCache<AccountAddress, CacheItem>>,
+    updates: RwLock<HashSet<AccountAddress>>,
 }
 
 pub struct StateTree<K: RawKey> {
     storage: Arc<dyn StateNodeStore>,
     storage_root_hash: RwLock<HashValue>,
+    updates: RwLock<BTreeMap<K, Option<Blob>>>,
+    cache: Mutex<StateCache<K>>,
 }
 
 pub enum DataType {
@@ -52,12 +56,12 @@ struct AccountStateObject {
     store: Arc<dyn StateNodeStore>,
 }
 ```
-这里 `store` 对应存储的 `KvStore`， `ChainStateDB` 的成员 `state_tree` 对应 `AccountAddreee` -> `AccountState` 的 `Account SMT` 树。
+这里 `store` 对应存储的 `KvStore`， `ChainStateDB` 的成员 `state_tree` 对应 `AccountAddress` -> `AccountState` 的 `Account SMT` 树。
 `StateTree` 的成员 `storage_root_hash` 对应 `SMT` 的根节点。
 `AccountState` 有2个 `HashValue` 元素，对应图中 `Code_Root_Hash1` 和 `Res_Root_Hash1`，也就是 `AccountStateObject` 中的 `code_tree` 和 `resource_tree` 的根节点。
 `AccountStateObject` 的成员 `code_tree` 对应 `ModuleName` -> `Vec<u8>` 的 `Code SMT` 。。
 `AccountStateObject` 的成员 `resource_tree` 对应 `StructTag` -> `Vec<u8>` 的 `Resource SMT` 。
-`ModuleName` 类似于 `Account1` (对应 starcoin-framework 里面的模块 https://github.com/starcoinorg/starcoin-framework/tree/v11/sources)。
+`ModuleName` 类似于 `Account1` (对应 starcoin-framework 里面的[模块](https://github.com/starcoinorg/starcoin-framework/tree/v11/sources)。
 `struct_tag` 类似于 `0x00000000000000000000000000000001::Account::Account`。
 
 可见 Starcoin 中状态是一个2级的 SMT 结构，`ChainStateDB` 对应一级 SMT ， `AccountStateObject` 对应两个二级 SMT 。
@@ -80,7 +84,7 @@ pub struct StateTree<K: RawKey> {
     cache: Mutex<StateCache<K>>,
 }
 ```
-将要更新的 `（key, value)` 缓存在 `StateTree` 的成员 `updates` ，这里并没有参与 `SMT` 的计算
+将要更新的 `(key, value)` 缓存在 `StateTree` 的成员 `updates` ，这里并没有参与 `SMT` 的计算
 
 ### remove
 ```rust
@@ -153,6 +157,7 @@ pub struct AccessPath {
     pub address: AccountAddress,
     pub path: DataPath,
 }
+
 fn get(&self, access_path: &AccessPath) -> Result<Option<Vec<u8>>>;
 ```
 给 `vm` 提供状态信息查询接口，  `AccountAddress` 查找对应的 `AccountStateObject`，再生成

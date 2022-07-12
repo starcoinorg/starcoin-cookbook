@@ -84,7 +84,7 @@ There are two CLI tools to deploy binary package to chain: `mpm deploy` and `sta
 
 - mpm deploy
 
-Account provider is need to signature the deployment transaction. There are three types of account privder for `mpm deploy` command:
+Account provider is need to signature the deployment transaction. There are three types of account provider for `mpm deploy` command:
 1) local-account-dir; 2) secret-file; 3) environment variable.  
 
 The commands corresponding to the three account provider are as follows:

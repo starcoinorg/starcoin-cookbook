@@ -15,7 +15,7 @@ const config = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: '/img/favicon.ico',
-  organizationName: 'staroinorg', // Usually your GitHub org/user name.
+  organizationName: 'starcoinorg', // Usually your GitHub org/user name.
   projectName: 'starcoin-cookbook', // Usually your repo name.
   i18n: {
     defaultLocale: 'en',
@@ -31,7 +31,7 @@ const config = {
       },
     },
   },
-	plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
+  plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
   presets: [
     [
       'classic',
@@ -40,7 +40,15 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/starcoinorg/starcoin-cookbook/edit/main/',
+          editUrl: ({ locale, versionDocsDirPath, docPath }) => {
+            let link
+            if (locale === 'en') {
+              link = `https://github.com/starcoinorg/starcoin-cookbook/edit/main/${versionDocsDirPath}/${docPath}`
+            } else {
+              link = `https://github.com/starcoinorg/starcoin-cookbook/edit/main/i18n/${locale}/docusaurus-plugin-content-docs/current/${docPath}`
+            }
+            return link
+          },
         },
         blog: {
           showReadingTime: true,

@@ -1,4 +1,4 @@
-# Interactiong with the contract by CLI
+# Interacting with the contract by CLI
 
 This article guides you on how to interact with the contract. 
 

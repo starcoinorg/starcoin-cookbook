@@ -12,7 +12,7 @@
 我还创建了另一个帐户`0x831d51f0087596e6aa4e7b3b9c85f945`并将一些 STC 转移给它。 
 该帐户将用于接收Token。
 
-源文件位于[my-token](https://github.com/starcoinorg/guide-to-move-package-manager/tree/main/my-token)
+源文件位于[my-token](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-token)
 
 ## 编译模块
 

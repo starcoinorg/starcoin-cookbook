@@ -1,16 +1,14 @@
-# Interacting with the contract by CLI
+# 与合约交互
 
-This article guides you on how to interact with the contract. 
+这篇文章指导你如何与合约交互。通过这篇文章，你将学习到：
 
-In this article, you will learn:
+- 读取合约
+- 写入合约
+- 查看资源（Resource）
 
-- read to contract
-- write to contract
-- view resource
+首先按照[部署你的第一个智能合约](07-deploy-first-move-contract.md)将 `MyCounter` 模块部署到区块链上。
 
-First deploy the `MyCounter` module as described in [Deploy your first Move contract](06-deploy-first-move-contract.md) .
-
-1. Call init_counter script function to init resource.
+1. 调用 init_counter 脚本函数来初始化资源。
 
 ```
 starcoin% account execute-function --function 0xb19b07b76f00a8df445368a91c0547cc::MyCounter::init_counter -s 0xb19b07b76f00a8df445368a91c0547cc -b
@@ -42,7 +40,7 @@ txn 0x0f67bab5ee5ceeb9c2fe4ffeed9ab6b79f2869e922862ec40dba8aa7787709b1 submitted
 }
 ```
 
-2. Show resource.
+2. 查看资源。
 
 ```
 starcoin% state get resource 0xb19b07b76f00a8df445368a91c0547cc 0xb19b07b76f00a8df445368a91c0547cc::MyCounter::Counter
@@ -56,7 +54,7 @@ starcoin% state get resource 0xb19b07b76f00a8df445368a91c0547cc 0xb19b07b76f00a8
 }
 ```
 
-3. Call incr_counter to increment counter.
+3. 调用 incr_counter 递增计数器。
 
 ```
 starcoin% account execute-function --function 0xb19b07b76f00a8df445368a91c0547cc::MyCounter::incr_counter -s 0xb19b07b76f00a8df445368a91c0547cc -b
@@ -88,7 +86,7 @@ txn 0x7e8d6189c144c7640cbd79617247c0e242f52df6d60c74c29250492077b1b690 submitted
 }
 ```
 
-4. Show resource again.
+4. 再次查看资源。
 
 ```
 starcoin% state get resource 0xb19b07b76f00a8df445368a91c0547cc 0xb19b07b76f00a8df445368a91c0547cc::MyCounter::Counter
@@ -102,11 +100,11 @@ starcoin% state get resource 0xb19b07b76f00a8df445368a91c0547cc 0xb19b07b76f00a8
 }
 ```
 
-You can see the counter’s value is 1 now.
+你现在可以看到计数器的值是 1。
 
-5. Use another account to init and incr counter again.
+5. 使用另一个帐户再次初始化和增加计数器。
 
-Say the new account address is 0x0da41daaa9dbd912647c765025a12e5a .
+假设新账户地址为 0x0da41daaa9dbd912647c765025a12e5a .
 
 ```
 starcoin% account execute-function -s 0x0da41daaa9dbd912647c765025a12e5a  --function 0xb19b07b76f00a8df445368a91c0547cc::MyCounter::init_counter -b

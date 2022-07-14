@@ -8,7 +8,7 @@ In this article, you will learn:
 - write to contract
 - view resource
 
-First deploy the `MyCounter` module as described in [Deploy your first Move contract](06-deploy-first-move-contract.md) .
+First deploy the `MyCounter` module as described in [Deploy your first Move contract](07-deploy-first-move-contract.md) .
 
 1. Call init_counter script function to init resource.
 

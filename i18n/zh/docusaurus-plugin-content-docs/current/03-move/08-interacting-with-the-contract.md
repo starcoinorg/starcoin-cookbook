@@ -6,7 +6,7 @@
 - 写入合约
 - 查看资源（Resource）
 
-首先按照[部署你的第一个智能合约](06-deploy-first-move-contract.md)将 `MyCounter` 模块部署到区块链上。
+首先按照[部署你的第一个智能合约](07-deploy-first-move-contract.md)将 `MyCounter` 模块部署到区块链上。
 
 1. 调用 init_counter 脚本函数来初始化资源。
 

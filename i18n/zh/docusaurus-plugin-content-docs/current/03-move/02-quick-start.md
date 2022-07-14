@@ -43,7 +43,7 @@ my-counter
 *（可以借助函数计算平台 —— 如 AWS Lambda —— 上发布函数、调用函数来帮助理解）*
 :::
 
-有 Move.toml 文件和 `sources/` 目录的项目，会被认为是一个 [Move 包（Move Package）](./02-move-language/01-packages.md)。
+有 Move.toml 文件和 `sources/` 目录的项目，会被认为是一个 [Move 包（Move Package）](./03-move-language/01-packages.md)。
 
 ## 创建 MyCounter 模块
 
@@ -179,7 +179,7 @@ Move语言是面向资源的语言，核心是资源的管理。
 通过给资源赋予不同的能力，Move 虚拟机可以从根本上保证「资源」只能转移（move），至于能否拷贝、修改、丢弃，看资源的具体能力。
 如果强行拷贝、修改或者丢弃，代码编译会出错，根本没有机会运行。
 
-更多信息可以参考：[认识 Ability](./03-understanding-ability.md) 章节。
+更多信息可以参考：[认识 Ability](./04-understanding-ability.md) 章节。
 :::
 
 一般来说我们认为，**有 `key` ability 的结构体，就是资源**。
@@ -580,7 +580,7 @@ starcoin% account execute-function --function  <0x地址>::<模块>::<函数>  -
 * 了解 [Starcoin Move Framework](./starcoin-framework/)
 * 可以通过 [Move高级开发] 学习高级 Move.
 * 了解 [Move 规范语言 和 Move Prover](./100-move-prover/01-move-spec-language.md) 开发更安全的 Move 应用
-* 探索 [Move 包管理器](./04-move-package-manager.md)的更多功能
+* 探索 [Move 包管理器](./05-move-package-manager.md)的更多功能
 
 或者，你可以直接进入 Dapp 的世界，
 * [Web3 和 DApp 开发](../web3/)

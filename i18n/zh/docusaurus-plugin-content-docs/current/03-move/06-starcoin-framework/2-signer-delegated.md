@@ -7,7 +7,8 @@
 以太坊有两种类型的Account，分别是外部账户(Externally Owned Account)和合约账户(Contract Account)。
 这两种账户之间主要有三个方面的差异：
 
-![eth_eoc_vs_contract](https://tva1.sinaimg.cn/large/008i3skNly1gvw5t00psnj311m0fy3zh.jpg)
+![eth_eoc_vs_contract](../../../../../../static/img/contract_account/eth_eoc_vs_contract.jpg)
+../../../../../../static/img/contract_account/
 
 * 创建方式
 * 是否有合约代码
@@ -15,7 +16,7 @@
 
 外部账户需要通过私钥创建，是面向普通用户的账户，只能存储当前用户的Balance，不允许有代码。用户通过私钥控制账户，主动发起交易，是普通用户的入口。而合约账户由外部账户的Address等数据计算而来，可以存储代码。账户状态由合约控制，存储通过合约产生的所有数据。
 
-![eth_create_account](https://tva1.sinaimg.cn/large/008i3skNly1gvw6wu8l3nj30x60h83zi.jpg)
+![eth_create_account](../../../../../../static/img/contract_account/eth_create_account.jpg)
 
 这两种账户本质上是希望将用户状态与合约状态分开存储。但是随着区块链的高速发展，以太坊的账户模型面临很多的问题：
 
@@ -37,7 +38,7 @@
 为了更好地为广大用户提供服务，Starcoin的Account模型设计了Data区和Code区。
 Data区用于存储用户数据，Code区用于存储合约代码，彻底将“用户数据”与“合约代码”分开存储。
 
-![starcoin_account](https://tva1.sinaimg.cn/large/008i3skNly1gvzmh52q8cj30oc0b8wf1.jpg)
+![starcoin_account](../../../../../../static/img/contract_account/starcoin_account.jpg)
 
 由于Starcoin的智能合约语言Move是面向资源编程的，合约生成的Resource在Move虚拟机的保障下，只能在账户之间转移，不能被修改（修改必须调用合约）。
 所以，在Starcoin的账户模型上运行Move合约有非常多的优势：
@@ -50,7 +51,7 @@ Data区用于存储用户数据，Code区用于存储合约代码，彻底将“
 * 为状态计费提供可能，避免了“状态爆炸”
 * 将状态与代码拆分，让合约调用有清晰的上下文
 
-![starcoin_account](https://tva1.sinaimg.cn/large/008i3skNly1gvzheh8hn6j30n60c9gmc.jpg)
+![starcoin_account](../../../../../../static/img/contract_account/starcoin_account2.jpg)
 
 
 ## Starcoin的合约账户
@@ -92,7 +93,7 @@ native fun create_signer(addr: address): signer;
 * SignerDelegated：存储在合约账户下的一个标记性质的资源，不能拷贝、不能丢弃、不能修改、不能转移，一个账户下如果有SignerDelegated表示合约账户，否则是外部账户
 * SignerCapability（Capability是Move合约中常用的编程思想，通常表示权限）：表示合约账户addr的签名权，谁掌握了addr的SignerCapability，谁就能控制addr账户。SignerCapability也是不能拷贝、不能丢弃、不能修改，只能转发的资源
 
-![starcoin_contract_account](https://tva1.sinaimg.cn/large/008i3skNly1gvzvf5niwxj30gy084aa6.jpg)
+![starcoin_contract_account](../../../../../../static/img/contract_account/starcoin_contract_account.jpg)
 
 SignerDelegated像是一把锁，SignerCapability像是一把钥匙。代码中还包括两个函数：
 
@@ -106,7 +107,7 @@ SignerDelegated像是一把锁，SignerCapability像是一把钥匙。代码中�
 
 前面我们说过，Starcoin的账户实现是统一的，合约账户和外部账户之间可以相互转换。跟以太坊的合约账户创建流程不同，Starcoin的合约账户创建流程只是在外部账户创建流程的基础上，多了一步“托管签名权”。下图是Starcoin创建账户的流程，最后紫色→和紫色+表示通过外部账户创建合约账户。
 
-![create_starcoin_account](https://tva1.sinaimg.cn/large/008i3skNly1gvzusmtlb3j30jl0d40tg.jpg)
+![create_starcoin_account](../../../../../../static/img/contract_account/create_starcoin_account.jpg)
 
 ## 合约账户应用场景
 
@@ -125,7 +126,7 @@ Starcoin将addr合约账户的签名权SignerCapability进行托管，实现在�
 在用户调用合约的时候，先确定用户类型，再根据类型使用对应的签名权切换身份，调用对应的合约。
 这样既能轻松统一用户的入口，保障业务逻辑的正确，又能更好地提供合约的安全性。
 
-![starcoin_pool_contract](https://tva1.sinaimg.cn/large/008i3skNly1gvzxlclhzkj30l00igt96.jpg)
+![starcoin_pool_contract](../../../../../../static/img/contract_account/starcoin_pool_contract.jpg)
 
 ### 2. Starcoin的第一个合约账户Genesis Account
 

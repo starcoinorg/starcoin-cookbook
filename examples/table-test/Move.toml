@@ -4,7 +4,7 @@ version = "0.0.1"
 
 [addresses]
 StarcoinFramework = "0x1"
-TableTest = "0xABCDE"
+TableTest = "0xe4c65b287e5a059a23a016f363c1ba42"
 
 [dependencies]
 StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="525e7a0f06803c521af47957b4598797c754a8df"}

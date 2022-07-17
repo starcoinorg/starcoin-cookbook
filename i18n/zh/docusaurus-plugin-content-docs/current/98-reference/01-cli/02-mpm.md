@@ -537,6 +537,10 @@ mpm check-compatibility [OPTIONS]
   - Path to a package which the command should be run withrespect to [default: .]
   - 指定命令应该运行的包的路径，默认为当前路径，即 `[default: .]`。
 
+- `--pre-modules <PRE_MODULES>`
+  - use to check pre modules compatibility
+  - 指定先前release包的文件或目录，比较与当前模块的兼容性。
+
 - `--rpc <rpc>`
   - use remote starcoin rpc as initial state
   - 使用远程（链上）的 Starcoin rpc 作为初始状态。

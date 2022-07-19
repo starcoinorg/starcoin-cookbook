@@ -34,6 +34,12 @@ $ starcoin -n dev
 Waiting SIGINT or SIGTERM ...
 ```
 
+As shown above, there are four RPC ways we can interact with node.
+* IPC file: .../dev/starcoin.ipc
+* HTTP JSON-RPC: 0.0.0.0:9850
+* TCP server: 0.0.0.0:9860
+* WebSocket server: 0.0.0.0:9870
+
 The local dev mode will use a temporary directory by default, all the data will be reset each time restart the network. Once the dev network is started, we can connect to the node through IPC (inter-process communication) file to execute commands, such as:
 
 ```bash

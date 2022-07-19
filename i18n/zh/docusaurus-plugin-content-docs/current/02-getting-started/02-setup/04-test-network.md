@@ -38,3 +38,11 @@ starcoin -n barnard
 ## 获取测试网络的 Token
 
 - [Barnard 的水龙头](https://faucet.starcoin.org/barnard)
+
+## 种子节点地址
+
+| 网络 | JSON-RPC | WebSocket |
+| - | - | - |
+| Halley | https://halley-seed.starcoin.org | ws://halley.seed.starcoin.org:9870 |
+| Proxima | https://proxima-seed.starcoin.org | ws://proxima.seed.starcoin.org:9870 |
+| Barnard | https://barnard-seed.starcoin.org | ws://barnard.seed.starcoin.org:9870 |

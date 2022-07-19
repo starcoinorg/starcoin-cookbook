@@ -221,3 +221,7 @@ Note: Please keep the private key safe!
 ```shell
 exit
 ```
+
+## Seed Node RPC
+- JSON-RPC: https://main-seed.starcoin.org
+- WebSocket: ws://main.seed.starcoin.org:9870

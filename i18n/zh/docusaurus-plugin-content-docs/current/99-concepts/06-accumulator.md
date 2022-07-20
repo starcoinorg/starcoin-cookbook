@@ -243,3 +243,15 @@ NodeIndex 提供了一些操作
 这部分细节待添加。
 
 相关资源[draw.io](../../../../../static/accumulator.drawio)
+
+## 总结
+
+默克尔累加器 MerkleAccumulator 是 Starcoin 区块链另一个核心数据结构，用于提供区块和交易的证明。它的结构如图所示：
+
+![MerkleAccumulator](../../../../../static/img/key_words/Proof.png)
+
+MerkleAccumulator 是一个叶子节点可以从左到右不断增加，从而不断累加的默克尔累加器。
+
+Starcoin 区块链设计了两个默克尔累加器，分别是区块默克尔累加器和交易默克尔累加器。
+上图红圈表示叶子节点，对应区块默克尔累加器就是指区块，对应交易默克尔累加器就是指交易；蓝圈表示中间节点。
+所以 Starcoin 区块链可以非常方便的给区块或者交易提供证明，例如，上图中叶子节点 B 的 Proof 是 CAD。

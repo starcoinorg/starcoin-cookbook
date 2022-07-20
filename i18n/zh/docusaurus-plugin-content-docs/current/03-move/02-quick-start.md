@@ -188,7 +188,7 @@ Move语言是面向资源的语言，核心是资源的管理。
 
 ```move title="my-counter/sources/MyCounter.move" {2}
 module MyCounter::MyCounter {
-    struct Counter has key, store {
+    struct Counter has key {
         value: u64,
     }
 
@@ -225,7 +225,7 @@ module MyCounter::MyCounter {
 ```
 
 注意第3行我们引用了一个依赖 —— [StarcoinFramwork](https://github.com/starcoinorg/starcoin-framework)。
-可以认为是 Starcoin 的 Stdlib 标准库。我们需要使用库中的 Signer::address_of(&signer) 方法来提取 signer 的地址。
+可以认为是 Starcoin 的 Stdlib 标准库。我们需要使用库中的 `Signer::address_of(&signer)` 方法来提取 signer 的地址。
 
 为了添加依赖到项目中，修改 Move.toml 文件
 
@@ -242,15 +242,14 @@ MyCounter = "0xcada49d6a37864931afb639203501695"
 StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}
 ```
 
-
-第16行有个新方法 `borrow_global_mut`，和前文的 `move_to` 一样，都是操作操作账户地址的存储空间上资源的内置方法。
+第16行有个新方法 `borrow_global_mut`，和前文的 `move_to` 一样，都是操作账户地址的存储空间上资源的内置方法。
 
 :::tip 加油站 —— 资源的操作方法
 1. `move_to<T>(&signer, T)`：发布、添加类型为 T 的资源到 signer 的地址下。
 2. `move_from<T>(address): T`：从地址下删除类型为 T 的资源并返回这个资源。
 3. `borrow_global<T>(address): &T`：返回地址 address 下类型为 T 的资源的不可变引用（immutable reference）。
 4. `borrow_global_mut<T>(address): &mut T`：返回地址 address 下类型为 T 的资源的可变引用（mutable reference）。
-5. `exists<T>(address): bool`：判断地址 address 下是否有类型为 T 的资源
+5. `exists<T>(address): bool`：判断地址 address 下是否有类型为 T 的资源。
 
 要使用这些方法，资源 T 必须定义在当前 module。
 **这确保了资源只会被定义资源的 module 提供的 API 方法来操作**。
@@ -317,22 +316,22 @@ module MyCounter::MyCounter {
 这里引入了函数可见性（visibility）的概念，不同的可见性决定了函数可以从何处被调用。（下面的 概念tip 可以先跳过）
 
 :::tip 概念——函数可见性
-| 可见性          | 写做                | 说明 |
-| -------------- | ------------------ | ----------- |
-| internal       | fun                | 也可以叫 private，只能在同一个 module 内调用 |
-| public         | public fun         | 可以被任一 module 内的函数调用 |
-| **public script**  | public(script) fun | script function 是 module 中的入口方法 ，可以**通过控制台发起一个transaction 来调用**，就像本地执行脚本一样（不过代码已经被存在了链上的 module 地址下）。 |
-| public friend  | public(friend) fun | 可以被同一 module 内调用，可以被加入到 `friend list` 的可信任 module 调用 |
+| 可见性            | 写做               | 说明                                                                                                                                                      |
+|-------------------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| internal          | fun                | 也可以叫 private，只能在同一个 module 内调用                                                                                                              |
+| public            | public fun         | 可以被任一 module 内的函数调用                                                                                                                            |
+| **public script** | public(script) fun | script function 是 module 中的入口方法，可以**通过控制台发起一个 transaction 来调用**，就像本地执行脚本一样（不过代码已经被存在了链上的 module 地址下）。 |
+| public friend     | public(friend) fun | 可以被同一 module 内调用，可以被加入到 `friend list` 的可信任 module 调用                                                                                 |
 :::
 
 下面，我们编写对应 init 和 incr 函数的 script function。
 
 ```move title="my-counter/sources/MyCounter.move" {18-24}
 module MyCounter::MyCounter {
-    
+
     use StarcoinFramework::Signer;
 
-    struct Counter has key, store, drop {
+    struct Counter has key, store {
         value: u64,
     }
 
@@ -364,6 +363,7 @@ module MyCounter::MyCounter {
 ### 发布到链上
 
 运行 mpm release 命令
+
 ```shell
 $ mpm release
 
@@ -374,7 +374,7 @@ Release done: release/my-counter.v0.0.1.blob, package hash: 0x31b36a1cd0fd13e840
 
 它将打包编译 module，获得二进制包。
 
-前文中我们准备了地址为 0xcada49d6a37864931afb639203501695 的账户，如果没有余额，可以通过 `dev get-coin` 命令获取一些测试币。
+前文中我们准备了地址为 `0xcada49d6a37864931afb639203501695` 的账户，如果没有余额，可以通过 `dev get-coin` 命令获取一些测试币。
 现在将编译好的 module 部署到这个账户地址下。
 
 ```starcoin title="starcoin控制台" {1,3,5}

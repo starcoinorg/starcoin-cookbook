@@ -16,10 +16,10 @@
 
 ![even_accumulator.png](../../../../../static/img/accumulator/even_accumulator.png)
 
-最下面 Leaf 那层的 Hash0 代表 Block0 的 Hash 值，Hash1 代表 Block1 的值， Hash2，Hash3 类似。
+最下面 Leaf 那层的 Hash0 代表 Block0 的 Hash 值，Hash1 代表 Block1 的值，Hash2，Hash3 类似。
 这里 Internal01 的左子树是 Hash0，右子树是 Hash1。
-Internal 01 的 Hash01 = Hash(Hash0 + Hash1)，+ 代表拼接字符串。
-在 Accumulator 中 Internal 节点的 Hash 值计算方法是左子树 Hash 值和右子树 Hash 值拼接后再 Hash 计算得出，Hash 计算的函数是 `sha3_256`。
+Internal 01 的 Hash01 = Hash(Hash0 + Hash1)，`+` 代表拼接字符串。
+在 Accumulator 中 Internal 节点的 Hash 值是由左子树 Hash 值和右子树 Hash 值拼接后再 Hash 计算得出，Hash 计算的函数是 `sha3_256`。
 这里从 Block0 开始是因为在区块链中有创世块（Genesis Block），最上面的根节点叫做 `Root_Hash`。
 
 ![odd_accumulator_origin.png](../../../../../static/img/accumulator/odd_accumulator_origin.png)
@@ -91,9 +91,10 @@ HashValue 使用 sha3_256 计算占8个字节，一个 AccumulatorInfo 占的内
 
 ## Leaf Index 和 Node Index
 
-如图1中，Hash0-Hash3 是 Merkle Tree 的 Leaf 节点，他们分别对应`0-3`的 Leaf 节点(计数从0开始)
-Leaf Index 就是从左开始 Leaf 节点的顺序。Node Index 是中序遍历 Tree 的各个节点的顺序，Hash0-Hash3 对应的 Node Index 是`0,2,4,6`。
+如图1中，Hash0、Hash1、Hash2 和 Hash3 是 Merkle Tree 的叶子节点，他们分别对应 `0-3` 的叶子节点(计数从0开始)
+Leaf Index 就是从左开始叶子节点的顺序。Node Index 是中序遍历 Tree 的各个节点的顺序，Hash0～Hash3 对应的 Node Index 是`0,2,4,6`。
 简略图如下
+
 ```shell
      3
     /  \
@@ -104,6 +105,7 @@ Leaf Index 就是从左开始 Leaf 节点的顺序。Node Index 是中序遍历 
 
 0   1  2   3 <[Leaf Index]
 ```
+
 Node Index 在代码中表示为 NodeIndex 。
 这里使用中序遍历的原因可能是 Accumulator 需要将 Merkle Tree 保存到 KvStore 中，由于保存的都是 HashValue，需要知道 HashValue 在 Merkle Tree 中的位置
 图3在图1基础上添加一个 Hash4 的节点，中序遍历情况下各个节点的 NodeIndex 值是不变的。
@@ -115,6 +117,7 @@ Node Index 在代码中表示为 NodeIndex 。
 ```rust
 pub fn append(&mut self, new_leaves: &[HashValue]) -> Result<HashValue>
 ```
+
 上面是对应的代码
 
 ![accumulator_store.png](../../../../../static/img/accumulator/accumulator_store.png)
@@ -122,20 +125,20 @@ pub fn append(&mut self, new_leaves: &[HashValue]) -> Result<HashValue>
 
 ### 新节点添加
 
-如图4中，Hash0-Hash3 构建的 Accumulator 的 Root_Hash 为 Hash(Internal0123)， 现在添加 Hash4-Hash6。
-添加 Hash4 LeafNode， Hash4 添加到 to_freeze，`to_freeze = [Hash4]`，Hash4 为左孩子节点，Hash4 添加完成。
-添加 Hash5 LeafNode， Hash5 添加到 to_freeze， `to_freeze = [Hash4, Hash5]`, Hash5 为右孩子节点，需要和其兄弟节点( sibling )生成一个 Frozen 的 Internal 45,
-并且添加到 to_freeze， `to_freeze = [Hash4, Hash5, Internal45]`， 这里产生了一个查询 sibling 操作，后面会介绍， Hash5 添加完成。
-添加 Hash6 LeafNode， Hash6 添加到 to_freeze，`to_freeze = [Hash4, Hash5, Internal45, Hash6]`, Hash6 为一个左孩子节点，Hash6 添加完成。
+如图4中，Hash0～Hash3 构建的 Accumulator 的 Root_Hash 为 Hash(Internal0123)， 现在添加 Hash4～Hash6。
+添加 Hash4 LeafNode，Hash4 添加到 to_freeze，`to_freeze = [Hash4]`，Hash4 为左孩子节点，Hash4 添加完成。
+添加 Hash5 LeafNode，Hash5 添加到 to_freeze，`to_freeze = [Hash4, Hash5]`，Hash5 为右孩子节点，需要和其兄弟节点( sibling )生成一个 Frozen 的 Internal 45，
+并且添加到 to_freeze，`to_freeze = [Hash4, Hash5, Internal45]`， 这里产生了一个查询 sibling 操作，后面会介绍，Hash5 添加完成。
+添加 Hash6 LeafNode，Hash6 添加到 to_freeze，`to_freeze = [Hash4, Hash5, Internal45, Hash6]`，Hash6 为一个左孩子节点，Hash6 添加完成。
 
 ### 根节点的计算
 
-根节点的计算会需要用到`NodeIndex, HashValue`的映射，就是下面提到 index_cache。
-需要计算下生成的新 Root_Hash 值，Hash6 和 PlaceHolder 生成 Not Frozen Node Internal67， 添加到 not_freeze， `not_freeze = [Internal67]`，
-Internal67 和其 sibling 节点 Internal45 (这里会产生查询操作) 生成 Not Frozen Node Internal4567  添加到 not_freeze，`not_freeze = [Internal67, Internal4567]`， 这里会有个查询节点操作，
-Internal4567 和其 sibling 节点 Internal0123 (这里会产生查询操作) 生成一个 Not Frozen Node Internal01234567，
-添加到not_freeze， `not_freeze = [Internal67, Internal4567, Internal01234567]`， `Hash(Internal01234567)`是新的 Root_Hash。
-Starcoin实现中会将 to_freeze, not_freeze 合并起来，并构建`LruCache<NodeIndex, HashValue>`， 这个称为 index_cache , 查询中会用到
+根节点的计算会需要用到 `NodeIndex, HashValue` 的映射，就是下面提到 index_cache。
+需要计算下生成的新 Root_Hash 值，Hash6 和 PlaceHolder 生成 Not Frozen Node Internal67，添加到 not_freeze，`not_freeze = [Internal67]`，
+Internal67 和其 sibling 节点 Internal45（这里会产生查询操作）生成 Not Frozen Node Internal4567 添加到 not_freeze，`not_freeze = [Internal67, Internal4567]`，这里会有个查询节点操作，
+Internal4567 和其 sibling 节点 Internal0123（这里会产生查询操作）生成一个 Not Frozen Node Internal01234567，
+添加到 not_freeze，`not_freeze = [Internal67, Internal4567, Internal01234567]`，`Hash(Internal01234567)`是新的 Root_Hash。
+Starcoin实现中会将 to_freeze 和 not_freeze 合并起来，并构建`LruCache<NodeIndex, HashValue>`，这个称为 index_cache，查询中会用到
 图4中 NodeIndex 用蓝色表示。
 `index_cache = [(8, Hash4), (10, Hash5), (9, Hash45), (13, Hash(Internal67)), (11, Hash(Internal4567)), (7, HashInternal(Internal01234567))]`。
 
@@ -144,9 +147,10 @@ Starcoin实现中会将 to_freeze, not_freeze 合并起来，并构建`LruCache<
 ```rust
 pub fn flush(&mut self) -> Result<()> 
 ```
-将 append 过程中产生的 to_freeze 和 not_free 合并后按照`(Hash(Node), encode(Node))` Key Value 键值对形式存储在 KvStore 中。
+
+将 append 过程中产生的 to_freeze 和 not_free 合并后按照 `(Hash(Node), encode(Node))` Key Value 键值对形式存储在 KvStore 中。
 在图4中使用的是 Column BLOCK_ACCUMULATOR，实际还有 Transaction 对应的 Column TRANSACTION_ACCUMULATOR，图中只画了部分 Leaf，Internal。
-注意到 Internal 分为 Frozen 和 Not Frozen， 图4中 Internal 67这个 Internal 节点是 Not Frozen 的，如果再添加一个新的 Leaf Hash7会变成 Frozen， 这样会保存
+注意到 Internal 分为 Frozen 和 Not Frozen，图4中 Internal 67这个 Internal 节点是 Not Frozen 的，如果再添加一个新的 Leaf Hash7 会变成 Frozen， 这样会保存
 两个不同状态的 Internal67 到 KvStore。
 
 ## 查询操作
@@ -154,10 +158,11 @@ pub fn flush(&mut self) -> Result<()>
 ```rust
 fn get_node_hash_always(&mut self, index: NodeIndex) -> Result<HashValue>
 ```
+
 这是个 private 操作，主要用在 append 流程中，通过 NodeIndex 查找对应的 HashValue。
-Accumulator 在 KvStore 中的存储中提到，Column BLOCK_ACCUMULATOR 保存是按照`(Hash(Node)，encode(Node))` Key Value 键值对存储在 KvStore 中，
-只能从其父类节点一层层查找，比如查询 NodeIndex x0 (假设为2)的 HashValue，查 NodeIndex x1 (假设为1)的父节点，如果 index_cache 中有，通过其 HashValue 从 KvStore 中获取这个 Node，如果
- index_cache 中没有，找其父节点的父节点，最终肯定能找到(最差的情况是找到 Root_Hash ), 这个节点记为 Cur_Node , 然后再从 Cur_Node 层次遍历找到子孙节点中 NodeIndex 等于 x0 的节点。
+Accumulator 在 KvStore 中的存储中提到，Column BLOCK_ACCUMULATOR 保存是按照 `(Hash(Node)，encode(Node))` Key Value 键值对存储在 KvStore 中，只能从其父类节点一层层查找。
+比如查询 NodeIndex x0（假设为2）的 HashValue，查 NodeIndex x1（假设为1）的父节点，如果 index_cache 中有，通过其 HashValue 从 KvStore 中获取这个 Node。
+如果 index_cache 中没有，找其父节点的父节点，最终肯定能找到（最差的情况是找到 Root_Hash）, 这个节点记为 Cur_Node , 然后再从 Cur_Node 层次遍历找到子孙节点中 NodeIndex 等于 x0 的节点。
 流程图见图5
 
 ![query_index.png](../../../../../static/img/accumulator/query_index.png)
@@ -191,6 +196,7 @@ new_with_info 通过 AccumulatorInfo 创建新的 Accumulator
 ```rust
  fn append(&self, leaves: &[HashValue]) -> Result<HashValue>
 ```
+
 添加新的 LeafNode，这个前面介绍过
 
 ### 保存树到 KvStore
@@ -222,7 +228,9 @@ fn get_proof(&self, leaf_index: u64) -> Result<Option<AccumulatorProof>> {
 ```rust
 FrozenSubTreeIterator::new(self.num_leaves)
 ```
-这里是因为 frozen_subtree 和 num_leaves 二进制里的的1对应， 就是找MSB操作(most significant set bit of a u64), 原理参考 Hackers Delight 的 flp 部分
+
+这里是因为 frozen_subtree 和 num_leaves 二进制里的的1对应， 就是找 MSB 操作(most significant set bit of a u64)，原理参考 Hackers Delight 的 flp 部分
+
 ### NodeIndex 相关操作
 
 如果不想研究 NodeIndex 源码，这部分可以不看
@@ -235,6 +243,3 @@ NodeIndex 提供了一些操作
 这部分细节待添加。
 
 相关资源[draw.io](../../../../../static/accumulator.drawio)
-
-
-

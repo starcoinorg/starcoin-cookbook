@@ -214,5 +214,6 @@ exit
 ```
 
 ## 种子节点地址
-- JSON-RPC: https://main-seed.starcoin.org
+- HTTP: http://main.seed.starcoin.org
+- HTTPS: https://main-seed.starcoin.org
 - WebSocket: ws://main.seed.starcoin.org:9870

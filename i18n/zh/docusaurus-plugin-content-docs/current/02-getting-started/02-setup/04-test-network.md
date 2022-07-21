@@ -41,8 +41,8 @@ starcoin -n barnard
 
 ## 种子节点地址
 
-| 网络 | JSON-RPC | WebSocket |
-| - | - | - |
-| Halley | https://halley-seed.starcoin.org | ws://halley.seed.starcoin.org:9870 |
-| Proxima | https://proxima-seed.starcoin.org | ws://proxima.seed.starcoin.org:9870 |
-| Barnard | https://barnard-seed.starcoin.org | ws://barnard.seed.starcoin.org:9870 |
+| Network | HTTP | HTTPS | WebSocket |
+| - | - | - | - |
+| Halley | http://halley.seed.starcoin.org | https://halley-seed.starcoin.org | ws://halley.seed.starcoin.org:9870 |
+| Proxima | http://proxima.seed.starcoin.org | https://proxima-seed.starcoin.org | ws://proxima.seed.starcoin.org:9870 |
+| Barnard | http://proxima.seed.starcoin.org | https://barnard-seed.starcoin.org | ws://barnard.seed.starcoin.org:9870 |

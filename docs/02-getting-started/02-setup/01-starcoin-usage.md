@@ -36,7 +36,7 @@ Waiting SIGINT or SIGTERM ...
 
 As shown above, there are four RPC ways we can interact with node.
 * IPC file: .../dev/starcoin.ipc
-* HTTP JSON-RPC: 0.0.0.0:9850
+* HTTP server: 0.0.0.0:9850
 * TCP server: 0.0.0.0:9860
 * WebSocket server: 0.0.0.0:9870
 

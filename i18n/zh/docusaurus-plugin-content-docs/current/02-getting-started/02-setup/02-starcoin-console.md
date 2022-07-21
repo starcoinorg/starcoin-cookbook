@@ -72,17 +72,29 @@ cd ~/dev
 starcoin -c starcoin.ipc console
 ```
 
-## 如何接入控制台
+更多接入方式及细节见下文。
+
+## 控制台连接节点
+
+本地节点默认会开放4种 JSON-PRC 接入方式，可以在启动节点时的控制台输出种找到。
+- IPC 文件
+- WebSocket
+- HTTP
+- TCP
+
+`starcoin console` 可以通过 `IPC 文件` 和 `WebSocket` 这两种方式连接到节点。
 
 ### 通过 IPC 文件
 
-参考[启动控制台中的方式二](#方式二)。
+```shell
+starcoin -c /path/to/starcoin.ipc console
 
-注意：在 Windows 中，IPC 文件所在路径不同。
-
-```cmd
+# 在 Windows 中，IPC 文件所在路径不同。用 dev 节点举例 
 starcoin.exe -c \\.\pipe\starcoin\dev\starcoin.ipc console
 ```
+
+此时，`starcoin console` 连接到了 IPC 文件对应节点的网络。
+可以是 dev、主网、测试网等，取决于启动的节点加入的网络。
 
 ### 通过 WebSocket
 
@@ -90,20 +102,15 @@ starcoin.exe -c \\.\pipe\starcoin\dev\starcoin.ipc console
 starcoin -c ws://0.0.0.0:9870 console
 ```
 
-## 如何通过控制台连接远程节点
-
-### 通过 IPC 文件连接主网
+还可以通过 WebSocket 连接主网或 Barnard 等测试网的种子节点
 
 ```shell
-starcoin -c ~/.starcoin/main/starcoin.ipc console
-```
-
-### 通过 WebSocket 连接主网
-
-```shell
-# 连接到主网络种子节点
 starcoin -c ws://main.seed.starcoin.org:9870 console
 ```
+
+:::info Info
+其他网络的种子节点地址可以在 [主网种子节点 JSON-RPC 地址](06-main-network.md#种子节点地址) 和 [测试网种子节点 JSON-RPC 地址](04-test-network.md#种子节点地址) 中找到。
+:::
 
 ## 使用本地账户
 

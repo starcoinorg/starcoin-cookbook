@@ -72,23 +72,46 @@ cd ~/dev
 starcoin -c starcoin.ipc console
 ```
 
+More details see below.
+
 ## How to attach a console
+
+Local Node provides four JSON-PRC ways to connect to.
+- IPC file
+- WebSocket
+- HTTP
+- TCP
+
+`starcoin console` can connect node using `IPC file` and `WebSocket`.
 
 ### via IPC file
 
-Refer to [the second method in the startup console](#method-two).
-
-Note: In Windows, the path to the IPC file is different.
-
 ```shell
+starcoin -c /path/to/starcoin.ipc console
+
+# In Windows, the path to the IPC file is different.
+# Attach to dev node for example.
 starcoin.exe -c \\.\pipe\starcoin\dev\starcoin.ipc console
 ```
+
+Now, `starcoin console` attached to the network which IPC file corresponding to.
 
 ### via WebSocket
 
 ```shell
 starcoin -c ws://0.0.0.0:9870 console
 ```
+
+You can also attach to seed node of main network or Barnard test network.
+
+```shell
+starcoin -c ws://main.seed.starcoin.org:9870 console
+```
+
+:::info Info
+Seed node address can be find out in [Main Network JSON-RPC address](06-main-network.md#seed-node-json-rpc) and [Test Network JSON-RPC address](04-test-network.md#seed-node-json-rpc)
+:::
+
 
 ## How to connect to a remote node via console
 

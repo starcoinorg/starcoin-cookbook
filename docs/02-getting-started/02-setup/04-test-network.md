@@ -39,3 +39,11 @@ starcoin -n barnard
 ## Get the Token of the test network
 
 - [Barnard Authenticated Faucet](https://faucet.starcoin.org/barnard)
+
+## Seed Node JSON-RPC
+
+| Network | HTTP | HTTPS | WebSocket |
+| - | - | - | - |
+| Halley | http://halley.seed.starcoin.org | https://halley-seed.starcoin.org | ws://halley.seed.starcoin.org:9870 |
+| Proxima | http://proxima.seed.starcoin.org | https://proxima-seed.starcoin.org | ws://proxima.seed.starcoin.org:9870 |
+| Barnard | http://proxima.seed.starcoin.org | https://barnard-seed.starcoin.org | ws://barnard.seed.starcoin.org:9870 |

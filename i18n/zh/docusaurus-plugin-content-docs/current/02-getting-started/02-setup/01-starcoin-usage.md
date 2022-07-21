@@ -34,6 +34,12 @@ $ starcoin -n dev
 Waiting SIGINT or SIGTERM ...
 ```
 
+此时在上面的控制台输出中可以看到节点的四种 RPC 访问方式
+* IPC 文件在 .../dev/starcoin.ipc
+* HTTP 服务默认运行在 0.0.0.0:9850
+* TCP 服务默认运行在 0.0.0.0:9860
+* WebSocket 服务默认运行在 0.0.0.0:9870
+
 ### 查看链的信息
 
 本地的 dev 模式默认使用一个临时目录，每次重启都会重置数据。

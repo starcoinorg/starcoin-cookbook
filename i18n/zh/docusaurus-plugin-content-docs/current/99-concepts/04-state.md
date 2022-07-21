@@ -4,15 +4,16 @@
 
 ## 状态的实现
 
-在 Starcoin 中，区块 ( `Block` ) 由一些交易 （ `Transaction` ) 组成，对一个区块的执行就是对区块内交易的执行。
+在 Starcoin 中，区块（Block）由一些交易（Transaction）组成，对一个区块的执行就是对区块内交易的执行。
 交易执行的结果由状态表示。这里采用的全局状态，包含链上所有账户的最新状态和历史状态。
-状态实际上就是账户地址 ( `AccountAddress` ) 到账户状态 ( `AccountState` ) 的映射。
+状态实际上就是账户地址（AccountAddress）到账户状态（AccountState）的映射。
 Starcoin 中状态是一颗2级的 SMT 树，如下图所示。
 
 ![two_level_state.png](../../../../../static/img/state/two_level_state.png)
 
 状态是 `AccountAddress` 到 `AccountState` 的映射，随着新的 `Block` 的执行 ， `AccountState` 会变化，由于需要保留历史状态相关的证明，这里使用了 SMT 这一数据结构。
-为了方便这里把 `AccountAddress` 到 `AccountState` 的状态称为 `Account SMT`。如图中显示这里 `(AccountAddress, AccountState)` 存储在 `Account SMT` 的 `Leaf` 节点上。
+为了方便，这里把 `AccountAddress` 到 `AccountState` 的状态称为 `Account SMT`。
+如图中显示这里 `(AccountAddress, AccountState)` 存储在 `Account SMT` 的 `Leaf` 节点上。
 在图中就是 `Account SMT` 的根节点是 `Root_Hash`，这里对应 `BlockHeader` 中的 `state_root`。
 在 Starcoin 中 `AccountAddress` 不同于以太坊个人账户和合约账户是分开的，合约是部署在个人账户下。`AccountState` 分为两部分，分别是合约代码 ( `Code` ) 和 资源 ( `Resource`  )。
 `Code` 就是账号下合约代码， `Resource` 就是类似有哪些 Token (比如 STC )。

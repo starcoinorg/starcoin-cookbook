@@ -31,9 +31,9 @@ BlockHeader 是 Starcoin 区块链的核心概念，包含了重要的数据。
 
 - `parent_hash` —— **父区块哈希**， 32字节，通过引用父区块哈希的方式，把所有区块链起来
 - `timestamp` —— **时间戳**，8字节
-- `number` —— **区块高度**，8字节，在父区块的高度上递增
-- `author` —— **矿工签名**，16字节
-- `author_auth_key` —— **矿工的 auth_key**，32字节，可选，用于第一次创建矿工的链上账号
+- `number` —— **区块高度**，8字节，在父区块的高度上递增（目前已废弃）
+- `author` —— **矿工签名**，16字节（目前已废弃）
+- `author_auth_key` —— **矿工的 auth_key**，32字节，可选，用于第一次创建矿工的链上账号（目前已废弃）
 - `txn_accumulator_root` —— 当前区块的所有交易执行完之后，交易的 Merkle 累加器 root，32字节，参看[默克尔累加器](06-accumulator.md)
 - `block_accumulator_root` —— 父区块的 Merkle 累加器 root，32字节，参看[默克尔累加器](06-accumulator.md)
 - `state_root` —— 当前区块的所有交易执行完之后，全局状态树 root，32字节，参看[全局状态树](09-gst.md)

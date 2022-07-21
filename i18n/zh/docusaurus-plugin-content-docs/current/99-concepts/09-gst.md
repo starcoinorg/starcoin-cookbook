@@ -14,3 +14,5 @@ Starcoin 区块链使用双层的稀疏默克尔树 SparseMerkleTree 作为状�
 * CodeTree：代码树
 
 如图中所示，如果要证明 b 账号的状态有效，Proof 是 acd。
+
+关于状态的详细描述，请参见[状态](04-state.md)。

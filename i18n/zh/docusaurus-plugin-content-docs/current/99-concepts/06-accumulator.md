@@ -25,7 +25,7 @@ Internal 01 的 Hash01 = Hash(Hash0 + Hash1)，`+` 代表拼接字符串。
 ![odd_accumulator_origin.png](../../../../../static/img/accumulator/odd_accumulator_origin.png)
 
 图2显示了奇数个 Block 组成一个 Accumulator 的情况，在图1基础上添加了 Block4，由于 Block4 构建 Internal 需要 Empty 节点来配对，这里 Empty 节点就是 PlaceHolder。
-这种情况下要补充多个 PlaceHolder，这里做了些优化，空子树用 PlaceHolder 表示来减少计算， 这里 PlaceHolder 有固定的 Hash 值 `ACCUMULATOR_PLACEHOLDER_HASH`，如图3。
+这种情况下要补充多个 PlaceHolder，这里做了些优化，空子树用 PlaceHolder 表示来减少计算，这里 PlaceHolder 有固定的 Hash 值 `*ACCUMULATOR_PLACEHOLDER_HASH`，如图3。
 
 ![odd_accumulator.png](../../../../../static/img/accumulator/odd_accumulator.png)
 

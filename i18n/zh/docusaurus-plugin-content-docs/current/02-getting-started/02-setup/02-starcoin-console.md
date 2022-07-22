@@ -79,7 +79,7 @@ starcoin -c starcoin.ipc console
 
 更多接入方式及细节见下文。
 
-## 控制台连接节点
+## 如何通过控制台连接节点
 
 本地节点默认会开放4种 JSON-PRC 接入方式，可以在启动节点时的控制台输出种找到。
 
@@ -118,7 +118,7 @@ starcoin -c ws://main.seed.starcoin.org:9870 console
 其他网络的种子节点地址可以在 [主网种子节点 JSON-RPC 地址](06-main-network.md#种子节点地址) 和 [测试网种子节点 JSON-RPC 地址](04-test-network.md#种子节点地址) 中找到。
 :::
 
-## 使用本地账户
+### 使用本地账户
 
 连接到主网络种子节点后，使用本地帐户数据库来使用与帐户相关的命令。
 
@@ -126,7 +126,7 @@ starcoin -c ws://main.seed.starcoin.org:9870 console
 starcoin --connect ws://main.seed.starcoin.org:9870 --local-account-dir ~/.starcoin/main/account_vaults console
 ```
 
-## 通过 Docker 接入控制台
+### 通过 Docker 接入控制台
 
 ```shell
 docker run --rm -it -v  ~/.starcoin/:/root/.starcoin/ starcoin/starcoin:latest /starcoin/starcoin --connect /root/.starcoin/main/starcoin.ipc console

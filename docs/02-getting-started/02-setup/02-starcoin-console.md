@@ -79,9 +79,10 @@ starcoin -c starcoin.ipc console
 
 More details see below.
 
-## How to attach a console
+## How to connect nodes through a console
 
 Local Node provides four JSON-PRC ways to connect to.
+
 - IPC file
 - WebSocket
 - HTTP
@@ -117,23 +118,7 @@ starcoin -c ws://main.seed.starcoin.org:9870 console
 Seed node address can be find out in [Main Network JSON-RPC address](06-main-network.md#seed-node-json-rpc) and [Test Network JSON-RPC address](04-test-network.md#seed-node-json-rpc)
 :::
 
-
-## How to connect to a remote node via console
-
-### Mainnet connection via IPC file
-
-```shell
-starcoin -c ~/.starcoin/main/starcoin.ipc console
-```
-
-### Connect to Mainnet via WebSocket
-
-```shell
-# Connect to the main network seed node
-starcoin -c ws://main.seed.starcoin.org:9870 console
-```
-
-## Usea local account
+### Use local account
 
 Once connected to the main network seed node, use the local account database to use account-related commands.
 
@@ -141,7 +126,7 @@ Once connected to the main network seed node, use the local account database to 
 starcoin --connect ws://main.seed.starcoin.org:9870 --local-account-dir ~/.starcoin/main/account_vaults console
 ```
 
-## Attach to console by Docker
+### Attach to console by Docker
 
 ```shell
 docker run --rm -it -v  ~/.starcoin/:/root/.starcoin/ starcoin/starcoin:latest /starcoin/starcoin --connect /root/.starcoin/main/starcoin.ipc console

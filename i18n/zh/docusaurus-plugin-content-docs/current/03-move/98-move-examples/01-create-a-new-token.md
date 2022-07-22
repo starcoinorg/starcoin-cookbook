@@ -108,14 +108,8 @@ starcoin% account execute-function --function 0xb19b07b76f00a8df445368a91c0547cc
 starcoin% account execute-function --function 0xb19b07b76f00a8df445368a91c0547cc::MyToken::mint --blocking --arg 1000000u128 -s 0xb19b07b76f00a8df445368a91c0547cc
 ```
 
-然后，让默认账户接受新的 Token。   
-一个账户只有在已经采用了 Token 的情况下才能接受 Token。
 
-```bash
-starcoin% account accept_token -s 0x831d51f0087596e6aa4e7b3b9c85f945 0xb19b07b76f00a8df445368a91c0547cc::MyToken::MyToken --blocking
-```
-
-随后，`0xb19b07b76f00a8df445368a91c0547cc` 账户转账1000个 MyToken 给默认用户
+然后，`0xb19b07b76f00a8df445368a91c0547cc` 账户转账1000个 MyToken 给默认用户
 
 ```bash
 starcoin%  account execute-function --function 0x1::TransferScripts::peer_to_peer_v2 -t 0xb19b07b76f00a8df445368a91c0547cc::MyToken::MyToken --arg 0x831d51f0087596e6aa4e7b3b9c85f945 --arg 10000u128 -s 0xb19b07b76f00a8df445368a91c0547cc

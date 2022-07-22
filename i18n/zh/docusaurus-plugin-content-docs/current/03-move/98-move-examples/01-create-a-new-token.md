@@ -6,21 +6,21 @@
 
 ## 前提
 
-首先，按照 [如何设置本地开发网络](https://starcoinorg.github.io/starcoin-cookbook/zh/docs/getting-started/setup/dev-network) 中的描述启动一个开发网络，并获得一些硬币，比如"1000000000"。
+首先，按照[如何设置本地开发网络](../../02-getting-started/02-setup/03-dev-network.md)中的描述启动一个开发网络，并获得一些 STC 代币，比如 `1000000000`。
 
-在本文档中，我将使用我的开发网络的默认帐户地址`0xb19b07b76f00a8df445368a91c0547cc`来代表发行和发送新Token的人。
-我还创建了另一个帐户`0x831d51f0087596e6aa4e7b3b9c85f945`并将一些 STC 转移给它。 
-该帐户将用于接收Token。
+在本文档中，我将使用我的开发网络的默认帐户地址 `0xb19b07b76f00a8df445368a91c0547cc` 来代表**发行**和**发送**新 Token 的人。
+我还创建了另一个帐户 `0x831d51f0087596e6aa4e7b3b9c85f945` 并将一些 STC 转移给它。该帐户将用于接收 Token。
 
-源文件位于[my-token](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-token)
+创建自定义代币的代码源文件位于 [my-token](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-token)。
 
 ## 编译模块
 
 修改模块地址：
+
 - 编辑`Move.toml`
 - MyToken = "0xABCDE" 改为 MyToken = "0xb19b07b76f00a8df445368a91c0547cc"
 
-在控制台中运行：
+在命令行中运行：
 
 ```bash
 $ mpm release
@@ -30,14 +30,15 @@ Packaging Modules:
 Release done: release/my_token.v0.0.1.blob, package hash: 0xc3b9cf32499f4bdf0a38d57f7c7c66a6f4df69881a8980bcda2106782dce88ba
 ```
 
-它将编译模块，您将获得二进制包
+它将编译自定义代币的合约代码，在项目的 `release` 目录下生成二进制文件。
 
-## 导入
+## 导入账户
 
 导入 `0xb19b07b76f00a8df445368a91c0547cc` 账号.
 
 ```bash
-starcoin% account import -i 0x05c9d09cd06a49e99efd0308c64bfdfb57409e10bc9e2a57cb4330cd946b4e83 -p my-pass 
+starcoin% account import -i 0x05c9d09cd06a49e99efd0308c64bfdfb57409e10bc9e2a57cb4330cd946b4e83 -p <MY-PASSWORD>
+
 {
   "ok": {
     "address": "0xb19b07b76f00a8df445368a91c0547cc",
@@ -48,24 +49,26 @@ starcoin% account import -i 0x05c9d09cd06a49e99efd0308c64bfdfb57409e10bc9e2a57cb
   }
 }
 ```
-  
-然后，解锁帐户并部署 MyToken 模块。  
 
-## 获取测试币
+## 获取代币
 
-获得 devnet 测试币  
+获得 `dev` 网络的 STC 代币
 
 ```bash
 dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
 ```
 
-## 解锁帐户  
+## 部署模块
+
+解锁帐户并部署 MyToken 模块。
 
 ```bash
-starcoin% account unlock 0xb19b07b76f00a8df445368a91c0547cc -p my-pass
+starcoin% account unlock 0xb19b07b76f00a8df445368a91c0547cc -p <MY-PASSWORD>
 ```
+
 ```bash
-starcoin% dev deploy /guide-to-move-package-manager/my-token/release/my_token.v0.0.1.blob -s 0xb19b07b76f00a8df445368a91c0547cc -b
+starcoin% dev deploy /path/to/my-token/release/my_token.v0.0.1.blob -s 0xb19b07b76f00a8df445368a91c0547cc -b
+
 txn 0x686964d6a4212f1e32e8626132e14dabffb034d6f3aec921e80a2e54726391b1 submitted.
 {
   "ok": {
@@ -102,20 +105,19 @@ txn 0x686964d6a4212f1e32e8626132e14dabffb034d6f3aec921e80a2e54726391b1 submitted
 starcoin% account execute-function --function 0xb19b07b76f00a8df445368a91c0547cc::MyToken::init -s 0xb19b07b76f00a8df445368a91c0547cc --blocking
 ```
 
-其次，使用 `0xb19b07b76f00a8df445368a91c0547cc` 账户铸币一些 MyToken。
+其次，使用 `0xb19b07b76f00a8df445368a91c0547cc` 账户铸造一些 MyToken 代币。
 
 ```bash
 starcoin% account execute-function --function 0xb19b07b76f00a8df445368a91c0547cc::MyToken::mint --blocking --arg 1000000u128 -s 0xb19b07b76f00a8df445368a91c0547cc
 ```
 
-
-然后，`0xb19b07b76f00a8df445368a91c0547cc` 账户转账1000个 MyToken 给默认用户
+然后，`0xb19b07b76f00a8df445368a91c0547cc` 账户转账1000个 MyToken 给默认账户 `0x831d51f0087596e6aa4e7b3b9c85f945`。
 
 ```bash
 starcoin%  account execute-function --function 0x1::TransferScripts::peer_to_peer_v2 -t 0xb19b07b76f00a8df445368a91c0547cc::MyToken::MyToken --arg 0x831d51f0087596e6aa4e7b3b9c85f945 --arg 10000u128 -s 0xb19b07b76f00a8df445368a91c0547cc
 ```
 
-最后，显示默认用户的余额。
+最后，显示默认账户的余额。
 
 ```bash
 starcoin% account show 0x831d51f0087596e6aa4e7b3b9c85f945
@@ -131,7 +133,7 @@ starcoin% account show 0x831d51f0087596e6aa4e7b3b9c85f945
     "auth_key": "0xedf8fad3eb73ab981793ca5b29b9f660831d51f0087596e6aa4e7b3b9c85f945",
     "balances": {
       "0x00000000000000000000000000000001::STC::STC": 100000533341,
-      "0xb19b07b76f00a8df445368a91c0547cc::MyToken::MyToken": 10000
+      "0xb19b07b76f00a8df445368a91c0547cc::MyToken::MyToken": 10000    <- 注意，已成功接收 MyToken 代币
     },
     "sequence_number": 3
   }

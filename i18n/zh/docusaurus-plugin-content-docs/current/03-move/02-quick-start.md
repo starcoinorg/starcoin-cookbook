@@ -8,7 +8,7 @@
 
 1. 需要按照[如何设置本地开发网络](../02-getting-started/02-setup/03-dev-network.md)搭建 *dev* 网络，并通过 Starcoin 控制台连接到 *dev* 网络。
 2. 按照[账号管理](../02-getting-started/03-accounts/1.account-manage.md)创建一个账号或者使用已有账号，并且给账号里转一点 STC。
-3. 通过[第一笔链上交易](../02-getting-started/03-accounts/2.first-transaction.md)对交易有基本的理解。
+3. 通过[第一笔链上交易](../02-getting-started/03-accounts/2.first-transaction.md)对*交易*有基本的理解。
 
 接下来将介绍一些必备工具和项目结构。
 
@@ -141,7 +141,7 @@ module MyCounterAddr::MyCounter {
 }
 ```
 
-这里的 `move_to<T>(&signer, T)` 是一个内置方法，作用是将类型为 `T` 的资源添加到账户 `signer` 的地址下的存储空间（尖括号在这里是范型）。
+这里的 `move_to<T>(&signer, T)` 是一个内置方法，作用是将类型为 `T` 的资源添加到账户 `signer` 的地址下的存储空间（尖括号在这里表示泛型）。
 
 :::info 更多信息
 这里的存储空间是 `GlobalState`，可以先简单理解为存放账户的*资源*和*模块代码*的地方。
@@ -156,7 +156,7 @@ module MyCounterAddr::MyCounter {
 `signer` 就像是 Linux 下的 *uid* 一样的东西。登陆 Linux 系统后，你输入的所有命令，都被认为是“这个已登陆的**经过认证**的用户”操作的。
 关键来了，这个认证过程不是在运行的命令、程序中做的，而是开机后由操作系统完成的。
 
-对应到 Move 中，这个认证过程就是和其他区块链系统类似的、我们熟知的“私钥签名 公钥验证”的过程。
+对应到 Move 中，这个认证过程就是和其他区块链系统类似的、我们熟知的“私钥签名，公钥验证”的过程。
 在带有 `&signer` 参数的函数执行时，发起者的身份已经被 Starcoin 区块链认证过了。
 :::
 
@@ -294,9 +294,9 @@ error[E04020]: missing acquires annotation
 ```
 
 哦！又出错了。
-报错信息提示了我们第14行调用方法获取 `Counter` 结构时，类型（Counter 结构）必须出现在调用上下文的 `qcquires` 列表中，而当前函数的 `acquires` 列表没有包含这个类型。
+报错信息提示了我们第14行调用方法获取 `Counter` 结构时，类型（Counter 结构）必须出现在调用上下文的 `acquires` 列表中，而当前函数的 `acquires` 列表没有包含这个类型。
 
-这里我们引入 `acquire` 的概念。
+这里我们引入 *acquire* 的概念。
 
 :::tip 概念
 当一个函数用 `move_from()`、`borrow_global()`、`borrow_global_mut()` 访问资源时，函数必须要显示声明需要“**获取**”哪种资源。
@@ -340,13 +340,13 @@ module MyCounterAddr::MyCounter {
 :::tip 概念——函数可见性
 | 可见性            | 写做               | 说明                                                                                                                                                      |
 |-------------------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| internal          | fun                | 也可以叫 private，只能在同一个 module 内调用                                                                                                              |
-| public            | public fun         | 可以被任一 module 内的函数调用                                                                                                                            |
-| **public script** | public(script) fun | script function 是 module 中的入口方法，可以**通过控制台发起一个 transaction 来调用**，就像本地执行脚本一样（不过代码已经被存在了链上的 module 地址下）。 |
-| public friend     | public(friend) fun | 可以被同一 module 内调用，可以被加入到 `friend list` 的可信任 module 调用                                                                                 |
+| internal          | fun                | 也可以叫 private，只能在同一个模块内调用                                                                                                              |
+| public            | public fun         | 可以被任一模块内的函数调用                                                                                                                            |
+| **public script** | public(script) fun | script function 是模块中的入口方法，可以**通过控制台发起一个交易来调用**，就像本地执行脚本一样（不过代码已经被存在了链上的模块地址下）。 |
+| public friend     | public(friend) fun | 可以被同一模块内调用，可以被加入到 `friend list` 的可信任模块调用                                                                                 |
 :::
 
-下面，我们编写对应 init 和 incr 函数的 script function。
+下面，我们编写对应 `init` 和 `incr` 函数的 *script function*。
 
 ```move title="my-counter/sources/MyCounter.move" {18-24}
 module MyCounterAddr::MyCounter {
@@ -384,7 +384,7 @@ module MyCounterAddr::MyCounter {
 
 ### 发布到链上
 
-运行 mpm release 命令
+运行 `mpm release` 命令：
 
 ```shell
 $ mpm release
@@ -432,7 +432,7 @@ txn 0xf60662ba0ac3373c28f827a0ac9d9db6667c3921056905356aa5414b3bf3df09 submitted
 
 `-s` 即 `--sender` 是发送者，`-b` 即 `--blocking`，阻塞等待命令执行完成。
 
-第5行的 `txn 0xf60662... submitted` 表示将模块发布到地址下的操作，也是一个链上的交易。
+第5行的 `txn 0xf60662... submitted` 表示计数器的智能合约已经成功部署到发布者的地址下，这属于一个链上交易，链已经把这个交易状态记录下来了。
 
 此时我们可以查看代码在链上的存储，
 
@@ -500,7 +500,7 @@ starcoin% state list resource 0xcada49d6a37864931afb639203501695
 可能有小伙伴会疑惑为什么 `Counter` 资源类型名要写这么长，下面先帮大家回忆一下 FQN 的概念。
 
 :::tip 概念——完整名称 FQN
-Fully Qualified Name(FQN) 是一种计算机术语，是在一个调用上下文中，对一个资源（对象、函数、域名、文件）名称的无歧义定义。举例来说：
+*Fully Qualified Name(FQN)* 是一种计算机术语，是在一个调用上下文中，对一个资源（对象、函数、域名、文件）名称的无歧义定义。举例来说：
 
 1. Linux 的绝对路径名 `/path/to/file` 就是 *fully qualified file name*，相对的 `./to/file` 是一个相对路径地址。
 2. 域名系统中，`google.com.` 是一个 *fully qualified domain name*，注意最后的 `.`。意味着这个域名不要继续被递归解析。
@@ -543,9 +543,9 @@ starcoin% state get resource 0xcada49d6a37864931afb639203501695 0xcada49d6a37864
 
 ### 另一个账号调用
 
-前面的例子中，我们用了同一个地址 `0xcada49d6a37864931afb639203501695` 来发布 module、创建 Counter 资源类型（dev deploy），以及调用函数添加计数器（account execute-function）。
+前面的例子中，我们用了同一个地址 `0xcada49d6a37864931afb639203501695` 来发布模块、创建 Counter 资源类型（dev deploy），以及调用函数添加计数器（account execute-function）。
 
-我们再换一个账号来初始化计数器和自增计数器。假设本地的一个账号为 0x012ABC
+我们再换一个账号来初始化计数器和自增计数器。假设本地的一个账号为 `0x012ABC`。
 
 ```starcoin title="starcoin控制台"
 starcoin% account execute-function -s 0x012ABC  --function 0xb19b07b76f00a8df445368a91c0547cc::MyCounter::init_counter -b
@@ -553,32 +553,34 @@ starcoin% account execute-function -s 0x012ABC  --function 0xb19b07b76f00a8df445
 starcoin% state get resource 0x012ABC 0xcada49d6a37864931afb639203501695::MyCounter::Counter
 ```
 
-读者可以自行观察 0x012ABC 下资源的变化。
+读者可以自行观察 `0x012ABC` 下资源的变化。
 
 
 :::info 历史 —— script 和 script function
 为了防止大家在别处看的教程中有 `script` 出现而搞迷惑，这里简单说一下历史由来。*这部分内容可以跳过*。
 
-我们用 Python 的 pip 或者 Node.js 的 npm 来辅助理解。
+我们用 *Python* 的 `pip` 或者 *Node.js* 的 `npm` 来辅助理解。
 
-在 pip 和 npm 这样的中心化包管理托管平台出现之前，我们想安装一个包，需要 `setup.py install /path/to/package`。
-这样子当然不便于包的分发传播与索引。后来有了 pip 我们是怎么做的呢，包作者先将自己的包打包上传到 pip 仓库，pip会存储包并建立索引。
-普通用户只需要 `pip install package_name` 即可。pip 工具会帮你根据 package_name 下载源码，然后执行安装。这两种方式安装包其实是一样的。
+在 `pip` 和 `npm` 这样的中心化包管理托管平台出现之前，我们想安装一个包，需要 `setup.py install /path/to/package`。
+这样子当然不便于包的分发传播与索引。
+后来有了 `pip` 我们是怎么做的呢，包作者先将自己的包打包上传到 `pip` 仓库，`pip` 会存储包并建立索引。
+普通用户只需要 `pip install package_name` 即可。
+`pip` 工具会根据你提供的 `package_name` 下载源码，然后执行安装。这两种安装包的方式其实是一样的。
 
-现在对应到 Move 中。在 script function 出现之前是只有 script 的，script 写在和 sources/ 平级的 scripts/ 目录下。
+现在对应到 Move 中。在 `script function` 出现之前是只有 `script` 的，`script` 写在与 `sources` 目录平级的 `scripts` 目录下。
 
-script 就像是本地的 python包，script可以被编译为字节码，要调用 script 时，需要创建一个 transaction，payload 中带上编译好的字节码，script就可以被 node 上的 Move虚拟机执行了。对应在 starcoin 控制台中是
+`script` 就像是本地的 Python 包，`script` 可以被编译为字节码，要调用 `script` 时，需要创建一个交易，`payload` 中带上编译好的字节码，`script` 就可以被节点上的 Move 虚拟机执行了。对应在 Starcoin 控制台中是：
 
 ```
 starcoin% account execute-script </path/to/mv_file>
 ```
 
 `script function` 作为 `script` 的替代，[被添加到了 Move 语言中](https://github.com/move-language/move/commit/e0a3acb7d5e3f5dbc07ee76b47dd05229584d4d0)。
-类比于保存在 pip 仓库中的软件包。script function 会在 module 中一起发布到一个地址下（就像包作者把软件包发布在pip中一样）。
-此时，要调用 script，需要创建一个 transaction，payload 中指向已经发布的代码的地址即可。对应到 starcoin 控制台中是
+类比于保存在 `pip` 仓库中的软件包。`script function` 会在模块中一起发布到一个地址下（就像包作者把软件包发布在 `pip` 中一样）。
+此时，要调用 `script`，需要创建一个交易，`payload` 中指向已经发布的代码的地址即可。对应到 Starcoin 控制台中是:
 
 ```
-starcoin% account execute-function --function  <0x地址>::<模块>::<函数>  --arg xxx
+starcoin% account execute-function --function  <0x地址>::<模块>::<函数> --arg xxx
 ```
 
 当然，Move 也是一门正在演进的语言，`public(script) fun` [正在被 `public entry` 取代](https://github.com/move-language/move/pull/186)，让我们拭目以待。
@@ -596,11 +598,11 @@ starcoin% account execute-function --function  <0x地址>::<模块>::<函数>  -
 完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
 
 接下来，
-* 你可以通过 [Move 语言](./move-language/)系统的学习 Move 语言
+* 你可以通过 [Move 语言](./move-language/)来系统地学习 Move 语言
 * 查看[更多 Move 例子]
 * 了解[如何 Debug/测试 Move module](./97-move-test/01-move-unit-test.md)
 * 了解 [Starcoin Move Framework](./starcoin-framework/)
-* 可以通过 [Move高级开发] 学习高级 Move.
+* 可以通过 [Move 高级开发]学习高级 Move。
 * 了解 [Move 规范语言 和 Move Prover](./100-move-prover/01-move-spec-language.md) 开发更安全的 Move 应用
 * 探索 [Move 包管理器](./05-move-package-manager.md)的更多功能
 

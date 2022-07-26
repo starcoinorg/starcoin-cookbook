@@ -1,4 +1,4 @@
-module MyCounter::MyCounter {
+module MyCounterAddr::MyCounter {
      use StarcoinFramework::Signer;
 
      struct Counter has key, store {

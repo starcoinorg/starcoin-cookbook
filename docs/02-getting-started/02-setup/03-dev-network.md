@@ -1,8 +1,10 @@
 # How to set up a local dev network
 
+*Dev* network is a network provided by Statcoin for local development, which allows Starcoin developers to verify smart contracts quickly and conveniently.
+
 ## Run the local dev network
 
-The following commands can start a new dev node:
+The following commands can start a new *dev* node:
 
 ```shell
 starcoin -n dev
@@ -28,7 +30,7 @@ Then, you can start another new node through the following command:
 starcoin -n dev --seed /ip4/127.0.0.1/tcp/59476/p2p/12D3KooWPePRG6BDdjgtEYmPDxNyJfMWpQ1Rwgefuz9eqksLfxJb
 ```
 
-`--seed` option specifies the seed node to form the network.
+`--seed` option specifies the *seed node* to form the network.
 
 Repeat these steps, you can get multi-node local development network.
 
@@ -40,7 +42,7 @@ You can find the following information in the first few lines out of the command
 2022-05-18T02:06:31.882468352+00:00 INFO - Ipc file path: "/tmp/.tmpORwKTS/dev/starcoin.ipc"
 ```
 
-This message indicates the storage location of the IPC file of the current dev node.
+This message indicates the storage location of the IPC file of the current *dev* node.
 
 ```shell
 # Open a new terminal and switch to the data directory of the node
@@ -52,9 +54,9 @@ starcoin -c starcoin.ipc dev get-coin -v 100STC
 
 ## Way of working
 
-The block generation mode of the `dev` network is different from that of the main network and the test network.
-The `dev` network generates blocks on demand, and no blocks are generated without transactions.
-The time on the `dev` network does not automatically pass, and the time needs to be changed by generating blocks.
+The block generation mode of the *dev* network is different from that of the main network and the test network.
+The *dev* network generates blocks on demand, and no blocks are generated without transactions.
+The time on the *dev* network does not automatically pass, and the time needs to be changed by generating blocks.
 If you want to quickly skip time and test, you can use the `sleep` command.
 
 ## Tips
@@ -72,4 +74,4 @@ starcoin -c starcoin.ipc console
 starcoin% dev get-coin -v 100STC
 ```
 
-Compared with obtaining STC directly from the CLI, it is more convenient to operate on the console.
+Compared with getting STC directly in the command line, it is more convenient to operate on the Starcoin console.

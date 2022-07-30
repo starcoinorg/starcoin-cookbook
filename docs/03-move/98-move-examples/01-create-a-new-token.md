@@ -49,7 +49,7 @@ starcoin% account import -i 0x05c9d09cd06a49e99efd0308c64bfdfb57409e10bc9e2a57cb
 
 ## Get devnet test coins
 
-Get some STC coin from `dev` net. This command can only be used in dev net.
+Get some STC coin from `dev` net, and it will send `1000000000` STC to the account by default. Notice that, this command can only be used in dev net.
 
 ```bash
 dev get-coin 0xb19b07b76f00a8df445368a91c0547cc

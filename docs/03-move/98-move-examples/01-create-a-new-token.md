@@ -1,6 +1,6 @@
 # Create a new Token
 
-In this chapter, we will focus on how to create a custom non-fungible token on the Starcoin blockchain. Let's get started.
+In this chapter, we will focus on how to create a custom token on the Starcoin blockchain. Let's get started.
 
 ## Required
 
@@ -52,7 +52,7 @@ starcoin% account import -i 0x05c9d09cd06a49e99efd0308c64bfdfb57409e10bc9e2a57cb
 Get some STC coin from `dev` net, and it will send `1000000000` STC to the account by default. Notice that, this command can only be used in dev net.
 
 ```bash
-dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
+starcoin% dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
 ```
 
 ## Deploy module

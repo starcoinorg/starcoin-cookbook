@@ -53,7 +53,7 @@ starcoin% account import -i 0x05c9d09cd06a49e99efd0308c64bfdfb57409e10bc9e2a57cb
 获得 `dev` 网络的 STC 代币，这个命令将默认发送 `1000000000` STC 到账户中。注意，这个命令只能用于开发网络。
 
 ```bash
-dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
+starcoin% dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
 ```
 
 ## 部署模块

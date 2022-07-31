@@ -1,14 +1,14 @@
 # 部署你的第一个智能合约
 
-这篇文章指导你如何编译和部署 Move 合约到 starcoin 区块链。
+这篇文章指导你如何编译和部署 Move 合约到 Starcoin 区块链。
 
-Move 是一种新的编程语言，旨在为 [Diem 区块链](https://github.com/deim/diem) 提供安全和可编程的基础。 Starcoin Blockchain 还支持 Move 语言编写智能合约。
+Move 是一种新的编程语言，旨在为 *Diem 区块链*提供安全和可编程的基础。*Starcoin 区块链*还支持 Move 语言编写智能合约。
 
 通过这篇文章，你将学习到：
 
 - 如何为 Move 开发设置工作目录和配置文件；
 - 如何打包（编译）一个 Move 模块；
-- 如何将编译好的二进制文件部署到 starcoin 区块链上。
+- 如何将编译好的二进制文件部署到 Starcoin 区块链上。
 
 首先，根据[如何设置本地开发网络](../02-getting-started/02-setup/03-dev-network.md)的描述启动一个 dev 网络，然后获取一些 dev 网络的测试代币，并解锁账户。这里假设账户地址是 0xb19b07b76f00a8df445368a91c0547cc 。
 

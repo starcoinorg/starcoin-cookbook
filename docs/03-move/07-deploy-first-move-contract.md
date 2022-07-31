@@ -1,8 +1,9 @@
 # Deploy your first Move contract
 
-This article guides you on how to compile and deploy a Move contract to the starcoin blockchain.
+This article guides you on how to compile and deploy a Move contract to the Starcoin blockchain.
 
-Move is a new programming language developed to provide a safe and programmable foundation for the [Diem](https://github.com/deim/diem) Blockchain. Starcoin Blockchain also support Move language to write smart contract.
+Move is a new programming language developed to provide a safe and programmable foundation for the *Diem Blockchain*.
+*Starcoin Blockchain* also support Move language to write smart contract.
 
 In this article, you will learn:  
 

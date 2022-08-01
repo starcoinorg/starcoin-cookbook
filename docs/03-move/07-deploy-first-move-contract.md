@@ -1,26 +1,56 @@
-# Deploy your first Move contract
+# How to deploy Move smart contracts
 
-This article guides you on how to compile and deploy a Move contract to the Starcoin blockchain.
+In the [quick start](./02-quick-start.md), I believe you have understood the whole process of writing, compiling and deploying smart contracts.
 
-Move is a new programming language developed to provide a safe and programmable foundation for the *Diem Blockchain*.
-*Starcoin Blockchain* also support Move language to write smart contract.
+In this article, the deployment of smart contracts will be explained in more detail.
 
-In this article, you will learn:  
+## Background
 
-- How to setup Move develop folder and config.
-- How to package(or compile) a Move module.
-- How to deploy the compiled binary to the starcoin blockchain.
+Move language is a *domain-specific language (DSL)* developed by Meta (formerly Facebook) for the *Libra* project (later renamed *Diem*).
+As a smart contract programming language for *resource-oriented programming*, the Move language undoubtedly injects new vitality into blockchain technology.
+*Starcoin blockchain* is **the first public chain to use the Move language**.
+As a contributor and beneficiary of the Move language, Starcoin has been working hard to build the *Move ecology*.
 
-First start a dev network as described in [How to set up a local dev network](../02-getting-started/02-setup/03-dev-network.md), get some dev net test coin, and unlock your account. Here assume your account address is 0xb19b07b76f00a8df445368a91c0547cc .
+Although Diem ended up due to some irresistible factors, a batch of advanced technologies born in the process have undoubtedly injected new vitality into the Web3 world. Many technicians who are enthusiastic about blockchain technology and look forward to the beautiful world of Web3 have rushed to a new voyage.
+Using the open source technology left by *Diem blockchain*, they have built two new public chains *Aptos* and *Sui* based on Move language to write smart contracts (It is currently in the test network stage.).
+
+*Starcoin*, *Aptos* and *Sui*, the three major public chains in the Move ecology, are emitting and heating the Move ecology with the momentum that the spark can start a prairie fire.
+
+## The importance of deploying smart contracts
+
+The development of blockchain technology has gone through two stages.
+Bitcoin (BTC) has opened the *blockchain 1.0* era, and Ethereum (ETH) has opened the *blockchain 2.0* era.
+The emergence of Ethereum has brought the key technology of *smart contracts* to blockchain, so that blockchain not only stays at the purpose of bookkeeping, but also brings more application expansion.
+Unfortunately, smart contracts are like a double-edged sword, which not only brings many rich functional expansions, but also makes it easy for smart contract developers to inadvertently introduce unsafe code and threaten the assets of the chain.
+
+I think writing simple, safe and deployable smart contracts should be the focus of the *blockchain 3.0* era.
+The Move language for *resource-oriented programming* undoubtedly provides a good solution to this problem.
+
+Deploying *smart contracts* is almost the most basic function of every *smart chain*.
+Next, we will introduce in detail how to deploy contracts in the Starcoin blockchain.
+
+## Preparations
+
+Through this article, you will learn:
+
+- How to set up working directories and configuration files for Move project development;
+- How to package (compile) a Move module;
+- How to deploy compiled binaries to the Starcoin blockchain.
+
+First of all, start a *dev* network node according to the description of [How to set up a local dev network](../02-getting-started/02-setup/03-dev-network.md).
+And get some test tokens of the *dev* network for the account and unlock the account.
+The address `0xb19b07b76f00a8df445368a91c0547cc` is used as the account address for deploying smart contracts.
 
 ```bash
 starcoin% dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
-starcoin% account unlock 0xb19b07b76f00a8df445368a91c0547cc -p my-pass
 ```
 
-Then, let's get started!
+## Contract Codes
 
-1. Assume you are working under folder `/your/dev/path/my-counter/`, setup your develop folder with the tree below. 
+This is a [counter contract](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter) with functions such as creating counters and incremental counters.
+For details, please refer to the introduction in [Quick Start](./02-quick-start.md).
+
+Project structure:
 
 ```
 .
@@ -29,12 +59,8 @@ Then, let's get started!
     └── MyCounter.move
 ```
 
-The file `Move.toml` and folder `sources` are required by the mpm package tool, which should not be modified. All the Move modules are putting under `sources/` folder. Here say a simple module: MyCounter.
-
-2. Code your Move module. The source file is at [my-counter](https://github.com/starcoinorg/starcoin-cookbook/blob/main/examples/my-counter/sources/MyCounter.move).
-
-```
-module MyCounter::MyCounter {
+```move title="my-counter/sources/MyCounter.move"
+module MyCounterAddr::MyCounter {
      use StarcoinFramework::Signer;
 
      struct Counter has key, store {
@@ -58,57 +84,84 @@ module MyCounter::MyCounter {
 }
 ```
 
-3. Compile the module.  
+```toml title="my-counter/Move.toml" {7}
+[package]
+name = "my_counter"
+version = "0.0.1"
 
-Change the address of the module:
+[addresses]
+StarcoinFramework = "0x1"
+MyCounterAddr = "0xb19b07b76f00a8df445368a91c0547cc"
 
-- edit [Move.toml](https://github.com/starcoinorg/starcoin-cookbook/blob/main/examples/my-counter/Move.toml)
-- MyCounter = “0xABCDE” to MyCounter = “0xb19b07b76f00a8df445368a91c0547cc”
+[dependencies]
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}
+```
 
-> A Move module should be declared with `module <Account>::<ModuleName> {`, and you must assign the variable `Account` you account address in the `Move.toml` file. In this example, it's the first `MyCounter` in the first line.
+The *Move.toml* file and *sources* directory is the basic structure of the Move project directory.
 
-Then, in console, run:
+## Deployment process
+
+All right, let's get started now!
+
+1. Modify the contract address
+
+Smart contracts are deployed under an account, so the value of `MyCounterAddr` in the *Move.toml* file needs to be modified to your actual account address.
+Take *0xb19b07b76f00a8df445368a91c0547cc* as an example.
+
+2. Compilation module
 
 ```bash
 $ mpm release
 
 Packaging Modules:
          0xb19b07b76f00a8df445368a91c0547cc::MyCounter
-Release done: release/my_counter.v0.0.1.blob, package hash: 0xa7e3c02c102c85708c6fa8c9f84064d09cf530b9581278aa92568d67131c3b6d
+Release done: release/my-counter.v0.0.0.blob, package hash: 0x3be68089a746a7a3d1aaf2e0282a7c73f3724e07d19dbdd5d5514f01ace9a662
 ```
 
-It will compile the module, you will get the binary package at `release/my_counter.v0.0.1.blob`.
+The command will compile the module and generate a binary package *release/my-counter.v0.0.1.blob*.
+
+> Tip: Use the `pwd` command to determine the *absolute path* of the contract, which is convenient for deployment in the *Starcoin console*.
+
+3. Unlock the account
+
+```shell
+starcoin% account unlock 0xb19b07b76f00a8df445368a91c0547cc -p <MY-PASSWORD>
+```
 
 4. Deploy to blockchain
 
-There are two CLI tools to deploy binary package to chain: `mpm deploy` and `starcoin dev deploy`.
+At present, there are two command-line tools that can deploy Move binaries to the blockchain:
+
+It is `mpm deploy` and `starcoin% dev deploy` respectively.
 
 - mpm deploy
 
-Account provider is need to signature the deployment transaction. There are three types of account provider for `mpm deploy` command:
-1) local-account-dir; 2) secret-file; 3) environment variable.  
+The deployment module requires an account signature, and the `mpm deploy` command supports three account modes:
+1) local wallet; 2) private key files; and 3) environment variables.
 
-The commands corresponding to the three account provider are as follows:
+The corresponding commands of the three account modes are as follows:
+
 ```
-$ mpm deploy --rpc ws://127.0.0.1:9871 --local-account-dir /your/local/account/dir --password xxxxx /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+$ mpm deploy --rpc ws://127.0.0.1:9871 --local-account-dir /your/local/account/dir --password xxxxx /your/dev/path/my-counter/release/my-counter.v0.0.1.blob
 
-$ mpm deploy --rpc ws://127.0.0.1:9871 --secret-file /your/secret/file /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+$ mpm deploy --rpc ws://127.0.0.1:9871 --secret-file /your/secret/file /your/dev/path/my-counter/release/my-counter.v0.0.1.blob
 
-$ mpm deploy --rpc ws://127.0.0.1:9871 --from-env /your/dev/path/my-counter/release/my_counter.v0.0.1.blob
+$ mpm deploy --rpc ws://127.0.0.1:9871 --from-env /your/dev/path/my-counter/release/my-counter.v0.0.1.blob
 ```
 
-You can change `--rpc` option to the Barnard's or Mainnet's RPC address to deploy package to the corresponding chain.
+If you want to deploy the module to the *Barnard* test network or the *Main* network, just specify the `--rpc` option as the corresponding RPC address.
 
-The **secret-file** is a local file storing only the private key content, without any other prefix or suffix.
+**`secret-file`** is a local file that stores the private key, which contains only one line of private keys, no other prefixes and suffixes.
 
-The key of environment variable is `STARCOIN_PRIVATE_KEY`.
+The key value of the environment variable is `STARCOIN_PRIVATE_KEY`
 
-- starcoin dev deploy 
+- starcoin% dev deploy
 
-In starcoin console mode, run:
+In Starcoin console mode, run the command:
 
 ```bash
-starcoin% dev deploy /your/dev/path/my-counter/release/my_counter.v0.0.1.blob -s 0xb19b07b76f00a8df445368a91c0547cc -b
+starcoin% dev deploy /your/dev/path/my-counter/release/my-counter.v0.0.1.blob -s 0xb19b07b76f00a8df445368a91c0547cc -b
+
 txn 0xeb055894f0c4440608246825c238a36683a8a0ad57144e905a12398a02ce806b submitted.
 {
   "ok": {
@@ -136,3 +189,5 @@ txn 0xeb055894f0c4440608246825c238a36683a8a0ad57144e905a12398a02ce806b submitted
   ....
 }
 ```
+
+Whether to deploy directly on the command line with the `mpm deploy` command or with the Starcoin console, it is mainly selected according to personal preferences or convenience.

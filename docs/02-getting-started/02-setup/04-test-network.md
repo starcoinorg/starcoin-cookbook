@@ -47,3 +47,13 @@ starcoin -n barnard
 | Halley  | http://halley.seed.starcoin.org  | https://halley-seed.starcoin.org  | ws://halley.seed.starcoin.org:9870  |
 | Proxima | http://proxima.seed.starcoin.org | https://proxima-seed.starcoin.org | ws://proxima.seed.starcoin.org:9870 |
 | Barnard | http://proxima.seed.starcoin.org | https://barnard-seed.starcoin.org | ws://barnard.seed.starcoin.org:9870 |
+
+### Connect to test network
+
+Take `Barnard` test network as an example:
+
+```shell
+starcoin --connect ws://barnard.seed.starcoin.org:9870 --local-account-dir ~/.starcoin/barnard/account_vaults console
+```
+
+where `--connect` points to the seed node JSON-PRC, and `--local-account-dir` points to the directory of accouts. You will be unable to execute account related operaions without it.

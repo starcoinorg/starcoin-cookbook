@@ -598,7 +598,7 @@ starcoin% account execute-function --function  <0x地址>::<模块>::<函数> --
 完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
 
 接下来，
-* 你可以通过 [Move 语言](./move-language/)来系统地学习 Move 语言
+* 你可以通过 [Move 语言](./03-move-language/README.md)来系统地学习 Move 语言
 * 查看[更多 Move 例子]
 * 了解[如何 Debug/测试 Move module](./97-move-test/01-move-unit-test.md)
 * 了解 [Starcoin Move Framework](./starcoin-framework/)

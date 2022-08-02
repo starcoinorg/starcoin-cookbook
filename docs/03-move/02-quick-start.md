@@ -622,7 +622,7 @@ The complete code repository is [here](https://github.com/starcoinorg/starcoin-c
 
 Next,
 
-* You can systematically learn the Move language through the [Move language](./move-language/)
+* You can systematically learn the Move language through the [Move language](./03-move-language/README.md)
 * View [more Move examples]
 * Learn [how to Debug/test Move module](./97-move-test/01-move-unit-test.md)
 * Learn about the [Starcoin Move Framework](./starcoin-framework/)

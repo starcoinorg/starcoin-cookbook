@@ -625,10 +625,10 @@ Next,
 * You can systematically learn the Move language through the [Move language](./03-move-language/README.md)
 * View [more Move examples]
 * Learn [how to Debug/test Move module](./97-move-test/01-move-unit-test.md)
-* Learn about the [Starcoin Move Framework](./starcoin-framework/)
+* Learn about the [Starcoin Move Framework](./06-starcoin-framework/README.md)
 * Advanced Move can be learned through [Move Advanced Development].
 * Learn about the [Move specification language and Move Prover](./100-move-prover/01-move-spec-language.md) to develop safer Move applications
 * Explore more features of [Move Package Manager](./05-move-package-manager.md)
 
 Or you can directly enter the world of Dapp.
-* [Web3 and DApp develop](../web3/)
+* [Web3 and DApp develop](../04-web3/README.md)

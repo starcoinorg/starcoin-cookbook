@@ -601,10 +601,10 @@ starcoin% account execute-function --function  <0x地址>::<模块>::<函数> --
 * 你可以通过 [Move 语言](./03-move-language/README.md)来系统地学习 Move 语言
 * 查看[更多 Move 例子]
 * 了解[如何 Debug/测试 Move module](./97-move-test/01-move-unit-test.md)
-* 了解 [Starcoin Move Framework](./starcoin-framework/)
+* 了解 [Starcoin Move Framework](./06-starcoin-framework/README.md)
 * 可以通过 [Move 高级开发]学习高级 Move。
 * 了解 [Move 规范语言 和 Move Prover](./100-move-prover/01-move-spec-language.md) 开发更安全的 Move 应用
 * 探索 [Move 包管理器](./05-move-package-manager.md)的更多功能
 
 或者，你可以直接进入 Dapp 的世界，
-* [Web3 和 DApp 开发](../web3/)
+* [Web3 和 DApp 开发](../04-web3/README.md)

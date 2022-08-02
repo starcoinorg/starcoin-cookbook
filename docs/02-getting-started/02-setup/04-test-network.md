@@ -56,4 +56,4 @@ Take `Barnard` test network as an example:
 starcoin --connect ws://barnard.seed.starcoin.org:9870 --local-account-dir ~/.starcoin/barnard/account_vaults console
 ```
 
-where `--connect` points to the seed node JSON-PRC, and `--local-account-dir` points to the directory of accouts. You will be unable to execute account related operaions without it.
+where `--connect` points to the seed node JSON-PRC, and `--local-account-dir` points to the directory of accouts. You will not be able to execute account related operaions without it.

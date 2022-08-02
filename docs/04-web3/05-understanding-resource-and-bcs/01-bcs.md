@@ -32,7 +32,8 @@ In the context of a cryptographic application, canonical serialization has sever
 
 Note that BCS ensures canonical serialization for each data type separately. The data type of a serialized value
 must be enforced by the application itself. This requirement is typically fulfilled
-using unique hash seeds for each data type. (See [Diem's cryptographic library](https://github.com/diem/diem/blob/master/crypto/crypto/src/hash.rs) for an example.)
+using unique hash seeds for each data type.
+<!-- (See [Diem's cryptographic library](https://github.com/diem/diem/blob/master/crypto/crypto/src/hash.rs) for an example.) -->
 
 ## Backwards Compatibility
 

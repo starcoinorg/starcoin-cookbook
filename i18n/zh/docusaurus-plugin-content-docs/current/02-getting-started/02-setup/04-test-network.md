@@ -46,3 +46,13 @@ starcoin -n barnard
 | Halley  | http://halley.seed.starcoin.org  | https://halley-seed.starcoin.org  | ws://halley.seed.starcoin.org:9870  |
 | Proxima | http://proxima.seed.starcoin.org | https://proxima-seed.starcoin.org | ws://proxima.seed.starcoin.org:9870 |
 | Barnard | http://proxima.seed.starcoin.org | https://barnard-seed.starcoin.org | ws://barnard.seed.starcoin.org:9870 |
+
+### 通过种子节点连接网络
+
+以连接 `Barnard` 测试网络为例：
+
+```shell
+starcoin --connect ws://barnard.seed.starcoin.org:9870 --local-account-dir ~/.starcoin/barnard/account_vaults console
+```
+
+其中 `--connect` 指定种子节点节点地址，`--local-account-dir` 指定账户信息位置，如果不指定该位置，将不能执行账户相关操作。

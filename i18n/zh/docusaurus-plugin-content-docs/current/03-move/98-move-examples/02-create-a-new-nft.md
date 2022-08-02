@@ -1,25 +1,25 @@
-# Create a new NFT
+# 创建一种新的 NFT
 
-In this chapter, we will focus on how to create a custom non-fungible token on the Starcoin blockchain. Let's get started.
+这一章节主要介绍用户如何在 Starcoin 区块链上自定义一种 NFT（Non-Fungible Token）。
 
-## Required
+## 前提
 
-First, start a dev network described in [How to set up a local dev network](../../02-getting-started/02-setup/03-dev-network.md) and get some coins, say `1000000000`.
+首先，按照[如何设置本地开发网络](../../02-getting-started/02-setup/03-dev-network.md)中的描述启动一个开发网络，并获得一些 STC 代币用于创建NFT，比如 `1000000000 STC`。
 
-In this document, I will use `0xb19b07b76f00a8df445368a91c0547cc`, the default account address of my dev network, to represent the person who issues and send the new token.
+在本文档中，我将使用我的开发网络的默认帐户地址 `0xb19b07b76f00a8df445368a91c0547cc` 来代表**发行**和**铸造**新 NFT 的人。
 
-The source file can be found at [simple-nft](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/simple-nft).
+创建自定义 NFT 的代码源文件位于 [simple-nft](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/simple-nft)。
 
-## Compile the module
+## 编译模块
 
-Clone the code from github and enter the `simple-nft` folder:
+下载代码并进入 `simple-nft` 目录：
 
 ```bash
 git clone https://github.com/starcoinorg/starcoin-cookbook.git
 cd starcoin-cookbook/examples/simple-nft
 ```
 
-Replace the SNFT address with your default address in the `Move.toml` file.
+修改 `Move.toml` 文件中 `SNFT` 地址为默认账户地址：
 
 ```toml
 [addresses]
@@ -27,7 +27,7 @@ StarcoinFramework = "0x1"
 SNFT = "0xb19b07b76f00a8df445368a91c0547cc"
 ```
 
-Run mpm release in another shell console for release package:
+在 shell 控制台中运行 `mpm release` 以获取发布模块：
 
 ```bash
 $ mpm release
@@ -38,9 +38,11 @@ Packaging Modules:
 Release done: release/simple-nft.v0.0.1.blob, package hash: 0x39bf53490461a9ccf07804312561280e7dafa4ba8ea102913c022de5c9a80555
 ```
 
-It will compile the module, and then you will get the binary package `simple-nft.v0.0.1.blob` in `release` folder. We will use it then.
+它将编译自定义 NFT 的合约代码，在项目的 `release` 目录下生成二进制文件 `simple-nft.v0.0.1.blob`，此二进制文件将用于之后的部署。
 
-We will need to import `0xb19b07b76f00a8df445368a91c0547cc` account to deploy the module.
+## 导入账户
+
+我们需要先导入 `0xb19b07b76f00a8df445368a91c0547cc` 账号。
 
 ```bash
 starcoin% account import -i 0x05c9d09cd06a49e99efd0308c64bfdfb57409e10bc9e2a57cb4330cd946b4e83 -p <MY-PASSWORD>
@@ -56,17 +58,17 @@ starcoin% account import -i 0x05c9d09cd06a49e99efd0308c64bfdfb57409e10bc9e2a57cb
 }
 ```
 
-## Get devnet test coins
+## 获取代币
 
-Get some STC coin from `dev` net, and it will send `1000000000` STC to the account by default.
+获得 `dev` 网络的 STC 代币用户支付合约部署过程中的花费，这个命令将默认发送 `1000000000` STC 到账户中。
 
 ```bash
 starcoin% dev get-coin 0xb19b07b76f00a8df445368a91c0547cc
 ```
 
-## Deploy module
+## 部署模块
 
-Then, unlock the account and deploy `SimpleNFT` module and `SimpleNFTScripts` module.
+解锁帐户并部署 SimpleNFT 模块和 SimpleNFTScripts 模块。
 
 ```bash
 starcoin% account unlock 0xb19b07b76f00a8df445368a91c0547cc -p <MY-PASSWORD>
@@ -103,23 +105,23 @@ txn 0x60e31b4e4fe974f66b80c3e69c659a573b4022754430bf030576292e1358d7b0 submitted
 }
 ```
 
-You can see that the transation is submitted and the result status is `Executed`. That means the module has been deployed.
+可以看到交易已经提交，结果状态为 `Executed`。这意味着该模块已部署。
 
-## Execute script function
+## 执行脚本功能
 
-First，execute the initialize transaction in starcoin console:
+首先，在 starcoin 控制台执行初始化交易：
 
 ```bash
 starcoin% account execute-function --function 0xb19b07b76f00a8df445368a91c0547cc::SimpleNFTScripts::initialize -b
 ```
 
-Then, mint a test nft:
+然后，铸造一个测试 NFT：
 
 ```bash
 starcoin% account execute-function --function 0xb19b07b76f00a8df445368a91c0547cc::SimpleNFTScripts::test_mint_with_image_data -b
 ```
 
-Last, run `account nft list` to check the NFT in the account:
+最后，通过 `account nft list` 命令可以查看已经铸造的 NFT：
 
 ```bash
 starcoin% account nft list
@@ -149,4 +151,4 @@ starcoin% account nft list
 }
 ```
 
-We can now see a NFT witd `id` 1 in your account.
+我们可以看到我们的账户中已经有了 `id` 为 1 的一个 NFT。

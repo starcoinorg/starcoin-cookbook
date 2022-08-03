@@ -181,7 +181,8 @@ Starcoin has defined variety protocols in Stdlib, some protocols will be shown i
 2. Faucet
    You will need STC(native cryptocurrency of this platform) when you run tests, such as paying gas fees. As a developer, you can apply for STC in Barnad network.
 
-- Barnad: https://faucet.starcoin.org/barnard
+- Barnad: https://faucet.starcoin.org
+<!-- - Barnad: https://faucet.starcoin.org/barnard -->
 
 3. Explorer
    Explorer is a complementary tool to chain. We suggest that you use [stcscan](https://stcscan.io/) as blockchain explorer.

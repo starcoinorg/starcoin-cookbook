@@ -8,4 +8,4 @@ Starcoin Cookbook 的目标是提供一个全栈的学习资料，方便开发�
 
 这些学习材料主要和 Starcoin 相关，但也可以作为区块链和智能合约的通用学习材料，因为主要的智能合约区块链在技术原理上是相通的。
 
-本文档还在完善中，欢迎一起改进，参看[贡献指南](./miscellaneous/contributing)。
+本文档还在完善中，欢迎一起改进，参看[贡献指南](./100-miscellaneous/99-contributing.md)。

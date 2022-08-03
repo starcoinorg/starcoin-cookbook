@@ -220,7 +220,8 @@ Starcoin 在 Stdlib 中定义了多种常用协议，如下图所示（更多协
 
    在测试过程中免不了需要测试网的 STC，比如支付 gas。开发者可以通过 Starcoin 提供的不同网络（暂时只开放 Barnad）的水龙头申请 STC：
 
-   - Barnard：https://faucet.starcoin.org/barnard
+   - Barnard：https://faucet.starcoin.org
+   <!-- - Barnard：https://faucet.starcoin.org/barnard -->
 
 3. 浏览器
 

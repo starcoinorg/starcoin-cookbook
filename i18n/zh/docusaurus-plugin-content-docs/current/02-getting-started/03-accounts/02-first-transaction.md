@@ -9,7 +9,7 @@
 
 ## 提交交易的几个步骤
 
-- 启动 Starcoin 控制台，并连接到 Starcoin 节点，详细步骤请查阅[如何与 Starcoin 控制台交互](../02-setup/starcoin-console.md)。
+- 启动 Starcoin 控制台，并连接到 Starcoin 节点，详细步骤请查阅[如何与 Starcoin 控制台交互](../02-setup/02-starcoin-console.md)。
 - 创建两个账户：Alice 和 Bob，详细步骤请查阅[账号管理](./01-account-manage.md)。
 - 给 Alice 账户充钱。
 - 提交转账交易：Alice 给 Bob 打钱。

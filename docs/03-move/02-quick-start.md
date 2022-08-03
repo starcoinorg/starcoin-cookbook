@@ -8,9 +8,9 @@ Prepare in advance:
 
 1. You need to build a *dev* network according to [how to set up a local development network](../02-getting-started/02-setup/03-dev-network.md) and connect to the *dev* network through the Starcoin console.
 
-2. Create an account according to [account management](../02-getting-started/03-accounts/1.account-manage.md) or use an existing account, and transfer a little STC to the account.
+2. Create an account according to [account management](../02-getting-started/03-accounts/01-account-manage.md) or use an existing account, and transfer a little STC to the account.
 
-3. There is a basic understanding of the *transaction* through [the first on-chain transaction](../02-getting-started/03-accounts/2.first-transaction.md).
+3. There is a basic understanding of the *transaction* through [the first on-chain transaction](../02-getting-started/03-accounts/02-first-transaction.md).
 
 Next, we will introduce some necessary tools and project structure.
 

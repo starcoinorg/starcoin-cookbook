@@ -7,8 +7,8 @@
 提前准备：
 
 1. 需要按照[如何设置本地开发网络](../02-getting-started/02-setup/03-dev-network.md)搭建 *dev* 网络，并通过 Starcoin 控制台连接到 *dev* 网络。
-2. 按照[账号管理](../02-getting-started/03-accounts/1.account-manage.md)创建一个账号或者使用已有账号，并且给账号里转一点 STC。
-3. 通过[第一笔链上交易](../02-getting-started/03-accounts/2.first-transaction.md)对*交易*有基本的理解。
+2. 按照[账号管理](../02-getting-started/03-accounts/01-account-manage.md)创建一个账号或者使用已有账号，并且给账号里转一点 STC。
+3. 通过[第一笔链上交易](../02-getting-started/03-accounts/02-first-transaction.md)对*交易*有基本的理解。
 
 接下来将介绍一些必备工具和项目结构。
 

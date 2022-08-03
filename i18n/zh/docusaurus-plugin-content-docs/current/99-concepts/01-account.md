@@ -16,7 +16,7 @@
 
 因此，对比, Ethereum/Bitcoin, Starcoin 地址不仅更短，为 16 字节, 同时，在不改变地址的情况下，还支持用户修改密钥对。更加灵活和安全。
 
-1. [sip-21 receipt_identifier](https://developer.starcoin.org/zh/sips/sip-21/)
+1. [sip-21 receipt_identifier](https://github.com/starcoinorg/sips/blob/master/sip-21/index.md)
 2. [rotate key 例子](https://github.com/starcoinorg/starcoin-sdk-python/blob/master/examples/rotate_auth_key.py)
 
 ## 序列号

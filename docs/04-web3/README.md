@@ -43,14 +43,14 @@ Next, we’ll explore further about each concept we have learned in figure 2. If
 
 It’s an easy decentralized application, it’s designed for you to get started. You will get a quick feel of what Dapp is and how it interacts with Starcoin. For a developer, you can build your own Dapp or check the code structure through viewing its source code.
 
-- Test Dapp Link: https://starmask-test-dapp.starcoin.org/Github
+- Test Dapp Link: https://starmask-test-dapp.starcoin.org/
 - Github Link: https://github.com/starcoinorg/starmask-test-dapp
 
 ## StarMask
 
 Starmask is not only used to manage your digital assets, but another way to interact with Starcoin blockchain. Here is one example, users create digital signature for each transaction in Dapp, then submit this transaction to Txpool which in remote nodes.
 
-- Installation Link: https://github.com/starcoinorg/starmask-extension/blob/main/docs/how-to-install.md
+- Installation Link: https://github.com/starcoinorg/starmask-extension/blob/main/docs/en/how-to-install.md
 - User Guides Link:https://github.com/starcoinorg/starmask-extension/blob/main/docs/en/how-to-use.md
 
 ## SDK
@@ -125,14 +125,15 @@ You can interact with Starcoin nodes using StarMask or SDK on Starcoin blockchai
    If you are a developer and want to get more details about Starcoin. We recommend you check these links:
 
 - Key concept: https://starcoin.org/zh/developer/key_concepts/
-- SIPs: https://starcoin.org/zh/developer/sips/
+<!-- - SIPs: https://starcoin.org/zh/developer/sips/ -->
 - Source code: https://github.com/starcoinorg/starcoin
 
 ## Move
 
 Currently, Starcoin is the first one public blockchain that can run Move smart contracts.
 
-1. [Move Book](https://move-book.com/).Check [Move introduction](https://developers.diem.com/docs/move/move-start-here/move-introduction) to learn more about Move.
+1. [Move Book](https://move-book.com/).
+<!-- Check [Move introduction](https://developers.diem.com/docs/move/move-start-here/move-introduction) to learn more about Move. -->
 2. IDE
 
 - Starcoin IDE: https://marketplace.visualstudio.com/items?itemName=starcoinorg.starcoin-ide
@@ -141,10 +142,10 @@ Currently, Starcoin is the first one public blockchain that can run Move smart c
 3. Test
    You can test your Move smart contracts with different test types.
 
-- Unit test: [Guides](https://github.com/diem/diem/blob/main/language/changes/4-unit-testing.md)
+<!-- - Unit test: [Guides](https://github.com/diem/diem/blob/main/language/changes/4-unit-testing.md) -->
 - Functional Test: To run a functional test, make sure to initialize Starcoin first.
 - [Guides](https://starcoin.org/zh/developer/functional_test/functional_test/)
-  - [Examples](https://github.com/starcoinorg/starcoin/tree/master/vm/functional-tests/tests/testsuite)
+  <!-- - [Examples](https://github.com/starcoinorg/starcoin/tree/master/vm/functional-tests/tests/testsuite) -->
 
 4. Compile and Deploy
    There are multiple ways to compile and deploy Move smart contracts on Starcoin blockchain. Make sure that you have chosen appropriate networks!
@@ -157,7 +158,9 @@ Currently, Starcoin is the first one public blockchain that can run Move smart c
 
 ## Stdlib and Protocols
 
-Starcoin has been created using Move language, it also has Stdlib features. Please check our [source code](https://github.com/starcoinorg/starcoin/tree/master/vm/stdlib/modules).Starcoin has defined variety protocols in Stdlib, some protocols will be shown in figure 3.
+Starcoin has been created using Move language, it also has Stdlib features. Please check our [source code]
+<!-- (https://github.com/starcoinorg/starcoin/tree/master/vm/stdlib/modules). -->
+Starcoin has defined variety protocols in Stdlib, some protocols will be shown in figure 3.
 ![](../../static/img/dapp/pb.jpg)
 
 1. DAO protocolDAO
@@ -178,7 +181,8 @@ Starcoin has been created using Move language, it also has Stdlib features. Plea
 2. Faucet
    You will need STC(native cryptocurrency of this platform) when you run tests, such as paying gas fees. As a developer, you can apply for STC in Barnad network.
 
-- Barnad: https://faucet.starcoin.org/barnard
+- Barnad: https://faucet.starcoin.org
+<!-- - Barnad: https://faucet.starcoin.org/barnard -->
 
 3. Explorer
    Explorer is a complementary tool to chain. We suggest that you use [stcscan](https://stcscan.io/) as blockchain explorer.
@@ -186,4 +190,4 @@ Starcoin has been created using Move language, it also has Stdlib features. Plea
 4. Voting DappVoting Dapp is another developer tool,it’s used to manage Starcoin blockchain. A developer can create a proposal, we will take a public,equal and formal vote in our community on the Voting Dapp. Your proposal will be approved with more votes in favour.
 
 5. Starcoin logos and icons
-   Download Link: https://starcoin.org/downloads/logo.zip⁣
+   <!-- Download Link: https://starcoin.org/downloads/logo.zip -->

@@ -249,7 +249,7 @@ starcoin
 #### Encrypting
 
 The point of the encryption key is of course to encrypt things.
-Here's an example of how to encrypt a message using [`eth-sig-util`](https://github.com/StarMask/eth-sig-util):
+<!-- Here's an example of how to encrypt a message using [`eth-sig-util`](https://github.com/StarMask/eth-sig-util): -->
 
 ```javascript
 const stcUtil = require("@starcoin/stc-util");

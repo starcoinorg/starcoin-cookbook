@@ -8,9 +8,9 @@ Prepare in advance:
 
 1. You need to build a *dev* network according to [how to set up a local development network](../02-getting-started/02-setup/03-dev-network.md) and connect to the *dev* network through the Starcoin console.
 
-2. Create an account according to [account management](../02-getting-started/03-accounts/1.account-manage.md) or use an existing account, and transfer a little STC to the account.
+2. Create an account according to [account management](../02-getting-started/03-accounts/01-account-manage.md) or use an existing account, and transfer a little STC to the account.
 
-3. There is a basic understanding of the *transaction* through [the first on-chain transaction](../02-getting-started/03-accounts/2.first-transaction.md).
+3. There is a basic understanding of the *transaction* through [the first on-chain transaction](../02-getting-started/03-accounts/02-first-transaction.md).
 
 Next, we will introduce some necessary tools and project structure.
 
@@ -622,13 +622,13 @@ The complete code repository is [here](https://github.com/starcoinorg/starcoin-c
 
 Next,
 
-* You can systematically learn the Move language through the [Move language](./move-language/)
+* You can systematically learn the Move language through the [Move language](./03-move-language/README.md)
 * View [more Move examples]
 * Learn [how to Debug/test Move module](./97-move-test/01-move-unit-test.md)
-* Learn about the [Starcoin Move Framework](./starcoin-framework/)
+* Learn about the [Starcoin Move Framework](./06-starcoin-framework/README.md)
 * Advanced Move can be learned through [Move Advanced Development].
 * Learn about the [Move specification language and Move Prover](./100-move-prover/01-move-spec-language.md) to develop safer Move applications
 * Explore more features of [Move Package Manager](./05-move-package-manager.md)
 
 Or you can directly enter the world of Dapp.
-* [Web3 and DApp develop](../web3/)
+* [Web3 and DApp develop](../04-web3/README.md)

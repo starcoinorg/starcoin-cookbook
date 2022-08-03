@@ -9,7 +9,7 @@ Usage scenarios.
 
 ## Preparation
 
-Start a `starcoin` dev node and connect it. See [Using the starcoin console](../setup/starcoin-usage) .) for detailed steps. .
+Start a `starcoin` dev node and connect it. See [Using the starcoin console](../02-setup/02-starcoin-console.md) for detailed steps.
 
 ## Steps
 

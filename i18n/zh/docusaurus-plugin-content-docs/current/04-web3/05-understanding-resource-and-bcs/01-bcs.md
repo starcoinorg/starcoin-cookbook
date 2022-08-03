@@ -28,7 +28,8 @@ BCS 格式保证规范的序列化，这意味着对于任何给定的数据类�
 
 请注意，BCS 分别确保每种数据类型的规范序列化。
 序列化值的数据类型必须由应用程序本身强制执行。
-通常使用每种数据类型的唯一哈希种子来满足此要求。（有关示例，请参见 [Diem 的密码库](https://github.com/diem/diem/blob/master/crypto/crypto/src/hash.rs)。）
+通常使用每种数据类型的唯一哈希种子来满足此要求。
+<!-- （有关示例，请参见 [Diem 的密码库](https://github.com/diem/diem/blob/master/crypto/crypto/src/hash.rs)。） -->
 
 ## 向后兼容性
 

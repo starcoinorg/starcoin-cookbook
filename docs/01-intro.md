@@ -10,4 +10,4 @@ It contains three main sections.
 
 These learning resources are mainly related to Starcoin, but they can also be used as general learning resources for blockchain and smart contracts, because the smart contract blockchains are similar in technical principles.
 
-This document is still being improved, and welcome to improve it [Contribution Guide](./miscellaneous/contributing).
+This document is still being improved, and welcome to improve it [Contribution Guide](./100-miscellaneous/99-contributing.md).

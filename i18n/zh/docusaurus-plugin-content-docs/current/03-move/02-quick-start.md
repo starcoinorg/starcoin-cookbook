@@ -7,8 +7,8 @@
 提前准备：
 
 1. 需要按照[如何设置本地开发网络](../02-getting-started/02-setup/03-dev-network.md)搭建 *dev* 网络，并通过 Starcoin 控制台连接到 *dev* 网络。
-2. 按照[账号管理](../02-getting-started/03-accounts/1.account-manage.md)创建一个账号或者使用已有账号，并且给账号里转一点 STC。
-3. 通过[第一笔链上交易](../02-getting-started/03-accounts/2.first-transaction.md)对*交易*有基本的理解。
+2. 按照[账号管理](../02-getting-started/03-accounts/01-account-manage.md)创建一个账号或者使用已有账号，并且给账号里转一点 STC。
+3. 通过[第一笔链上交易](../02-getting-started/03-accounts/02-first-transaction.md)对*交易*有基本的理解。
 
 接下来将介绍一些必备工具和项目结构。
 
@@ -598,13 +598,13 @@ starcoin% account execute-function --function  <0x地址>::<模块>::<函数> --
 完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
 
 接下来，
-* 你可以通过 [Move 语言](./move-language/)来系统地学习 Move 语言
+* 你可以通过 [Move 语言](./03-move-language/README.md)来系统地学习 Move 语言
 * 查看[更多 Move 例子]
 * 了解[如何 Debug/测试 Move module](./97-move-test/01-move-unit-test.md)
-* 了解 [Starcoin Move Framework](./starcoin-framework/)
+* 了解 [Starcoin Move Framework](./06-starcoin-framework/README.md)
 * 可以通过 [Move 高级开发]学习高级 Move。
 * 了解 [Move 规范语言 和 Move Prover](./100-move-prover/01-move-spec-language.md) 开发更安全的 Move 应用
 * 探索 [Move 包管理器](./05-move-package-manager.md)的更多功能
 
 或者，你可以直接进入 Dapp 的世界，
-* [Web3 和 DApp 开发](../web3/)
+* [Web3 和 DApp 开发](../04-web3/README.md)

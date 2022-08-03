@@ -47,7 +47,7 @@
 
 StarMask 是 Starcoin 官方发布的浏览器插件钱包，不仅是用户管理链上数字资产的一种方式，也是 Dapp 跟链上进行交互的一种选择。例如，用户对 Dapp 的交易进行签名，并将签名后的交易提交到远程节点的 Txpool 中。这里带您深入了解一下 StarMask：
 
-- 安装指南：https://github.com/starcoinorg/starmask-extension/blob/main/docs/how-to-install.md
+- 安装指南：https://github.com/starcoinorg/starmask-extension/blob/main/docs/zh/how-to-install.md
 
 - 使用指南：https://github.com/starcoinorg/starmask-extension/blob/main/docs/zh/how-to-use.md
 
@@ -137,7 +137,7 @@ StarMask 是 Starcoin 官方发布的浏览器插件钱包，不仅是用户管�
    如果您是开发者，想进一步了解 Starcoin 的原理，可以从以下方面入手：
 
    - 关键概念：https://starcoin.org/zh/developer/key_concepts/
-   - SIPs：https://starcoin.org/zh/developer/sips/
+   <!-- - SIPs：https://starcoin.org/zh/developer/sips/ -->
    - 源代码：https://github.com/starcoinorg/starcoin
 
 ## Move
@@ -170,10 +170,10 @@ Move 语法简单，安全特性开箱即用，能够做到轻松上手。对于
 
    Move 支持多种测试方案
 
-   - Unit Test：[指南](https://github.com/diem/diem/blob/main/language/changes/4-unit-testing.md)
+   <!-- - Unit Test：[指南](https://github.com/diem/diem/blob/main/language/changes/4-unit-testing.md) -->
    - Speck Test：语法跟 UT 差不多，主要区别是 ST 会预先初始化链
      - [使用指南](https://github.com/starcoinorg/guide-to-move-package-manager/)
-     - [参考例子](https://github.com/starcoinorg/starcoin-framework/tree/main/spectests)
+     <!-- - [参考例子](https://github.com/starcoinorg/starcoin-framework/tree/main/spectests) -->
 
 4. 编译&部署
 
@@ -189,7 +189,8 @@ Move 语法简单，安全特性开箱即用，能够做到轻松上手。对于
 
 ## Stdlib & 协议
 
-Starcoin 有 Stdlib 特性，完全使用 Move 语言开发，感兴趣的朋友可以[查看源代码](https://github.com/starcoinorg/starcoin/tree/master/vm/stdlib/modules)。
+Starcoin 有 Stdlib 特性，完全使用 Move 语言开发，感兴趣的朋友可以[查看源代码]
+<!-- (https://github.com/starcoinorg/starcoin/tree/master/vm/stdlib/modules)。 -->
 
 Starcoin 在 Stdlib 中定义了多种常用协议，如下图所示（更多协议在陆续制定中）：
 
@@ -219,7 +220,8 @@ Starcoin 在 Stdlib 中定义了多种常用协议，如下图所示（更多协
 
    在测试过程中免不了需要测试网的 STC，比如支付 gas。开发者可以通过 Starcoin 提供的不同网络（暂时只开放 Barnad）的水龙头申请 STC：
 
-   - Barnard：https://faucet.starcoin.org/barnard
+   - Barnard：https://faucet.starcoin.org
+   <!-- - Barnard：https://faucet.starcoin.org/barnard -->
 
 3. 浏览器
 
@@ -231,4 +233,4 @@ Starcoin 在 Stdlib 中定义了多种常用协议，如下图所示（更多协
 
 5. Starcoin logos && icons
 
-   下载地址: https://starcoin.org/downloads/logo.zip⁣
+   <!-- 下载地址: https://starcoin.org/downloads/logo.zip -->

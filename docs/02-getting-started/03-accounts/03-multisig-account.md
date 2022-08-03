@@ -2,7 +2,8 @@
 
 [Account concept](../../99-concepts/01-account.md)
 
-This section describes the use of multisig accounts, including how to create multisig accounts on-chain via the CLI, and how to initiate multisig transactions. For the principle and implementation of multi-signature accounts, please refer to the multi-signature account section of the [account concept](../../concepts/account).
+This section describes the use of multisig accounts, including how to create multisig accounts on-chain via the CLI, and how to initiate multisig transactions.
+For the principle and implementation of multi-signature accounts, please refer to the multi-signature account section of the [account concept](../../99-concepts/01-account.md).
 
 ## Pre-preparation
 

@@ -173,7 +173,7 @@ Move 语法简单，安全特性开箱即用，能够做到轻松上手。对于
    <!-- - Unit Test：[指南](https://github.com/diem/diem/blob/main/language/changes/4-unit-testing.md) -->
    - Speck Test：语法跟 UT 差不多，主要区别是 ST 会预先初始化链
      - [使用指南](https://github.com/starcoinorg/guide-to-move-package-manager/)
-     - [参考例子](https://github.com/starcoinorg/starcoin-framework/tree/main/spectests)
+     <!-- - [参考例子](https://github.com/starcoinorg/starcoin-framework/tree/main/spectests) -->
 
 4. 编译&部署
 

@@ -9,7 +9,7 @@
 
 ## 准备工作
 
-1. 启动一个 `starcoin` dev 节点并连接。详细步骤请查阅[使用 starcoin 控制台](../setup/starcoin-usage)。
+1. 启动一个 `starcoin` dev 节点并连接。详细步骤请查阅[使用 starcoin 控制台](../02-setup/02-starcoin-console.md)。
 
 ## 操作步骤
 

@@ -46,6 +46,7 @@ These are the IDs of the Starcoin chains that StarMask supports by default.
 | 0xfb | 251     | Barnard Test Network            |
 | 0xfc | 252     | Proxima Test Network            |
 | 0xfd | 253     | Halley Test Network             |
+| 0xfe | 254     | Starcoin Dev Network            |
 
 ## Properties
 

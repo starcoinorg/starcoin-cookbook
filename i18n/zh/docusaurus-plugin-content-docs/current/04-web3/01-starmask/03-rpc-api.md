@@ -1,16 +1,15 @@
 # RPC API
 
-StarMask uses the [`starcoin.request(args)` method](./02-starcoin-provider.md#starcoin-request-args) to wrap an RPC API.
+StarMask 使用 [`starcoin.request(args)` method](./02-starcoin-provider.md#starcoin-request-args) 来封装 RPC API。
 
-The API is based on an interface exposed by all Starcoin clients, along with a growing number of methods that may or may not be supported by other wallets.
+该 API 基于所有 Starcoin 客户端公开的界面，以及越来越多的其他钱包可能支持也可能不支持的方法。
 
 :::tip Tip
-All RPC method requests can return errors.
-Make sure to handle errors for every call to `starcoin.request(args)`.
+所有 RPC 方法请求都可能返回错误。确保每次调用 `starcoin.request(args)` 时都处理错误。
 :::
 
 :::info Try
-Starcoin Methods, please visit our [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/).
+Starcoin 方法，请访问我们的 [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/)。
 :::
 
 <!--
@@ -27,17 +26,15 @@ Important methods from this API include:
 - [`eth_sign`](https://eth.wiki/json-rpc/API#eth_sign)
 -->
 
-## Restricted Methods
+## 受限制的方法
 
-StarMask introduced Web3 Wallet Permissions via [EIP-2255](https://eips.ethereum.org/EIPS/eip-2255).
-In this permissions system, each RPC method is either _restricted_ or _unrestricted_.
-If a method is restricted, the caller must have the corresponding permission in order to call it.
-Unrestricted methods, meanwhile, have no corresponding permission. Some of them still rely upon permissions to succeed though (e.g. the signing methods require that you have the `stc_accounts` permission for the signer account), and some require confirmation by the user (e.g. `wallet_addStarcoinChain`).
+StarMask 通过 EIP-2255 引入了 Web3 钱包权限。在此权限系统中，每个 RPC 方法要么受到限制，要么不受限制。
+如果方法受到限制，调用者必须具有相应的权限才能调用它。与此同时，不受限制的方法没有相应的权限。
+不过，其中一些仍然依赖权限才能成功（例如，签名方法要求您拥有签名人帐户的 `stc_accounts` 权限），另一些则需要用户确认（例如 `wallet_addStarcoinChain`）。
 
-More permissions will be added in the future.
+将来将添加更多权限。
 
-Under the hood, permissions are plain, JSON-compatible objects, with a number of fields that are mostly used internally by StarMask.
-The following interface lists the fields that may be of interest to consumers:
+在引擎盖下，权限是普通的、与 JSON 兼容的对象，其中许多字段主要由 StarMask 内部使用。以下界面列出了消费者可能感兴趣的字段：
 
 ```typescript
 interface Web3WalletPermission {
@@ -49,34 +46,33 @@ interface Web3WalletPermission {
 }
 ```
 
-If you're interested in learning more about the theory behind this _capability_-inspired permissions system, we encourage you to take a look at [EIP-2255](https://eips.ethereum.org/EIPS/eip-2255).
+如果您有兴趣了解有关此*功能*启发的权限系统背后的理论的更多信息，我们建议您查看 [EIP-2255](https://eips.ethereum.org/EIPS/eip-2255)。
 
 ### `stc_requestAccounts`
 
 :::tip EIP-1102
-This method is specified by [EIP-1102](https://eips.ethereum.org/EIPS/eip-1102).
+此方法由 [EIP-1102](https://eips.ethereum.org/EIPS/eip-1102) 指定。
 
-Under the hood, it calls [`wallet_requestPermissions`](#wallet-requestpermissions) for the `stc_accounts` permission.
-Since `stc_accounts` is currently the only permission, this method is all you need for now.
+在引擎盖下，它调用 [`wallet_requestPermissions`](#wallet-requestpermissions) 以获得 `stc_accounts` 权限。
+由于 `stc_accounts` 目前是唯一的权限，因此您目前只需要此方法。
 :::
 
-#### Returns
+#### 返回值
 
-`string[]` - An array of a single, hexadecimal Starcoin address string.
+`string[]` - 一个由单个十六进制 Starcoin 地址字符串组成。
 
-#### Description
+#### 描述
 
-Requests that the user provides an Starcoin address to be identified by.
-Returns a Promise that resolves to an array of a single Starcoin address string.
-If the user denies the request, the Promise will reject with a `4001` error.
+请求用户提供要识别的 Starcoin 地址。返回一个 Promise，解析为单个 Starcoin 地址字符串的数组。
+如果用户拒绝请求，Promise 将以 `4001` 错误拒绝。
 
-The request causes a StarMask popup to appear.
-You should only request the user's accounts in response to user action, such as a button click.
-You should always disable the button that caused the request to be dispatched, while the request is still pending.
+请求导致出现 StarMask 弹出窗口。
+您只能根据用户操作请求用户的帐户，例如单击按钮。
+当请求仍在等待处理时，您应该始终禁用导致请求发送的按钮。
 
-If you can't retrieve the user's account(s), you should encourage the user to initiate an account request.
+如果您无法检索用户的帐户，您应该鼓励用户发起帐户请求。
 
-#### Example
+#### 例子
 
 ```javascript
 document.getElementById("connectButton", connect);
@@ -98,23 +94,22 @@ function connect() {
 
 ### `wallet_getPermissions`
 
-#### Returns
+#### 返回值
 
-`Web3WalletPermission[]` - An array of the caller's permissions.
+`Web3WalletPermission[]` - 调用者权限数组。
 
-#### Description
+#### 描述
 
-Gets the caller's current permissions.
-Returns a Promise that resolves to an array of `Web3WalletPermission` objects.
-If the caller has no permissions, the array will be empty.
+获取来电者的当前权限。
+返回解析为 `Web3WalletPermission` 对象数组的 Promise。如果调用者没有权限，数组将是空的。
 
 ### `wallet_requestPermissions`
 
-#### Parameters
+#### 参数
 
 - `Array`
 
-  0. `RequestedPermissions` - The requested permissions.
+`RequestedPermissions` - 请求的权限。
 
 ```typescript
 interface RequestedPermissions {
@@ -122,20 +117,19 @@ interface RequestedPermissions {
 }
 ```
 
-#### Returns
+#### 返回值
 
-`Web3WalletPermission[]` - An array of the caller's permissions.
+`Web3WalletPermission[]` - 调用者权限数组。
 
-#### Description
+#### 描述
 
-Requests the given permissions from the user.
-Returns a Promise that resolves to a non-empty array of `Web3WalletPermission` objects, corresponding to the caller's current permissions.
-If the user denies the request, the Promise will reject with a `4001` error.
+向用户请求给定的权限。
+返回一个 Promise，解析为 `Web3WalletPermission` 对象的非空数组，对应于调用者的当前权限。
+如果用户拒绝请求，Promise 将以 `4001` 错误拒绝。
 
-The request causes a StarMask popup to appear.
-You should only request permissions in response to user action, such as a button click.
+请求导致出现 StarMask 弹出窗口。您只能根据用户操作请求权限，例如单击按钮。
 
-#### Example
+#### 例子
 
 ```javascript
 document.getElementById("requestPermissionsButton", requestPermissions);
@@ -165,30 +159,30 @@ function requestPermissions() {
 }
 ```
 
-## Unrestricted Methods
+## 不受限制的方法
 
 ### `stc_decrypt`
 
-#### Parameters
+#### 参数
 
 - `Array`
 
-  0. `string` - An encrypted message.
-  1. `string` - The address of the Starcoin account that can decrypt the message.
+  0. `string` - 不受限制的方法。
+  1. `string` - 可以解密消息的 Starcoin 帐户的地址。
 
-#### Returns
+#### 返回值
 
-`string` - The decrypted message.
+`string` - 解密的消息。
 
-#### Description
+#### 描述
 
-Requests that StarMask decrypts the given encrypted message.
-The message must have been encrypted using the public encryption key of the given Starcoin address.
-Returns a Promise that resolves to the decrypted message, or rejects if the decryption attempt fails.
+请求 StarMask 解密给定的加密消息。
+消息必须使用给定 Starcoin 地址的公共加密密钥进行加密。
+返回解析解密消息的承诺，如果解密尝试失败，则拒绝。
 
-See [`stc_getEncryptionPublicKey`](#stc-getencryptionpublickey) for more information.
+有关更多信息，请参阅 [`stc_getEncryptionPublicKey`](#stc-getencryptionpublickey)。
 
-#### Example
+#### 例子
 
 ```javascript
 starcoin
@@ -204,24 +198,24 @@ starcoin
 
 ### `stc_getEncryptionPublicKey`
 
-#### Parameters
+#### 参数
 
 - `Array`
 
-  0. `string` - The address of the Starcoin account whose encryption key should be retrieved.
+  0. `string` - 应检索其加密密钥的 Starcoin 帐户的地址。
 
-#### Returns
+#### 返回值
 
-`string` - The public encryption key of the specified Starcoin account.
+`string` - 指定 Starcoin 帐户的公共加密密钥。
 
-#### Description
+#### 描述
 
-Requests that the user shares their public encryption key.
-Returns a Promise that resolve to the public encryption key, or rejects if the user denied the request.
+请求用户共享他们的公共加密密钥。
+返回解析为公共加密密钥的承诺，如果用户拒绝了请求，则返回拒绝。
 
-The public key is computed from entropy associated with the specified user account, using the [`nacl`](https://github.com/dchest/tweetnacl-js) implementation of the `X25519_XSalsa20_Poly1305` algorithm.
+公钥使用 `X25519_XSalsa20_Poly1305` 算法的 [`nacl`](https://github.com/dchest/tweetnacl-js) 实现，从与指定用户帐户关联的熵计算。
 
-#### Example
+#### 例子
 
 ```javascript
 let encryptionPublicKey;
@@ -244,9 +238,9 @@ starcoin
   });
 ```
 
-#### Encrypting
+#### 加密
 
-The point of the encryption key is of course to encrypt things.
+当然，加密密钥的意义在于加密东西。
 <!-- Here's an example of how to encrypt a message using [`eth-sig-util`](https://github.com/StarMask/eth-sig-util): -->
 
 ```javascript
@@ -270,16 +264,16 @@ const encryptedMessage = stcUtil.bufferToHex(
 ### `wallet_addStarcoinChain`
 
 :::tip EIP-3085
-This method is specified by [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085).
+此方法由 [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085) 指定。
 :::
 
-#### Parameters
+#### 参数
 
 - `Array`
 
-  0. `AddStarcoinChainParameter` - Metadata about the chain that will be added to StarMask.
+  0. `AddStarcoinChainParameter` - 关于将添加到 StarMask 的链条的元数据。
 
-For the `rpcUrls` and `blockExplorerUrls` arrays, at least one element is required, and only the first element will be used.
+对于 `rpcUrls` 和 `blockExplorerUrls` 数组，至少需要一个元素，并且只使用第一个元素。
 
 ```typescript
 interface AddStarcoinChainParameter {
@@ -296,32 +290,28 @@ interface AddStarcoinChainParameter {
 }
 ```
 
-#### Returns
+#### 返回值
 
-`null` - The method returns `null` if the request was successful, and an error otherwise.
+`null` - 如果请求成功，该方法返回 `null`，否则返回错误。
 
-#### Description
+#### 描述
 
-Creates a confirmation asking the user to add the specified chain to StarMask.
-The user may choose to switch to the chain once it has been added.
+创建一个确认，要求用户将指定的链添加到 StarMask。添加链后，用户可以选择切换到链。
 
-As with any method that causes a confirmation to appear, `wallet_addStarcoinChain`
-should **only** be called as a result of direct user action, such as the click of a button.
+与任何导致确认出现的方法一样，`wallet_addStarcoinChain` 只能通过直接用户操作来调用，例如单击按钮。
 
-StarMask stringently validates the parameters for this method, and will reject the request
-if any parameter is incorrectly formatted.
-In addition, StarMask will automatically reject the request under the following circumstances:
+StarMask 严格验证此方法的参数，如果任何参数格式错误，将拒绝请求。
+此外，在以下情况下，StarMask 将自动拒绝请求：
 
-- If the RPC endpoint doesn't respond to RPC calls.
-- If the RPC endpoint returns a different chain ID when `chain.id` is called.
-- If the chain ID corresponds to any default StarMask chains.
+- 如果 RPC 端点不响应 RPC 调用。
+- 如果 RPC 端点在调用 `chain.id` 时返回不同的链ID。
+- 如果链 ID 对应于任何默认的 StarMask 链。
 
-StarMask does not yet support chains with native currencies that do not have 18 decimals,
-but may do so in the future.
+StarMask 还不支持本地货币没有小数点后18的链，但将来可能会这样做。
 
-#### Usage with `wallet_switchStarcoinChain`
+#### `wallet_switchStarcoinChain` 的使用
 
-We recommend using this method with [`wallet_addStarcoinChain`](#wallet-addStarcoinchain):
+我们建议将此方法与 [`wallet_addStarcoinChain`](#wallet-addStarcoinchain) 搭配使用：
 
 ```javascript
 try {
@@ -354,10 +344,10 @@ try {
 ### `wallet_switchStarcoinChain`
 
 :::tip EIP-3326
-This method is specified by [EIP-3326](https://ethereum-magicians.org/t/eip-3326-wallet-switchethereumchain).
+此方法由 [EIP-3326](https://ethereum-magicians.org/t/eip-3326-wallet-switchethereumchain) 指定。
 :::
 
-#### Parameters
+#### 参数
 
 - `Array`
 
@@ -370,12 +360,14 @@ interface SwitchEthereumChainParameter {
 ```
 
 #### Returns
+#### 返回值
 
 `null` - The method returns `null` if the request was successful, and an error otherwise.
 
 If the error code (`error.code`) is `4902`, then the requested chain has not been added by StarMask, and you have to request to add it via [`wallet_addStarcoinChain`](#wallet-addstarcoinchain).
 
 #### Description
+#### 描述
 
 :::tip Tip
 See [above](#usage-with-wallet-switchstarcoinchain) for how to use this method with `wallet_addStarcoinChain`.
@@ -400,10 +392,12 @@ TODO: fix some bugs, until translate zh
 :::
 
 #### Returns
+#### 返回值
 
 `boolean` - `true` if the request was successful, `false` otherwise.
 
 #### Description
+#### 描述
 
 Registers the requesting site with StarMask as the initiator of onboarding.
 Returns a Promise that resolves to `true`, or rejects if there's an error.
@@ -421,16 +415,19 @@ This method is specified by [EIP-747](https://eips.ethereum.org/EIPS/eip-747).
 :::
 
 #### Parameters
+#### 参数
 
 - `WatchAssetParams` - The metadata of the asset to watch.
 
 <<< @/docs/snippets/WatchAssetParams.ts
 
 #### Returns
+#### 返回值
 
 `boolean` - `true` if the the token was added, `false` otherwise.
 
 #### Description
+#### 描述
 
 Requests that the user tracks the token in StarMask.
 Returns a `boolean` indicating if the token was successfully added.
@@ -440,6 +437,7 @@ Most Starcoin wallets support some set of tokens, usually from a centrally curat
 Once added, the token is indistinguishable from those added via legacy methods, such as a centralized registry.
 
 #### Example
+#### 例子
 
 ```javascript
 starcoin
@@ -470,16 +468,19 @@ starcoin
 ### `wallet_scanQRCode`
 
 #### Parameters
+#### 参数
 
 - `Array`
 
   0. `string` - (optional) A regular expression for matching arbitrary QR code strings
 
 #### Returns
+#### 返回值
 
 `string` - The string corresponding to the scanned QR code.
 
 #### Description
+#### 描述
 
 Requests that the user scans a QR code using their device camera.
 Returns a Promise that resolves to a string, matching either:
@@ -493,6 +494,7 @@ StarMask previously introduced this feature per the proposed [EIP-945](https://g
 The functionality was temporarily removed before being reintroduced as this RPC method.
 
 #### Example
+#### 例子
 
 ```javascript
 starcoin

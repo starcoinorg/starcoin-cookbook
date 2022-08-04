@@ -46,6 +46,7 @@ Starcoin JavaScript 提供程序 API 由 [EIP-1193](https://eips.ethereum.org/EI
 | 0xfb | 251     | Barnard Test Network            |
 | 0xfc | 252     | Proxima Test Network            |
 | 0xfd | 253     | Halley Test Network             |
+| 0xfe | 254     | Starcoin Dev Network            |
 
 ## 属性
 

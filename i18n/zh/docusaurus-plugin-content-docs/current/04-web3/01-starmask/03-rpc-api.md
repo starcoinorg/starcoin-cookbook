@@ -1,4 +1,4 @@
-# RPC API
+# StarMask javascript sdk
 
 StarMask 使用 [`starcoin.request(args)` method](./02-starcoin-provider.md#starcoin-request-args) 来封装 RPC API。
 
@@ -9,7 +9,8 @@ StarMask 使用 [`starcoin.request(args)` method](./02-starcoin-provider.md#star
 :::
 
 :::info Try
-Starcoin 方法，请访问我们的 [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/)。
+Starcoin 方法，请访问我们的 [Starcoin JSON RPC API Documents](https://starcoinorg.github.io/starcoin-cookbook/docs/reference/json-rpc/)
+或者 [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/)。
 :::
 
 <!--

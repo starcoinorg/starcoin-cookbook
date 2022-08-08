@@ -1,4 +1,4 @@
-# RPC API
+# StatMask javascript sdk
 
 StarMask uses the [`starcoin.request(args)` method](./02-starcoin-provider.md#starcoin-request-args) to wrap an RPC API.
 
@@ -10,7 +10,7 @@ Make sure to handle errors for every call to `starcoin.request(args)`.
 :::
 
 :::info Try
-Starcoin Methods, please visit our [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/).
+Starcoin Methods, please visit our [Starcoin JSON RPC API Documents](https://starcoinorg.github.io/starcoin-cookbook/docs/reference/json-rpc/) or [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/).
 :::
 
 <!--

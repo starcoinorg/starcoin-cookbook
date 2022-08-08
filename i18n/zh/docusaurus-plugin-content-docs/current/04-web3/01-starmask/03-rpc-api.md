@@ -351,7 +351,7 @@ try {
 
 - `Array`
 
-  0. `SwitchStarcoinChainParameter` - Metadata about the chain that StarMask will switch to.
+  0. `SwitchStarcoinChainParameter` - StarMask 将切换到的链的元数据。
 
 ```typescript
 interface SwitchEthereumChainParameter {
@@ -359,44 +359,38 @@ interface SwitchEthereumChainParameter {
 }
 ```
 
-#### Returns
 #### 返回值
 
-`null` - The method returns `null` if the request was successful, and an error otherwise.
+`null` - 如果请求成功，该方法返回 `null`，否则返回错误。
 
-If the error code (`error.code`) is `4902`, then the requested chain has not been added by StarMask, and you have to request to add it via [`wallet_addStarcoinChain`](#wallet-addstarcoinchain).
+如果错误码（`error.code`）为 `4902`，则说明请求的链没有被StarMask添加，需要通过 [`wallet_addStarcoinChain`](#wallet-addstarcoinchain) 请求添加。
 
-#### Description
 #### 描述
 
 :::tip Tip
-See [above](#usage-with-wallet-switchstarcoinchain) for how to use this method with `wallet_addStarcoinChain`.
+有关如何将此方法与 `wallet_addStarcoinChain` 一起使用的信息，请参见[上文](#usage-with-wallet-switchstarcoinchain)。
 :::
 
-Creates a confirmation asking the user to switch to the chain with the specified `chainId`.
+创建一个确认，要求用户切换到具有指定 `chainId` 的链。
 
-As with any method that causes a confirmation to appear, `wallet_switchStarcoinChain`
-should **only** be called as a result of direct user action, such as the click of a button.
+与任何导致确认出现的方法一样，`wallet_switchStarcoinChain` 只能作为直接用户操作的结果调用，例如单击按钮。
 
-StarMask will automatically reject the request under the following circumstances:
+StarMask 会在以下情况下自动拒绝该请求：
 
-- If the chain ID is malformed
-- If the chain with the specified chain ID has not been added to StarMask
+- 如果链 ID 格式错误
+- 如果指定链 ID 的链尚未添加到 StarMask
 
 ### `wallet_registerOnboarding`
 
 :::tip Tip
-As an API consumer, you are unlikely to have to call this method yourself.
-<!-- Please see the [Onboarding Library documentation](./01-onboarding-library.md) for more information. -->
-TODO: fix some bugs, until translate zh
+作为 API 使用者，您不太可能必须自己调用此方法。
+更多信息请参阅 [入门库](./01-onboarding-library.md) 的文档。
 :::
 
-#### Returns
 #### 返回值
 
-`boolean` - `true` if the request was successful, `false` otherwise.
+`boolean` - 如果请求成功则为 `true`，否则为 `false`。
 
-#### Description
 #### 描述
 
 Registers the requesting site with StarMask as the initiator of onboarding.
@@ -407,36 +401,38 @@ You can use this method to inform StarMask that you were the one that suggested 
 This lets StarMask redirect the user back to your site after onboarding has completed.
 
 Instead of calling this method directly, you should use the [`@starcoin/starmask-onboarding` library](https://github.com/starcoinorg/starmask-onboarding).
+向 StarMask 注册请求站点作为入职的发起者。返回一个解析为 `true` 的 Promise，如果有错误则拒绝。
+
+此方法旨在在安装 StarMask 之后，但在 StarMask 载入完成之前调用。
+您可以使用此方法通知 StarMask，您是建议安装 StarMask 的人。
+这允许 StarMask 在用户引导完成后将用户重定向回您的站点。
+
+您应该使用 [`@starcoin/starmask-onboarding` library](https://github.com/starcoinorg/starmask-onboarding) 库，而不是直接调用此方法。
 
 ### `wallet_watchAsset`
 
 :::tip EIP-747
-This method is specified by [EIP-747](https://eips.ethereum.org/EIPS/eip-747).
+此方法由 [EIP-747](https://eips.ethereum.org/EIPS/eip-747) 指定。
 :::
 
-#### Parameters
 #### 参数
 
-- `WatchAssetParams` - The metadata of the asset to watch.
+- `WatchAssetParams` - 要观看的资产的元数据。
 
 <<< @/docs/snippets/WatchAssetParams.ts
 
-#### Returns
 #### 返回值
 
-`boolean` - `true` if the the token was added, `false` otherwise.
+`boolean` - 如果添加了令牌，则为 `true`，否则为 `false`。
 
-#### Description
 #### 描述
 
-Requests that the user tracks the token in StarMask.
-Returns a `boolean` indicating if the token was successfully added.
+请求用户在 StarMask 中跟踪令牌。返回一个布尔值，指示令牌是否已成功添加。
 
-Most Starcoin wallets support some set of tokens, usually from a centrally curated registry of tokens.
-`wallet_watchAsset` enables web3 application developers to ask their users to track tokens in their wallets, at runtime.
-Once added, the token is indistinguishable from those added via legacy methods, such as a centralized registry.
+大多数 Starcoin 钱包支持一组代币，通常来自一个集中管理的代币注册表。
+`wallet_watchAsset` 使 web3 应用程序开发人员能够在运行时要求他们的用户跟踪他们钱包中的代币。
+添加后，令牌与通过传统方法（例如集中式注册表）添加的令牌无法区分。
 
-#### Example
 #### 例子
 
 ```javascript
@@ -463,37 +459,31 @@ starcoin
   .catch(console.error);
 ```
 
-## Mobile Specific RPC Methods
+## 移动特定的 RPC 方法
 
 ### `wallet_scanQRCode`
 
-#### Parameters
 #### 参数
 
 - `Array`
 
-  0. `string` - (optional) A regular expression for matching arbitrary QR code strings
+  0. `string` - （可选）匹配任意二维码字符串的正则表达式
 
-#### Returns
 #### 返回值
 
-`string` - The string corresponding to the scanned QR code.
+`string` - 扫描的二维码对应的字符串。
 
-#### Description
 #### 描述
 
-Requests that the user scans a QR code using their device camera.
-Returns a Promise that resolves to a string, matching either:
+请求用户使用他们的设备摄像头扫描二维码。返回解析为字符串的 Promise，匹配以下任一：
 
-1. The regex parameter, if provided
-2. An starcoin address, if no regex parameter was provided
+- 正则表达式参数（如果提供）
+- 星币地址，如果没有提供正则表达式参数
 
-If neither condition is met, the Promise will reject with an error.
+如果两个条件都不满足，Promise 将拒绝并返回错误。
 
-StarMask previously introduced this feature per the proposed [EIP-945](https://github.com/ethereum/EIPs/issues/945).
-The functionality was temporarily removed before being reintroduced as this RPC method.
+StarMask 之前根据提议的 [EIP-945](https://github.com/ethereum/EIPs/issues/945) 引入了此功能。该功能在作为此 RPC 方法重新引入之前被暂时删除。
 
-#### Example
 #### 例子
 
 ```javascript

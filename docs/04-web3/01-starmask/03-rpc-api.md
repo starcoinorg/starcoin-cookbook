@@ -1,7 +1,6 @@
-# RPC API
+# StatMask javascript sdk
 
-TODO: Need to fix a bug -> index
-<!-- StarMask uses the [`starcoin.request(args)` method](./02-starcoin-provider.md#starcoin-request-args) to wrap an RPC API. -->
+StarMask uses the [`starcoin.request(args)` method](./02-starcoin-provider.md#starcoin-request-args) to wrap an RPC API.
 
 The API is based on an interface exposed by all Starcoin clients, along with a growing number of methods that may or may not be supported by other wallets.
 
@@ -10,9 +9,8 @@ All RPC method requests can return errors.
 Make sure to handle errors for every call to `starcoin.request(args)`.
 :::
 
-:::tip Try
-Starcoin Methods
-Visit our [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/)
+:::info Try
+Starcoin Methods, please visit our [Starcoin JSON RPC API Documents](https://starcoinorg.github.io/starcoin-cookbook/docs/reference/json-rpc/) or [API Playground](https://starcoin.org/en/developers/dapp/rpc/rpc_document/).
 :::
 
 <!--
@@ -397,8 +395,7 @@ StarMask will automatically reject the request under the following circumstances
 
 :::tip Tip
 As an API consumer, you are unlikely to have to call this method yourself.
-<!-- Please see the [Onboarding Library documentation](./01-onboarding-library.md) for more information. -->
-TODO: fix some bugs, until translate zh
+Please see the [Onboarding Library](./01-onboarding-library.md) documentation for more information.
 :::
 
 #### Returns

@@ -92,6 +92,19 @@ starcoin% dev call --function 0x68a0e9bab71d6493456432a676a4a915::EthSigVerifier
 }
 ```
 
+
+## Call functions via RPC
+
+After publishing to the chain, we can call it through the API interface or SDK.
+
+Use the curl command to call the function remotely:
+
+```shell
+ubuntu@VM-12-14-ubuntu:~/i/m-pra/test$ curl 'http://localhost:9850/' -H 'content-type: application/json' --data-raw '{"jsonrpc":"2.0","method":"contract.call_v2","params":[{"function_id":"0x68a0e9bab71d6493456432a676a4a915::EthSigVerifier::verify_eth_sig","args":["x\"90a938f7457df6e8f741264c32697fc52f9a8f867c52dd70713d9d2d472f2e415d9c94148991bbe1f4a1818d1dff09165782749c877f5cf1eff4ef126e55714d1c\"","x\"29c76e6ad8f28bb1004902578fb108c507be341b\"","x\"b453bd4e271eed985cbab8231da609c4ce0a9cf1f763b6c1594e76315510e0f1\""],"type_args":[]}],"id":0}'
+
+{"jsonrpc":"2.0","result":[true],"id":0}
+```
+
 ## Summary
 
 The Starcoin console command used to call a normal function is `dev call --function`, and the Starcoin console command to call a script function is `account execute-function --function`.

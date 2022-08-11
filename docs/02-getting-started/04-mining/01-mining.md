@@ -19,7 +19,7 @@ FLAGS:
 
 OPTIONS:
     -p, --plugin-path <plugin-path>
-    -a, --server <server>               [default: 127.0.0.1:9870]
+    -a, --server <server>               [default: 127.0.0.1:9880]
     -n, --thread-num <thread-num>       [default: 1]
     -u, --user <user>
 ```

@@ -41,6 +41,6 @@ BlockHeader 是 Starcoin 区块链的核心概念，包含了重要的数据。
 - `body_hash` —— **当前区块的 BlockBody 的哈希**，32字节
 - `gas_used` —— **当前 Block 的所有交易消耗的总 Gas**，8字节
 - `chain_id` —— **网络标识**，1字节，区分不同网络
-- `nonce` —— 计算出来的 nonce，4字节
+- `nonce` —— 计算出来的 nonce，4字节，nonce 是一个用于计算难度的随机数。
 - `extra` —— 区块头的扩展数据，4字节
 

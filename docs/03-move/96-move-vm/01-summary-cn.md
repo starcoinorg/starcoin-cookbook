@@ -1,14 +1,13 @@
-#1. Move虚拟机简要介绍
+# 1. Move虚拟机简要介绍
 
 ## 0. 前言
-下面的内容分为两部分，第一部分介绍了Move虚拟机的结构: 作为一个栈式虚拟机，它的操作数栈、调用栈。另外还介绍了Move虚拟机中，虚拟机提供了数据结构来支持函数调用和返回。
+下面的内容分为两部分，第一部分介绍了 Move 虚拟机的结构: 作为一个栈式虚拟机，它的操作数栈、调用栈。另外还介绍了 Move 虚拟机中，虚拟机提供了数据结构来支持函数调用和返回。
 
-第二部分介绍了Move虚拟机中比较关键的字节码指令的作用。
+第二部分介绍了 Move 虚拟机中比较关键的字节码指令的作用。
 
-要彻底理解Move虚拟机字节码的指令工作原理，还需要理解Move语言编译器的关键编译过程。
+要彻底理解 Move 虚拟机字节码的指令工作原理，还需要理解 Move 语言编译器的关键编译过程。
 
-例如：编译器何时生成MoveLoc指令，何时生成CopyLoc指令，解引用是用哪条指令实现的，给结构体的字段赋值是哪条指令实现的，借用检查发生在编译的哪个阶段，move_to和move_from如何实现，为什么Move没有全局变量。这些问题，需要从编译阶段入手，了解编译的大致过程，结合虚拟机的功能，做整体分析。
-<br />
+例如：编译器何时生成 MoveLoc 指令，何时生成 CopyLoc 指令，解引用是用哪条指令实现的，给结构体的字段赋值是哪条指令实现的，借用检查发生在编译的哪个阶段，move_to 和 move_from 如何实现，为什么 Move 没有全局变量。这些问题，需要从编译阶段入手，了解编译的大致过程，结合虚拟机的功能，做整体分析。
 
 ## 1. 虚拟机结构
 
@@ -23,11 +22,11 @@ pub(crate) struct Interpreter {
 }
 ```
 
-`Interpreter` 结构体中，有一个操作数栈，它的作用是所有的`算术、关系、比较、copy、move、pack、unpack` 等等除了调用native函数和普通函数之外的所有操作符，都使用`operand_stack` 作为操作数栈。
+`Interpreter` 结构体中，有一个操作数栈，它的作用是所有的`算术、关系、比较、copy、move、pack、unpack` 等等除了调用native函数和普通函数之外的所有操作符，都使用 `operand_stack` 作为操作数栈。
 
 `call_stack` 专门用作调用普通函数或native函数的调用栈。
 
-所以我们知道 Move  的虚拟机，是一个栈式的虚拟机，有三点可以证明：
+所以我们知道 Move 的虚拟机，是一个栈式的虚拟机，有三点可以证明：
 
 - 它没有内存相关的例如 `mem_set、mem_get` 类的指令，这类指令都接受内存地址作为操作数，自然它也没有内存的概念（例如wasm虚拟机就有内存的概念，它的内存是用一个连续的平坦的字节数组来模拟）；
 - 它有操作数栈，操作符使用的是 `operand_stack`，而不是使用寄存器来做运算；
@@ -86,7 +85,6 @@ impl CallStack {
 ```
 上面的函数 `push、pop` 是用来在函数调用进入和退出的时候，保存和取消函数栈帧 `Frame` 的函数。
 
-<br />
 
 ## 2. 字节码指令
 
@@ -99,7 +97,7 @@ impl CallStack {
     Pop,
 
     /// 从函数返回，根据函数签名中的返回类型可能带有返回值。
-    /// 返回值被push到栈上。
+    /// 返回值被 push 到栈上。
     /// 已执行的函数的函数签名定义了 Ret 操作码的语义。
     Ret,
 
@@ -155,26 +153,26 @@ impl CallStack {
     StLoc(LocalIndex),
 
     /// 调用一个函数。
-    /// 栈上已经存在调用参数，参数是从第一个到最后一个push到栈中的。
-    /// 接着参数从栈中被消耗，并且push到函数的locals即局部变量数组中。
+    /// 栈上已经存在调用参数，参数是从第一个到最后一个 push 到栈中的。
+    /// 接着参数从栈中被消耗，并且push到函数的 locals 即局部变量数组中。
     /// 函数的返回值放在栈上，并且对调用者可用。
     Call(FunctionHandleIndex),
     CallGeneric(FunctionInstantiationIndex),
 
     /// 创建一个由 `StructHandleIndex` 指定的类型的实例，并且将这个实例 push 到栈上。
     /// 结构体所有字段的值，必须以它们在结构体中出现的顺序，依次的 push 栈上。
-    /// Pack指令必须完整的初始化结构体的实例，意味着如有字段是结构体，则嵌套初始化。
+    /// Pack 指令必须完整的初始化结构体的实例，意味着如有字段是结构体，则嵌套初始化。
     /// 结构体实例，在栈上的类型是 Struct 类型，Struct 类型相当与把 栈上的多个元素打包了。
     Pack(StructDefinitionIndex),
     PackGeneric(StructDefInstantiationIndex),
 
-    /// 将栈上打包的Struct类型中的items字段，解包后取出所有字段，并放在栈上
+    /// 将栈上打包的 Struct 类型中的 items 字段，解包后取出所有字段，并放在栈上
     Unpack(StructDefinitionIndex),
     UnpackGeneric(StructDefInstantiationIndex),
 
     /// 读取一个引用。引用在栈上，它会被消耗并且读取后的值也会放在栈上。
     /// 读取一个引用会读取一个被引用对象的拷贝。
-    /// 如此，ReadRef 要求被读取的值有Copy的特性。
+    /// 如此，ReadRef 要求被读取的值有 `Copy` 的特性。
     ReadRef,
 
     /// 将栈上已经存在的Value写入到引用的Value中。
@@ -210,13 +208,13 @@ impl CallStack {
 
     /// 返回对在作为参数传递的 地址 处发布的类型为 "StructDefinitionIndex" 的实例的可变引用。
     /// 如果这样的对象不存在或引用已被分发，则中止执行。
-    /// address地址Value必须已经在栈上存在
+    /// address 地址 Value 必须已经在栈上存在
     MutBorrowGlobal(StructDefinitionIndex),
     MutBorrowGlobalGeneric(StructDefInstantiationIndex),
 
     /// 返回对在作为参数传递的 地址 处发布的类型为 "StructDefinitionIndex" 的实例的不可变引用。
     /// 如果这样的对象不存在或引用已被分发，则中止执行。
-    /// address地址Value必须已经在栈上存在
+    /// address 地址 Value 必须已经在栈上存在
     ImmBorrowGlobal(StructDefinitionIndex),
     ImmBorrowGlobalGeneric(StructDefInstantiationIndex),
 
@@ -249,7 +247,7 @@ impl CallStack {
     MoveFrom(StructDefinitionIndex),
     MoveFromGeneric(StructDefInstantiationIndex),
 
-    /// 将栈顶的Value实例移动到紧挨着栈顶元素的 `Signer` 的地址上
+    /// 将栈顶的 Value 实例移动到紧挨着栈顶元素的 `Signer` 的地址上
     /// 如果 StructDefinitionIndex 类型的对象，已经在地址上存在，就停止执行
     MoveTo(StructDefinitionIndex),
     MoveToGeneric(StructDefInstantiationIndex),

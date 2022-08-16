@@ -157,7 +157,7 @@ let starcoinProvider = new providers.Web3Provider(
 
 ## 第三步 - 合约通信
 
-在 JS 端掉用合约
+在 JS 端调用合约
 
 ### NFT
 
@@ -229,7 +229,7 @@ const nft = {
 
 稍后，你就可以在 starcoin 钱包里看到自己的 NFT 了。
 
-如果你用 HTTP 获取过后端接口，那么这段代码就会感觉很熟悉。是的，掉用合约就像掉用接口一样。从某种程度上说它们是一样的，不过是后端是去中心化的了。
+如果你用 HTTP 获取过后端接口，那么这段代码就会感觉很熟悉。是的，调用合约就像调用接口一样。从某种程度上说它们是一样的，不过是后端是去中心化的了。
 
 ## 第四步 - 合约
 
@@ -419,7 +419,7 @@ The deployment is successful.
 ...
 ```
 
-删除在 Move 里是这样的。在 JS 中是和之前一样掉用的。
+删除在 Move 里是这样的。在 JS 中是和之前一样调用的。
 
 ```js
 // Counter.tsx
@@ -460,8 +460,8 @@ SicBoGame 具体问题来自 https://github.com/starcoinorg/dapps/issues/9 。�
   }
 ```
 
-`Token::Token<T>` 是不能被 `drop` 的，所以不能 Game 持有。像这样
-
+`Token::Token<T>` 是不能被 `drop` 的，所以不能像这样
+被 Game 持有
 ```rust
   struct Game has key, store, drop {
     aliceSecret: vector<u8>,
@@ -512,7 +512,7 @@ starcoin% starcoin% account execute-function --function 0xb80660f71e0d5ac2b5d5c4
 
 **`--arg 0u128` 中 *`u128`* 很重要，因为我起初是使用的 `--arg 0` 得到参数错误。因为合约指定了 amount 是 u128，所以这里也需要 u128 后缀指明类型。**
 
-如果命令返回 `account 0xb80660f71e0d5ac2b5d5c43f2246403f is locked` 说明账户是锁住的，需要解锁账户 `starcoin% account unlock`。然后再掉用命令。得到 `txn 0x14bc2406c4967194fcb2b47a03a6404117bac24ebee6cf25d3c05b2fe7e65fd5 submitted.` 类似信息，就说明我们的部署已经被区块链采纳了。再等一会就会得到一大串执行后的返回。这时 bank 已经初始化好了，我们需要初始化 Game 了。
+如果命令返回 `account 0xb80660f71e0d5ac2b5d5c43f2246403f is locked` 说明账户是锁住的，需要解锁账户 `starcoin% account unlock`。然后再调用命令。得到 `txn 0x14bc2406c4967194fcb2b47a03a6404117bac24ebee6cf25d3c05b2fe7e65fd5 submitted.` 类似信息，就说明我们的部署已经被区块链采纳了。再等一会就会得到一大串执行后的返回。这时 bank 已经初始化好了，我们需要初始化 Game 了。
 
 ```rust
 // SicBo.move
@@ -539,6 +539,7 @@ starcoin% starcoin% account execute-function --function 0xb80660f71e0d5ac2b5d5c4
         });
     }
 ```
+
 初始化 Game 的参数是 alice 的加密信息和 alice 的下注额度。这里很多信息是我 debug 用的，**debug move 的更好方法是单元测试**。默认 alice 和 bob 的猜的数字是 0 。那么 0 就不应该被用作下注数字，可以是 1 ～ 10。
 
 alice 初始化 game 后，由 bob 拿着 alice 的地址去参加 alice 的 game。

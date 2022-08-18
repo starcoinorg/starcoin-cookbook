@@ -64,7 +64,7 @@ starcoin -n my_chain:123 console
 
 ## 组建自定义网络集群
 
-在启动了一个节点后，你可以在日志或标准输出中找到节点的地址，它可能如下所示：
+在启动了一个节点后，你可以在日志或标准输出中找到节点的地址，记录本机的IP地址，接下来组网要用到，它可能如下所示：
 
 ```shell
 2022-05-25T11:27:10.201604911+00:00 INFO - Self address is: /ip4/127.0.0.1/tcp/9840/p2p/12D3KooWR1p3uxnWZ2rv5mZ3Sw2i8z3gabxNEHjgkPDC2pkk19Vp
@@ -74,6 +74,22 @@ starcoin -n my_chain:123 console
 
 注意：多个节点必须使用同一套创世配置文件来生成创世区块，才能组成一个网络。
 
+在其他机器上，您可以启动一个新节点并使用 --seed 参数添加到您的私有网络
 ```shell
-starcoin -n my_chain:123 --seed /ip4/127.0.0.1/tcp/9840/p2p/12D3KooWR1p3uxnWZ2rv5mZ3Sw2i8z3gabxNEHjgkPDC2pkk19Vp console
+starcoin -n my_chain:123 --seed /ip4/创世seed节点的IP地址/tcp/9840/p2p/12D3KooWR1p3uxnWZ2rv5mZ3Sw2i8z3gabxNEHjgkPDC2pkk19Vp console
+```
+
+### 如果只是想测试一下，在一台机器上起多个节点来组网
+
+第一步，启动一个节点作为创世种子节点，如果跟着上面的步骤来，那它已经启动了，这时候检查您的本地 IP 地址，第三步会用到
+
+第二步, 把创世seed节点的genesis_config配置文件 cp 到新的目录下
+```shell
+cp ~/.starcoin/my_chain/genesis_config.json ~/.starcoin1/my_chain/
+```
+
+第三步，用docker来启动其他节点，命令如下
+```shell
+docker run --name starcoin-p1 -d -v ~/.starcoin1/:/root/.starcoin/ starcoin/starcoin:latest /starcoin/starcoin -n my_chain:123 --seed /ip4/创世seed节点的IP地址/tcp/9840/p2p/12D3KooWR1p3uxnWZ2rv5mZ3Sw2i8z3gabxNEHjgkPDC2pkk19Vp
+
 ```

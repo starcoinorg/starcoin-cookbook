@@ -63,7 +63,7 @@ starcoin -n my_chain:123 console
 
 ## Form a custom network cluster
 
-After starting a node, you can find the node's address in the log or standard output, which might look like this:
+After starting a node, you can find the address of the node in the log or standard output, record the IP address of the machine, and then use it for networking. It may look like this:
 
 ```shell
 2022-05-25T11:27:10.201604911+00:00 INFO - Self address is: /ip4/127.0.0.1/tcp/9840/p2p/12D3KooWR1p3uxnWZ2rv5mZ3Sw2i8z3gabxNEHjgkPDC2pkk19Vp
@@ -73,7 +73,7 @@ Specify the first node as the seed node by `--seed`, and then start other nodes 
 
 Note: Multiple nodes must use the same genesis configuration file to generate genesis blocks in order to form a network.
 
-On the other machine, you can start a new node and add to your private network with --seed parameter
+On other machines, you can add to your private network by starting a new node and specifying the IP address of the genesis node using the `--seed` option:
 
 ```shell
 starcoin -n my_chain:123 --seed /ip4/ip of genesis seed/tcp/9840/p2p/12D3KooWR1p3uxnWZ2rv5mZ3Sw2i8z3gabxNEHjgkPDC2pkk19Vp console
@@ -83,13 +83,14 @@ starcoin -n my_chain:123 --seed /ip4/ip of genesis seed/tcp/9840/p2p/12D3KooWR1p
 
 First, start one node as the genesis seed, which is already started if you follow the steps, and check your local ip address.
 
-Second, copy the genesis configuration file to a new directory.
+Second, copy the *genesis_config.json* configuration file of the genesis seed node to a new directory:
+
 ```shell
 cp ~/.starcoin/my_chain/genesis_config.json ~/.starcoin1/my_chain/
 ```
 
-Third, start other node using docker with following command.
+Third, start other node using docker with following command:
+
 ```shell
 docker run --name starcoin-p1 -d -v ~/.starcoin1/:/root/.starcoin/ starcoin/starcoin:latest /starcoin/starcoin -n my_chain:123 --seed /ip4/ip of genesis seed/tcp/9840/p2p/12D3KooWR1p3uxnWZ2rv5mZ3Sw2i8z3gabxNEHjgkPDC2pkk19Vp
-
 ```

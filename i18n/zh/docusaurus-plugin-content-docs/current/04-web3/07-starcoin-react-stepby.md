@@ -653,8 +653,8 @@ starcoin-framework-commons = { git = "https://github.com/starcoinorg/starcoin-fr
 source 下新建一个 move 文件，随便什么名字。拷贝 https://diem.github.io/move/unit-testing.html 示例代码。
 
 ```move
-address admin {
-module UTest {
+#[test_only]
+module admin::UTest {
     struct MyCoin has key { value: u64 }
 
     public fun make_sure_non_zero_coin(coin: MyCoin): MyCoin {
@@ -671,7 +671,6 @@ module UTest {
         let coin = MyCoin { value: 1 };
         let MyCoin { value: _ } = make_sure_non_zero_coin(coin);
     }
-  }
 }
 ```
 
@@ -688,11 +687,21 @@ Running Move unit tests
 Test result: OK. Total tests: 1; passed: 1; failed: 0
 ```
 
-这就证明测试用例成功运行。我们想验证的是 sha3-256 的结果，所以修改 move 代码为
+这就证明测试用例成功运行。在这个模块中，我们添加了 `#[test_only]` 宏，这样这个 module 就不会被编译到 release 中。如果在这个示例项目中执行 `mpm release`，就会得到：
+
+```bash
+❯ mpm release
+Packaging Modules:
+Error: must at latest one module
+```
+
+这就说明了 `test_only` module 没有被编译到 release 中。
+
+我们想验证的是 sha3-256 的结果，所以修改 move 代码为
 
 ```move
-address admin {
-module UTest {
+#[test_only]
+module admin::UTest {
 
     use StarcoinFramework::Debug;
     use StarcoinFramework::Vector;
@@ -723,7 +732,6 @@ module UTest {
         Debug::print(&camp);
     }
 
-}
 }
 ```
 

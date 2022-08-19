@@ -661,8 +661,8 @@ starcoin-framework-commons = { git = "https://github.com/starcoinorg/starcoin-fr
 Create a new move file under source with any name. Copy the sample code from https://diem.github.io/move/unit-testing.html.
 
 ````move
-address admin {
-module UTest {
+#[test_only]
+module admin::UTest {
     struct MyCoin has key { value: u64 }
 
     public fun make_sure_non_zero_coin(coin: MyCoin): MyCoin {
@@ -679,7 +679,6 @@ module UTest {
         let coin = MyCoin { value: 1 };
         let MyCoin { value: _ } = make_sure_non_zero_coin(coin);
     }
-  }
 }
 ````
 
@@ -696,11 +695,20 @@ Running Move unit tests
 Test result: OK. Total tests: 1; passed: 1; failed: 0
 ````
 
-This proves that the test case ran successfully. What we want to verify is the result of sha3-256, so modify the move code to
+This proves that the test case ran successfully. In this module, we add the `#[test_only]` macro so that this module will not be compiled into release. If you execute `mpm release` in this example project, you get:
+
+```bash
+❯ mpm release
+Packaging Modules:
+Error: must at latest one module
+```
+
+
+What we want to verify is the result of sha3-256, so modify the move code to
 
 ````move
-address admin {
-module UTest {
+#[test_only]
+module admin::UTest {
 
     use StarcoinFramework::Debug;
     use StarcoinFramework::Vector;
@@ -730,8 +738,6 @@ module UTest {
         let camp = Hash::sha3_256(tempCamp);
         Debug::print(&camp);
     }
-
-}
 }
 ````
 

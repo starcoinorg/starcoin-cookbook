@@ -743,6 +743,7 @@ module admin::UTest {
 
 A new test function `test_hash_result` has been added, which does one thing: sha3-256("hello world"). First Debug and print it to see the result
 
+```bash
 ❯ mpm package test
 CACHED UnitTest
 CACHED StarcoinFramework
@@ -755,6 +756,7 @@ Running Move unit tests
 Test result: OK. Total tests: 2; passed: 2; failed: 0
 
 This is the result of my execution of JS, which can be seen to be the same with the naked eye.
+```
 
 ```bash
 ❯ node sha3test.js

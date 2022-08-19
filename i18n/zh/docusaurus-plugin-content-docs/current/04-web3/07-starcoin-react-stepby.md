@@ -737,6 +737,7 @@ module admin::UTest {
 
 新加了一个 test 函数 `test_hash_result`，这个函数就做一件事：sha3-256("hello world")。先 Debug 打印下看看结果
 
+```bash
 ❯ mpm package test 
 CACHED UnitTest
 CACHED StarcoinFramework
@@ -747,6 +748,7 @@ Running Move unit tests
 [debug] (&) [100, 75, 204, 126, 86, 67, 115, 4, 9, 153, 170, 200, 158, 118, 34, 243, 202, 113, 251, 161, 217, 114, 253, 148, 163, 28, 59, 251, 242, 78, 57, 56]
 [ PASS    ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::test_hash_result
 Test result: OK. Total tests: 2; passed: 2; failed: 0
+```
 
 这是我执行 JS 的结果，可以肉眼看出是一样的。
 

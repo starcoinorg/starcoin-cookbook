@@ -1,6 +1,6 @@
 # How to set up a local dev network
 
-*Dev* network is a network provided by Statcoin for local development, which allows Starcoin developers to verify smart contracts quickly and conveniently.
+*Dev* network is a network provided by Starcoin for local development, which allows Starcoin developers to verify smart contracts quickly and conveniently.
 
 ## Run the local dev network
 

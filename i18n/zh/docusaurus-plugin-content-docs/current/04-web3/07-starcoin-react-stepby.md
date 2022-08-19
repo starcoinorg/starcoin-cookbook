@@ -625,11 +625,216 @@ alice 初始化 game 后，由 bob 拿着 alice 的地址去参加 alice 的 gam
 
 JS 如何写。见[仓库](https://github.com/Tonyce/starcoin-react-stepby)的 `SicBoGame.tsx`
 
+## 第六步 - 测试用例
+
+上面的游戏在 Debug 的过程中，用了一个比较“笨”的方法来 debug Move 合约的 sha3-256 结果。就是把 sha3-256 的结果存了下来，然后取来对比。其实这个验证用 unit-test (测试用例) 来做会更高效。接下来一个 demo 来展示如何使用测试用例来验证 Move sha3-256 结果。
+
+为单纯的介绍测试用例，新建一个项目
+
+```bash
+$ mpm package new move_ut
+```
+
+修改  Move.toml ，加入 starcoin 的库。
+
+```toml
+...
+[addresses]
+StarcoinFramework = "0x1"
+admin = "0xb80660f71e0d5ac2b5d5c43f2246403f"
+SFC = "0x6ee3f577c8da207830c31e1f0abb4244"
+
+[dependencies]
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}
+starcoin-framework-commons = { git = "https://github.com/starcoinorg/starcoin-framework-commons.git", rev = "e7f538175a5f50a97207692569b6631a87ee08cc" }
+...
+```
+
+source 下新建一个 move 文件，随便什么名字。拷贝 https://diem.github.io/move/unit-testing.html 示例代码。
+
+```move
+#[test_only]
+module admin::UTest {
+    struct MyCoin has key { value: u64 }
+
+    public fun make_sure_non_zero_coin(coin: MyCoin): MyCoin {
+        assert!(coin.value > 0, 0);
+        coin
+    }
+
+    public fun has_coin(addr: address): bool {
+        exists<MyCoin>(addr)
+    }
+
+    #[test]
+    fun make_sure_non_zero_coin_passes() {
+        let coin = MyCoin { value: 1 };
+        let MyCoin { value: _ } = make_sure_non_zero_coin(coin);
+    }
+}
+```
+
+然后执行 `mpm package test` 后会看到 test 的输出
+
+```bash
+❯ mpm package test   
+BUILDING UnitTest
+BUILDING StarcoinFramework
+BUILDING starcoin-framework-commons
+BUILDING move_ut
+Running Move unit tests
+[ PASS    ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::make_sure_non_zero_coin_passes
+Test result: OK. Total tests: 1; passed: 1; failed: 0
+```
+
+这就证明测试用例成功运行。在这个模块中，我们添加了 `#[test_only]` 宏，这样这个 module 就不会被编译到 release 中。如果在这个示例项目中执行 `mpm release`，就会得到：
+
+```bash
+❯ mpm release
+Packaging Modules:
+Error: must at latest one module
+```
+
+这就说明了 `test_only` module 没有被编译到 release 中。
+
+我们想验证的是 sha3-256 的结果，所以修改 move 代码为
+
+```move
+#[test_only]
+module admin::UTest {
+
+    use StarcoinFramework::Debug;
+    use StarcoinFramework::Vector;
+    use StarcoinFramework::Hash;
+
+    struct MyCoin has key { value: u64 }
+
+    public fun make_sure_non_zero_coin(coin: MyCoin): MyCoin {
+        assert!(coin.value > 0, 0);
+        coin
+    }
+
+    public fun has_coin(addr: address): bool {
+        exists<MyCoin>(addr)
+    }
+
+    #[test]
+    fun make_sure_non_zero_coin_passes() {
+        let coin = MyCoin { value: 1 };
+        let MyCoin { value: _ } = make_sure_non_zero_coin(coin);
+    }
+
+    #[test]
+    fun test_hash_result() {
+        let tempCamp = Vector::empty();
+        Vector::append(&mut tempCamp, b"hello world");
+        let camp = Hash::sha3_256(tempCamp);
+        Debug::print(&camp);
+    }
+
+}
+```
+
+新加了一个 test 函数 `test_hash_result`，这个函数就做一件事：sha3-256("hello world")。先 Debug 打印下看看结果
+
+```bash
+❯ mpm package test 
+CACHED UnitTest
+CACHED StarcoinFramework
+CACHED starcoin-framework-commons
+BUILDING move_ut
+Running Move unit tests
+[ PASS    ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::make_sure_non_zero_coin_passes
+[debug] (&) [100, 75, 204, 126, 86, 67, 115, 4, 9, 153, 170, 200, 158, 118, 34, 243, 202, 113, 251, 161, 217, 114, 253, 148, 163, 28, 59, 251, 242, 78, 57, 56]
+[ PASS    ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::test_hash_result
+Test result: OK. Total tests: 2; passed: 2; failed: 0
+```
+
+这是我执行 JS 的结果，可以肉眼看出是一样的。
+
+```bash
+❯ node sha3test.js 
+{
+  type: 'Buffer',
+  data: [
+    100,  75, 204, 126,  86,  67, 115,   4,
+      9, 153, 170, 200, 158, 118,  34, 243,
+    202, 113, 251, 161, 217, 114, 253, 148,
+    163,  28,  59, 251, 242,  78,  57,  56
+  ]
+}
+```
+
+但这样是不够的，需要 assert 结果是和 JS 的结果一样的。修改 `test_hash_result` 为
+
+```move
+...
+    #[test]
+    fun test_hash_result() {
+        let expect_vec = vector[
+            100,  75, 204, 126,  86,  67, 115,   4,
+            9, 153, 170, 200, 158, 118,  34, 243,
+            202, 113, 251, 161, 217, 114, 253, 148,
+            163,  28,  59, 251, 242,  78,  57,  56
+        ];
+        let temp_camp = Vector::empty();
+        Vector::append(&mut temp_camp, b"hello world");
+        let camp = Hash::sha3_256(temp_camp);
+        Debug::print(&camp);
+        assert!(&camp == &expect_vec, 1);
+    }
+```
+
+然后再执行
+
+```bash
+❯ mpm package test  
+CACHED UnitTest
+CACHED StarcoinFramework
+CACHED starcoin-framework-commons
+BUILDING move_ut
+Running Move unit tests
+[ PASS    ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::make_sure_non_zero_coin_passes
+[debug] (&) [100, 75, 204, 126, 86, 67, 115, 4, 9, 153, 170, 200, 158, 118, 34, 243, 202, 113, 251, 161, 217, 114, 253, 148, 163, 28, 59, 251, 242, 78, 57, 56]
+[ PASS    ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::test_hash_result
+Test result: OK. Total tests: 2; passed: 2; failed: 0
+```
+
+可以看到，是没有问题的。如果怀疑 assert，可以修改 `expect_vec` 中的一个数据，再 `mpm package test`  一下。然后就会发现：
+
+```bash
+..
+[debug] (&) [100, 75, 204, 126, 86, 67, 115, 4, 9, 153, 170, 200, 158, 118, 34, 243, 202, 113, 251, 161, 217, 114, 253, 148, 163, 28, 59, 251, 242, 78, 57, 56]
+[ FAIL    ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::test_hash_result
+
+Test failures:
+
+Failures in 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest:
+
+┌── test_hash_result ──────
+│ error[E11001]: test failure
+│    ┌─ ./sources/ut.move:41:9
+│    │
+│ 30 │     fun test_hash_result() {
+│    │         ---------------- In this function in 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest
+│    ·
+│ 41 │         assert!(&camp == &expect_vec, 1);
+│    │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Test was not expected to abort but it aborted with 1 here
+│ 
+│ 
+└──────────────────
+
+Test result: FAILED. Total tests: 2; passed: 1; failed: 1
+```
+
+测试用例没有通过。完美。
+
+测试用例不但可以保证程序质量，还能大大的提高效率。
+
 ## 再精进计划
 
 1. cookbook 作为手册，遇到问题去看看。
-2. move 测试用例。
-3. move 合约常用方法。
-4. 其它区块链和 Move 资料
+2. move 合约常用方法。
+3. 。。。
 
 

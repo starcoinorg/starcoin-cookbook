@@ -633,9 +633,213 @@ This completes the main logic of the game. It records the Game start time. Some 
 
 How to write JS. See `SicBoGame.tsx` in [repo](https://github.com/Tonyce/starcoin-react-stepby)
 
+## Step 6 - Test Case
+
+During the debugging process of the above game, a relatively "stupid" method was used to debug the sha3-256 result of the Move contract. It is to save the results of sha3-256 and compare them. In fact, it is more efficient to use unit-test (test cases) for this verification. Next a demo to show how to use test cases to verify Move sha3-256 results.
+
+To simply introduce test cases, create a new project
+
+```bash
+$ mpm package new move_ut
+````
+
+Modify Move.toml and add starcoin's library.
+
+````toml
+...
+[addresses]
+StarcoinFramework = "0x1"
+admin = "0xb80660f71e0d5ac2b5d5c43f2246403f"
+SFC = "0x6ee3f577c8da207830c31e1f0abb4244"
+
+[dependencies]
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}
+starcoin-framework-commons = { git = "https://github.com/starcoinorg/starcoin-framework-commons.git", rev = "e7f538175a5f50a97207692569b6631a87ee08cc" }
+...
+````
+
+Create a new move file under source with any name. Copy the sample code from https://diem.github.io/move/unit-testing.html.
+
+````move
+#[test_only]
+module admin::UTest {
+    struct MyCoin has key { value: u64 }
+
+    public fun make_sure_non_zero_coin(coin: MyCoin): MyCoin {
+        assert!(coin.value > 0, 0);
+        coins
+    }
+
+    public fun has_coin(addr: address): bool {
+        exists<MyCoin>(addr)
+    }
+
+    #[test]
+    fun make_sure_non_zero_coin_passes() {
+        let coin = MyCoin { value: 1 };
+        let MyCoin { value: _ } = make_sure_non_zero_coin(coin);
+    }
+}
+````
+
+Then you will see the output of test after executing `mpm package test`
+
+```bash
+❯ mpm package test
+BUILDING UnitTest
+BUILDING StarcoinFramework
+BUILDING starcoin-framework-commons
+BUILDING move_ut
+Running Move unit tests
+[ PASS ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::make_sure_non_zero_coin_passes
+Test result: OK. Total tests: 1; passed: 1; failed: 0
+````
+
+This proves that the test case ran successfully. In this module, we add the `#[test_only]` macro so that this module will not be compiled into release. If you execute `mpm release` in this example project, you get:
+
+```bash
+❯ mpm release
+Packaging Modules:
+Error: must at latest one module
+```
+
+
+What we want to verify is the result of sha3-256, so modify the move code to
+
+````move
+#[test_only]
+module admin::UTest {
+
+    use StarcoinFramework::Debug;
+    use StarcoinFramework::Vector;
+    use StarcoinFramework::Hash;
+
+    struct MyCoin has key { value: u64 }
+
+    public fun make_sure_non_zero_coin(coin: MyCoin): MyCoin {
+        assert!(coin.value > 0, 0);
+        coins
+    }
+
+    public fun has_coin(addr: address): bool {
+        exists<MyCoin>(addr)
+    }
+
+    #[test]
+    fun make_sure_non_zero_coin_passes() {
+        let coin = MyCoin { value: 1 };
+        let MyCoin { value: _ } = make_sure_non_zero_coin(coin);
+    }
+
+    #[test]
+    fun test_hash_result() {
+        let tempCamp = Vector::empty();
+        Vector::append(&mut tempCamp, b"hello world");
+        let camp = Hash::sha3_256(tempCamp);
+        Debug::print(&camp);
+    }
+}
+````
+
+A new test function `test_hash_result` has been added, which does one thing: sha3-256("hello world"). First Debug and print it to see the result
+
+```bash
+❯ mpm package test
+CACHED UnitTest
+CACHED StarcoinFramework
+CACHED starcoin-framework-commons
+BUILDING move_ut
+Running Move unit tests
+[ PASS ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::make_sure_non_zero_coin_passes
+[debug] (&) [100, 75, 204, 126, 86, 67, 115, 4, 9, 153, 170, 200, 158, 118, 34, 243, 202, 113, 251, 161, 217, 114 , 253, 148, 163, 28, 59, 251, 242, 78, 57, 56]
+[ PASS ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::test_hash_result
+Test result: OK. Total tests: 2; passed: 2; failed: 0
+
+This is the result of my execution of JS, which can be seen to be the same with the naked eye.
+```
+
+```bash
+❯ node sha3test.js
+{
+  type: 'Buffer',
+  data: [
+    100, 75, 204, 126, 86, 67, 115, 4,
+      9, 153, 170, 200, 158, 118, 34, 243,
+    202, 113, 251, 161, 217, 114, 253, 148,
+    163, 28, 59, 251, 242, 78, 57, 56
+  ]
+}
+````
+
+But this is not enough, the assert result needs to be the same as the JS result. Modify `test_hash_result` to
+
+````move
+...
+    #[test]
+    fun test_hash_result() {
+        let expect_vec = vector[
+            100, 75, 204, 126, 86, 67, 115, 4,
+            9, 153, 170, 200, 158, 118, 34, 243,
+            202, 113, 251, 161, 217, 114, 253, 148,
+            163, 28, 59, 251, 242, 78, 57, 56
+        ];
+        let temp_camp = Vector::empty();
+        Vector::append(&mut temp_camp, b"hello world");
+        let camp = Hash::sha3_256(temp_camp);
+        Debug::print(&camp);
+        assert!(&camp == &expect_vec, 1);
+    }
+````
+
+then execute
+
+```bash
+❯ mpm package test
+CACHED UnitTest
+CACHED StarcoinFramework
+CACHED starcoin-framework-commons
+BUILDING move_ut
+Running Move unit tests
+[ PASS ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::make_sure_non_zero_coin_passes
+[debug] (&) [100, 75, 204, 126, 86, 67, 115, 4, 9, 153, 170, 200, 158, 118, 34, 243, 202, 113, 251, 161, 217, 114 , 253, 148, 163, 28, 59, 251, 242, 78, 57, 56]
+[ PASS ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::test_hash_result
+Test result: OK. Total tests: 2; passed: 2; failed: 0
+````
+
+As you can see, there is no problem. If you doubt the assert, you can modify one of the data in `expect_vec` and `mpm package test` again. Then you will find:
+
+
+```bash
+..
+[debug] (&) [100, 75, 204, 126, 86, 67, 115, 4, 9, 153, 170, 200, 158, 118, 34, 243, 202, 113, 251, 161, 217, 114, 253, 148, 163, 28, 59, 251, 242, 78, 57, 56]
+[ FAIL    ] 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest::test_hash_result
+
+Test failures:
+
+Failures in 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest:
+
+┌── test_hash_result ──────
+│ error[E11001]: test failure
+│    ┌─ ./sources/ut.move:41:9
+│    │
+│ 30 │     fun test_hash_result() {
+│    │         ---------------- In this function in 0xb80660f71e0d5ac2b5d5c43f2246403f::UTest
+│    ·
+│ 41 │         assert!(&camp == &expect_vec, 1);
+│    │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Test was not expected to abort but it aborted with 1 here
+│ 
+│ 
+└──────────────────
+
+Test result: FAILED. Total tests: 2; passed: 1; failed: 1
+```
+
+The test case does not pass. Perfect.
+
+Test cases can not only ensure the quality of the program, but also greatly improve the efficiency.
+
 ## Refinement plan
 
 1. The cookbook is used as a manual, if you have any problems, go to see it.
-2. Move the test case.
-3. Common methods of move contract.
-4. Other blockchain and Move data
+2. Common methods of move contract.
+3. . . .

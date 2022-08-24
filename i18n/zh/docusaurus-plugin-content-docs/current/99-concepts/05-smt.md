@@ -8,7 +8,7 @@
 
 Starcoin 是基于账户模型，不同于以太坊个人账户和合约账户是分开的， Starcoin 中合约相关信息也都存储在 State 中。
 State 包括合约代码( CODE )和资源( RESOURCE )，余额相关信息都在RESOURCE中，需要数据结构来处理账户地址到状态的映射，
-也就是 AccountAddree -> State， 直观上来这个映射就是 Key -> Value 之间映射。
+也就是 AccountAddress -> State， 直观上来这个映射就是 Key -> Value 之间映射。
 处理这个可以使用 HashMap，系统中维护一个全局的 HashMap，每次有新的账户创建就插入一对 Key， Value，
 查询账户余额就在 HashMap 中使用 Key 来查询，
 不考虑 Hash 碰撞，查询基本是常数时间完成(O(1))，更新也是，

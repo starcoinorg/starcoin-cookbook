@@ -248,7 +248,7 @@ let hash = HashValue::sha3_256_of(&salt[..]);
 
 https://developers.diem.com/papers/jellyfish-merkle-tree/2021-01-14.pdf
 
-https://westar.io/blog/jellyfish-merkle-tree-in-libra/
+https://westar.io/jellyfish-merkle-tree-in-libra-blockchain/
 
 ### 相关资源
 

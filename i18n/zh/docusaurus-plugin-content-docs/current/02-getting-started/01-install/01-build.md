@@ -121,6 +121,34 @@ rpm -qa | grep "llvm-private"                   # 查找包含 llvm-private 的�
 rpm -e --nodeps llvm-private-6.0.1-2.el7.x86_64 # 卸载查找到的包，实际找到的可能和示例不同
 ```
 
+### Ubuntu
+
+#### Q1:
+
+普通用户执行`./script/dev_setup.sh`时会报权限错误，因此会加上 sudo 命令（`sudo ./script/dev_setup.sh` -ypt），因此又会出现另外一个问题，如下所示的错误：
+
+```bash
+./script/dev_setup.sh：line 155：mpm：command not found
+```
+
+`mpm`明明已经配置好了环境变量，执行`mpm --version`也正常，但执行`sudo mpm --version`时会报错：
+
+```bash
+sudo：mpm：command not found
+```
+
+**原因：**
+
+Linux 系统中在使用 sudo 执行命令时是为当前用户赋予临时的 root 权限，考虑到安全性等相关问题，**sudo 执行命令时会重置 PATH**，此时 PATH 中是不包含用户配置的很多命令的路径的。所以会发现 sudo 执行命令时可能存在找不到的情况。
+
+**解决方案：**
+
+使用 `sudo vim /etc/sudoers` 进行修改，找到 secure_path 这一行，在其中追加 mpm的路径即可（和配置环境变量的 mpm 路径一致，也是用`:`追加），然后通过 :wq! 保存即可。
+
+此后，你再执行`sudo mpm`相关命令时，提示找不到的错误就不会出现了。
+
+
+
 ### 常见问题排查
 
 #### Q1:

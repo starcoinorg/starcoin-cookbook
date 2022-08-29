@@ -1,4 +1,4 @@
-# 理解和管理账户
+# Understanding and managing accounts
 
-这一章中，我们主要介绍如何通过 CLI 命令进行 Starcoin 的账户管理、链上交易、多签账户和多签交易、重置账户私钥等。
-后半部分内容主要介绍如何使用 Starcoin 的浏览器钱包 StarMask 以及如何使用 Starcoin 的区块链浏览器。
+In this chapter, we mainly introduce how to perform Starcoin account management, on-chain transactions, multi-signature accounts and multi-signature transactions, reset account private keys, etc. through CLI commands.
+The second half mainly introduces how to use Starcoin's browser wallet StarMask and how to use Starcoin's blockchain explorer.

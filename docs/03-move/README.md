@@ -1,6 +1,6 @@
 # Move in Action
 
-这一章主要介绍 Move 开发的相关内容。
+This chapter mainly introduces the related content of Move development.
 
-首先介绍如何搭建 Move 语言的开发环境，接着就可以动手跟着快速开始这一章节的内容体验 Move 合约开发的基本流程。
-接着介绍 Move 语言一些重要概念、Starcoin 开发的 `mpm` 工具、如何跟合约交互，集成测试等内容。
+First of all, we will introduce how to build the development environment of Move language, and then you can follow the content of the Quick Start chapter to experience the basic process of Move contract development.
+Then introduce some important concepts of the Move language, the `mpm` tool developed by Starcoin, how to interact with the contract, and integration testing.

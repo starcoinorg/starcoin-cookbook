@@ -147,6 +147,115 @@ Linux 系统中在使用 sudo 执行命令时是为当前用户赋予临时的 r
 
 此后，你再执行`sudo mpm`相关命令时，提示找不到的错误就不会出现了。
 
+#### Q2:
+
+在更新包依赖的时候，`apt-get` 运行报错，无法获得锁。
+
+```bash
+Reading package lists... Done
+Installing ca-certificates......
+Installing ca-certificates.
+E: Could not get lock /var/lib/dpkg/lock-frontend - open (11: Resource temporarily unavailable)
+E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), is another process using it?
+```
+
+**解决方案：**
+
+先查看是否有 apt-get 这个程序在运行
+
+```bash
+ps aux|grep apt-get
+```
+
+如果发现存在这样的程序在运行那么就 kill 掉，否则执行如下命令(直接删除锁文件)
+
+```bash
+sudo rm /var/lib/dpkg/lock-frontend
+sudo rm /var/lib/dpkg/lock
+sudo rm /var/cache/apt/archives/lock
+```
+
+#### Q3:
+
+`Debian Packager`的问题，dpkg 安装被中断。
+
+```bash
+E: dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to correct the problem. 
+```
+
+**解决办法：**
+
+执行如下命令
+
+``` bash
+sudo dpkg --configure -a 
+```
+
+然后，再执行如下命令：
+
+```bash
+sudo apt-get update 
+sudo apt-get upgrade
+```
+
+如果上述操作依然不行的话，直接删除重新更新。即：
+
+```bash
+sudo rm /var/lib/dpkg/updates/* 
+sudo apt-get update 
+sudo apt-get upgrade
+```
+
+保守的操作的话，可以选择如下操作：
+
+```bash
+sudo mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/
+sudo mkdir /var/lib/dpkg/info/
+sudo apt-get update
+
+sudo apt-get -f install
+   
+sudo mv /var/lib/dpkg/info/* /var/lib/dpkg/info_old/
+sudo rm -rf /var/lib/dpkg/info
+sudo mv /var/lib/dpkg/info_old/ /var/lib/dpkg/info/
+```
+
+#### Q4:
+
+`dev_setup.sh` 脚本执行成功后，但执行`boogie /version` 提示命令未找到。
+
+```bash
+.......Installation finished successfully.
+Installing boogie
+You can invoke the tool using the following command: boogie
+Tool 'boogie' (version '2.9.6') was successfully installed.
+Finished installing all dependencies.
+
+You should now be able to build the project by running:
+	mpm package build
+	mpm package prove
+```
+
+```bash
+starcoin$ boogie /version
+Command 'boogie' not found, but can be installed with:
+
+sudo apt install boogie
+```
+
+**原因：**
+
+环境变量配置未生效。
+
+**解决办法：**
+
+执行如下命令即可：
+
+```bash
+source ~/.profile
+```
+
+
 
 
 ### 常见问题排查

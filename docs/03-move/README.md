@@ -1,14 +1,6 @@
 # Move in Action
 
-:::note
+This chapter mainly introduces the related content of Move development.
 
-TODO
-
-This document is a overview guide, is a reorg of Cookbook's move charpters.
-
-Migrate and Rewrite, replace the contents with links to Cookbook's chapters. 
-
-* https://starcoin.org/zh/developer/blog/move_development/
-* https://starcoin.org/en/developer/blog/move_development/
-
-:::
+First of all, we will introduce how to build the development environment of Move language, and then you can follow the content of the Quick Start chapter to experience the basic process of Move contract development.
+Then introduce some important concepts of the Move language, the `mpm` tool developed by Starcoin, how to interact with the contract, and integration testing.

@@ -131,7 +131,7 @@ rpm -e --nodeps llvm-private-6.0.1-2.el7.x86_64 # 卸载查找到的包，实际
 ./script/dev_setup.sh：line 155：mpm：command not found
 ```
 
-`mpm`明明已经配置好了环境变量，执行`mpm --version`也正常，但执行`sudo mpm --version`时会报错：
+`mpm` 明明已经配置好了环境变量，执行 `mpm --version` 也正常，但执行 `sudo mpm --version` 时会报错：
 
 ```bash
 sudo：mpm：command not found

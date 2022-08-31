@@ -125,7 +125,7 @@ rpm -e --nodeps llvm-private-6.0.1-2.el7.x86_64 # 卸载查找到的包，实际
 
 #### Q1:
 
-普通用户执行`./script/dev_setup.sh`时会报权限错误，因此会加上 sudo 命令（`sudo ./script/dev_setup.sh` -ypt），因此又会出现另外一个问题，如下所示的错误：
+普通用户执行 *./script/dev_setup.sh* 时会报权限错误，因此要加上 sudo 命令（`sudo ./script/dev_setup.sh -ypt`），因此又会出现另外一个问题，如下所示的错误：
 
 ```bash
 ./script/dev_setup.sh：line 155：mpm：command not found

@@ -222,7 +222,7 @@ sudo mv /var/lib/dpkg/info_old/ /var/lib/dpkg/info/
 
 #### Q4:
 
-`dev_setup.sh` 脚本执行成功后，但执行`boogie /version` 提示命令未找到。
+`dev_setup.sh` 脚本执行成功后，但执行 `boogie /version` 提示命令未找到。
 
 ```bash
 .......Installation finished successfully.

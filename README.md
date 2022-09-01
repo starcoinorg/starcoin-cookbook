@@ -2,7 +2,7 @@
 
 Learn how to build on Starcoin, the document URL:
 
-* [https://starcoinorg.github.io/starcoin-cookbook/](https://starcoinorg.github.io/starcoin-cookbook/)
+* [https://cookbook.starcoin.org/](https://cookbook.starcoin.org/)
 * [https://starcoin-cookbook.4everland.app/](https://starcoin-cookbook.4everland.app/)
 
 ### How to contribute

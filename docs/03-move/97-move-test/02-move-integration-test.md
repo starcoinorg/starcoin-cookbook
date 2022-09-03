@@ -107,14 +107,15 @@ OPTIONS:
         --block-number <block-number>       block number to read state from. default to latest block number
         --addresses <named-addresses>...
     -n, --network <network>                 genesis with the network
-        --public-keys <public-keys>...
+        --public-keys <public-keys>...      the `public-keys` option is deprecated, please remove it.
         --rpc <rpc>                         use remote starcoin rpc as initial state
+        --debug <debug>                     enable debug mode, output more info to stderr.
 ```
 
 Directive `init` can declare the initial state of you integration test.
 You can either start from a fresh blockchain state by providing arg `-n test`,
 or fork from a remote state snapshot like `--rpc http://main.seed.starcoin.org:9850 --block-number 100000`.
-`--address <named-addresses>` can be used to declare additional named addressed which will be used in the integration test later.
+`--address <named-addresses>` can be used to declare additional named addressed which will be used in the integration test later. `--debug` mode will print more information of transaction results.
 
 Examples:
 
@@ -184,12 +185,10 @@ FLAGS:
 OPTIONS:
         --addr <address>
         --amount <initial-balance>     [default: 100000000000]
-        --public-key <public-key>
 ```
 
 Directive **faucet** can create and faucet an address (can be named address like `alice`, `tom` or raw address like `0x1`, `0x2`) with some STC of given amount.
 If the address is a named address, it will auto generate an raw address(and public key) and assign it to the named address.
-If you has some specific requirements on `public-key`, use `--public-key` to specify it.
 
 
 Examples:
@@ -201,6 +200,144 @@ Examples:
 
 //# faucet --addr tom --amount 10000000000000
 
+```
+
+#### Directive - call
+
+```
+task-call 0.1.0
+
+Call a smart contract function 
+
+USAGE:
+    task call <function>  [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <function>       Smart contract function name
+
+OPTIONS:
+    -i, --args <args>               function arguments
+    -t, --type-args <type-args>     function type arguments
+```
+
+Directive `call` can use to call smart contract functions.
+
+Examples:
+
+```
+//# call 0x1::Account::balance --type-args 0x1::STC::STC --args 0x662ba5a1a1da0f1c70a9762c7eeb7aaf
+```
+
+
+#### Directive - call-api
+
+```
+task-call-api 0.1.0
+
+Call a RPC api from remote starcoin node.
+
+USAGE:
+    task call-api <method> <params>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <method>         api method to call, example: node.info
+    <params>         api params, should be a json array string
+```
+
+Directive `call-api` can use to call starcoin RPC apis. The outputs are stored in mpm runtime context, 
+user can use the result through templete variable as the following directive's args.
+You can check [jsonrpc](https://starcoinorg.github.io/jsonrpcdoc/) to get available APIs and their output schema.
+
+Examples:
+
+```
+//# call-api chain.info
+
+//# call-api chain.get_block_by_hash [{{$.call-api[0].head.parent_hash}}]
+
+```
+
+#### Directive - package
+
+```
+task-package 0.1.0
+
+Package a module
+
+USAGE:
+    task package [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --signers
+        --init-function
+        --type-args
+        --args
+```
+
+Directive `package` package a module and return the packed binary blob, blob hash, and the temporary file path. 
+It's usefull in two-phase module upgrade test.
+
+The output example:
+```
+{
+    "file":"/tmp/.tmpnok0M6/0x3c6b00fadc6b4f37fa6e2c6c0949e97c89b00c07c0d1f1761671e6fe18792676.blob",
+    "hex":"0x662ba5a1a1da0f1c70a9762c7eeb7aaf0146a11ceb0b040000000601000203020505070107080b0813100c2307000000010000000004746573740568656c6c6f662ba5a1a1da0f1c70a9762c7eeb7aaf000100000001020000",
+    "package_hash":"0x3c6b00fadc6b4f37fa6e2c6c0949e97c89b00c07c0d1f1761671e6fe18792676"
+}
+```
+
+Examples:
+
+```
+//# package
+module creator::test {
+    public fun hello() {}
+}
+```
+
+#### Directive - deploy
+
+```
+task-deploy 0.1.0
+
+Deploy a packed module.
+
+USAGE:
+    task deploy [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <mv-or-package-file>    move bytecode file path or package binary path
+
+OPTIONS:
+        --signers
+        --gas-budget
+```
+
+Directive `deploy` can deploy a packed module to the blockchain.
+
+`--signers` used in the second phase of a two-phase upgrade plan, any one call the `deploy` directive.
+`--gas-budget` specifies the max gas of the transaction.
+
+Examples: 
+
+```
+//# deploy {{$.package[0].file}}
 ```
 
 #### Directive - publish
@@ -228,7 +365,7 @@ The module code must follows the directive.
 `--gas-budget` specifies the max gas of the transaction.
 `--syntax` can be ingored for now.
 
-Exmaples:
+Examples:
 
 ```
 //# publish

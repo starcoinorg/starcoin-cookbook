@@ -3,39 +3,37 @@ processed 7 tasks
 task 4 'run'. lines 10-10:
 {
   "gas_used": 34774,
-  "status": {
-    "Keep": "Executed"
-  }
+  "status": "Executed"
 }
 
 task 5 'view'. lines 12-12:
 key 0x00000000000000000000000000000001::Account::Account {
-    authentication_key: 57290c46d313dfcd9cfe8bd0a05592e915d0b101053497f9a2354d63f744d5d0
+    authentication_key: f90391c81027f03cdea491ed8b36ffaced26b6df208a9b569e5baf2590eb9b16
     withdrawal_capability: copy drop store 0x00000000000000000000000000000001::Option::Option<0x00000000000000000000000000000001::Account::WithdrawCapability> {
         vec: [
             store 0x00000000000000000000000000000001::Account::WithdrawCapability {
-                account_address: 15d0b101053497f9a2354d63f744d5d0
+                account_address: a7dcef9aef26202fce82a7c7d6672afb
             },
         ]
     }
     key_rotation_capability: copy drop store 0x00000000000000000000000000000001::Option::Option<0x00000000000000000000000000000001::Account::KeyRotationCapability> {
         vec: [
             store 0x00000000000000000000000000000001::Account::KeyRotationCapability {
-                account_address: 15d0b101053497f9a2354d63f744d5d0
+                account_address: a7dcef9aef26202fce82a7c7d6672afb
             },
         ]
     }
     withdraw_events: store 0x00000000000000000000000000000001::Event::EventHandle<0x00000000000000000000000000000001::Account::WithdrawEvent> {
         counter: 0
-        guid: 000000000000000015d0b101053497f9a2354d63f744d5d0
+        guid: 0000000000000000a7dcef9aef26202fce82a7c7d6672afb
     }
     deposit_events: store 0x00000000000000000000000000000001::Event::EventHandle<0x00000000000000000000000000000001::Account::DepositEvent> {
-        counter: 1
-        guid: 010000000000000015d0b101053497f9a2354d63f744d5d0
+        counter: 0
+        guid: 0100000000000000a7dcef9aef26202fce82a7c7d6672afb
     }
     accept_token_events: store 0x00000000000000000000000000000001::Event::EventHandle<0x00000000000000000000000000000001::Account::AcceptTokenEvent> {
-        counter: 2
-        guid: 020000000000000015d0b101053497f9a2354d63f744d5d0
+        counter: 1
+        guid: 0100000000000000a7dcef9aef26202fce82a7c7d6672afb
     }
     sequence_number: 1
 }

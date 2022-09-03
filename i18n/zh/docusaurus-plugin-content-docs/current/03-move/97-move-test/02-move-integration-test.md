@@ -99,13 +99,14 @@ OPTIONS:
         --block-number <block-number>       block number to read state from. default to latest block number
         --addresses <named-addresses>...
     -n, --network <network>                 genesis with the network
-        --public-keys <public-keys>...
+        --public-keys <public-keys>...      the `public-keys` option is deprecated, please remove it.
         --rpc <rpc>                         use remote starcoin rpc as initial state
+        --debug                             enable debug mode, output more info to stderr.
 ```
 
 `init` 指令用来声明某个集成测试的的初始状态。
 
-你可以声明测试从一个创世块开始（通过参数 `-n test` ），或者从一个远程状态快照开始，比如`--rpc http://main.seed.starcoin.org:9850 --block-number 100000`。`--address <named-addresses>` 可以用来声明额外的命名地址，这将在后面的集成测试中使用。
+你可以声明测试从一个创世块开始（通过参数 `-n test` ），或者从一个远程状态快照开始，比如`--rpc http://main.seed.starcoin.org:9850 --block-number 100000`。`--address <named-addresses>` 可以用来声明额外的命名地址，这将在后面的集成测试中使用。`--debug` 模式将会打印更多的交易信息，便于调试。
 
 例子:
 
@@ -176,13 +177,11 @@ FLAGS:
 OPTIONS:
         --addr <address>
         --amount <initial-balance>     [default: 100000000000]
-        --public-key <public-key>
 ```
 
 `faucet` 指令可以创建地址，给地址充钱。
 地址可以是命名地址(named address)，比如 `alice`, `tom`， 或者是字面地址(raw address)，比如 `0x1`, `0x2`。
 如果是命名地址，它会为该地址自动生成一个字面地址以及对应的公钥。
-如果你想指定具体的某个公钥，可以用 `--public-key` 参数。
 
 例子:
 
@@ -194,6 +193,145 @@ OPTIONS:
 //# faucet --addr tom --amount 10000000000000
 
 ```
+
+
+#### call 指令
+
+```
+task-call 0.1.0
+
+Call a smart contract function 
+
+USAGE:
+    task call <function>  [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <function>       Smart contract function name
+
+OPTIONS:
+    -i, --args <args>               function arguments
+    -t, --type-args <type-args>     function type arguments
+```
+
+`call` 指令可以用来直接调用智能合约的函数。
+
+示例:
+
+```
+//# call 0x1::Account::balance --type-args 0x1::STC::STC --args 0x662ba5a1a1da0f1c70a9762c7eeb7aaf
+```
+
+
+#### call-api 指令
+
+```
+task-call-api 0.1.0
+
+Call a RPC api from remote starcoin node.
+
+USAGE:
+    task call-api <method> <params>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <method>         api method to call, example: node.info
+    <params>         api params, should be a json array string
+```
+
+`call-api` 指令可以用来调用远程 RPC 的接口。返回值会被保存在 mpm 的运行环境中，可以后续的测试指令中用模板变量来获取返回结果并将其作为后续指令的参数输入。
+可以通过 [jsonrpc](https://starcoinorg.github.io/jsonrpcdoc/) 查看 Starcoin 的 API 接口和它们的输出格式。
+
+示例:
+
+```
+//# call-api chain.info
+
+//# call-api chain.get_block_by_hash [{{$.call-api[0].head.parent_hash}}]
+
+```
+
+#### Directive - package
+
+```
+task-package 0.1.0
+
+Package a module
+
+USAGE:
+    task package [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --signers
+        --init-function
+        --type-args
+        --args
+```
+
+`package` 指令可以将模块打包并返回打包后的 bytes，hash 和保存下来的临时文件。
+这常在两阶段提交的测试用到。
+
+输出示例：
+```
+{
+    "file":"/tmp/.tmpnok0M6/0x3c6b00fadc6b4f37fa6e2c6c0949e97c89b00c07c0d1f1761671e6fe18792676.blob",
+    "hex":"0x662ba5a1a1da0f1c70a9762c7eeb7aaf0146a11ceb0b040000000601000203020505070107080b0813100c2307000000010000000004746573740568656c6c6f662ba5a1a1da0f1c70a9762c7eeb7aaf000100000001020000",
+    "package_hash":"0x3c6b00fadc6b4f37fa6e2c6c0949e97c89b00c07c0d1f1761671e6fe18792676"
+}
+```
+
+示例:
+
+```
+//# package
+module creator::test {
+    public fun hello() {}
+}
+```
+
+#### deploy 指令
+
+```
+task-deploy 0.1.0
+
+Deploy a packed module.
+
+USAGE:
+    task deploy [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <mv-or-package-file>    move bytecode file path or package binary path
+
+OPTIONS:
+        --signers
+        --gas-budget
+```
+
+`deploy` 指令可以将打包后的模块部署到区块链上。
+
+`--signers` 一般在两阶段提交中用到，在第二阶段发布模型是，任何人都可以发起模型部署的交易。
+`--gas-budget` 指定交易的最大 gas 。
+
+示例: 
+
+```
+//# deploy {{$.package[0].file}}
+```
+
 
 #### `publish` 指令
 

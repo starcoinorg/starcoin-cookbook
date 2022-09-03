@@ -1,4 +1,4 @@
-//# init -n test --public-keys SNFT=0x17fc40aa27bad102b323b506cd784057c3238bf876d5caf3bfa77f1bf8c638f8
+//# init -n test
 
 //# faucet --addr SNFT --amount 10000000000000
 

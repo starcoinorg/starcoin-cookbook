@@ -17,7 +17,7 @@ Move 中的资源类型，我们都知道它其实就是 Move 中的一个自定
 
 资源必须存储在账户下，也就是说创建资源的时候，必须要传入一个账户信息，例如下面的代码：
 
-```rust
+```move
 address 0x2 {
 	module Counter {
 		use 0x1::Signer;

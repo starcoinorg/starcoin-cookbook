@@ -183,7 +183,7 @@ impl ContainerRef {
 
 下面的内容就是在VM执行交易完毕之后，将标记为 `GlobalDataStatus::Dirty` 状态的引用，保存到数据库中。
 
-保存的过程和 资源创建 调用 `move_to()` 函数的过程一样，调用VM的finish函数：`session.finish()`，将标记为 `GlobalDataStatus::Dirty` 的状态的引用，转换为 `GlobalValueEffect::Changed` 状态。
+保存的过程和资源创建调用 `move_to()` 函数的过程一样，调用 VM的finish 函数：`session.finish()`，将标记为 `GlobalDataStatus::Dirty` 的状态的引用，转换为 `GlobalValueEffect::Changed` 状态。
 
 最后调用 `maybe_commit_effects()` 函数将状态变更的内存对象，写入并提交到磁盘。
 

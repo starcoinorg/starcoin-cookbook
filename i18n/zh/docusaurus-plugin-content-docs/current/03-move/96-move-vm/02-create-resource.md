@@ -589,6 +589,6 @@ pub fn delete_resource(&self, addr: AccountAddress, tag: StructTag) -> Result<()
     }
 ```
 
-到目前位置，在某个账户下创建资源的源码分析完毕。
+到目前为止，在某个账户下创建资源的源码分析完毕。
 
 

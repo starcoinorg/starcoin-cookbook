@@ -435,7 +435,7 @@ pub(crate) fn into_effects(self) -> PartialVMResult<(ChangeSet, Vec<Event>)> {
         for (ty, (layout, gv: GlobalValue)) in account_data_cache.data_map {
 			       // 调用 GlobalValue 的 into_effect() 函数返回 GloalValue 对应的修改类型
 				     match gv.into_effect()? {
-						     GlobalValueEffect::None => (),	// 为修改什么都不做
+						     GlobalValueEffect::None => (),	// 未修改什么都不做
 						     GlobalValueEffect::Deleted => {	// 标记为删除
 								     resources.insert(struct_tag, None);	// 资源类型: None
 						     },

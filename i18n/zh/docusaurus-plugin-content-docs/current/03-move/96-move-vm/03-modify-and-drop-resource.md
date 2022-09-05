@@ -103,6 +103,8 @@ B0:
 
 上面的内容分析了对用户账户下的资源做修改时，编译器生成了 `WriteRef` 指令，下面我们分析 `WriteRef` 指令在虚拟机中的实现源码。
 
+文件：`language/move-vm/runtime/src/interpreter.rs`
+
 ```rust
 Bytecode::WriteRef => {
     // 从操作数栈上弹出引用类型的对象
@@ -192,6 +194,8 @@ impl ContainerRef {
 
 上面的内容分析了移除账户下的资源时，编译器生成了 `MoveFrom` 指令，下面我们分析 `MoveFrom` 指令在虚拟机中的实现源码。
 
+文件：`language/move-vm/runtime/src/interpreter.rs`
+
 ```rust
 // sd_idx: 代表了资源对应的结构体类型，在Move虚拟机的结构体定义列表中的索引
 // Move虚拟机的结构体定义列表，是虚拟机从Move语言字节码文件中解析得来的
@@ -209,36 +213,36 @@ Bytecode::MoveFrom(sd_idx) => {
 
 和 `move_to()` 函数一样，`move_from()` 函数实际调用的 `GlobalValueImpl` 类型的 `move_from()` 函数：
 
+文件：`language/move-vm/runtime/src/interpreter.rs`
+
 ```rust
 fn move_from(&mut self) -> PartialVMResult<ValueImpl> {
-        let fields = match self {
-            Self::None | Self::Deleted => {
-                return Err(PartialVMError::new(StatusCode::MISSING_DATA))
-            }
-            // 如果是 Fresh(GlobalValue在内存中，未持久化到存储) 直接把自身(GlobalValueImpl)替换为 None
-            Self::Fresh { .. } => match std::mem::replace(self, Self::None) {
-                Self::Fresh { fields } => fields, // 返回同样类型的 Fresh 数据 (move_from函数有返回值)
-                _ => unreachable!(),
-            },
-            // 如果是 Cached(GlobalValue在内存中，也持久化到了存储中) 直接把自身(GlobalValueImpl)替换为 Deleted
-            Self::Cached { .. } => match std::mem::replace(self, Self::Deleted) {
-                Self::Cached { fields, .. } => fields,  // 返回同样类型的 Cached 数据 (move_from函数有返回值)
-                _ => unreachable!(),
-            },
-        };
+    let fields = match self {
+        Self::None | Self::Deleted => return Err(PartialVMError::new(StatusCode::MISSING_DATA)),
+        // 如果是 Fresh(GlobalValue在内存中，未持久化到存储) 直接把自身(GlobalValueImpl)替换为 None
+        Self::Fresh { .. } => match std::mem::replace(self, Self::None) {
+            Self::Fresh { fields } => fields, // 返回同样类型的 Fresh 数据 (move_from函数有返回值)
+            _ => unreachable!(),
+        },
+        // 如果是 Cached(GlobalValue在内存中，也持久化到了存储中) 直接把自身(GlobalValueImpl)替换为 Deleted
+        Self::Cached { .. } => match std::mem::replace(self, Self::Deleted) {
+            Self::Cached { fields, .. } => fields, // 返回同样类型的 Cached 数据 (move_from函数有返回值)
+            _ => unreachable!(),
+        },
+    };
 
-        // 如果已经有对这个全局变量的多余１个的引用，说明多余一个对象引用当前对象，就不能 move_from 它
-        // Move虚拟机报错：moving global resource with dangling reference
-        if Rc::strong_count(&fields) != 1 {
-            return Err(
-                PartialVMError::new(StatusCode::UNKNOWN_INVARIANT_VIOLATION_ERROR)
-                    .with_message("moving global resource with dangling reference".to_string()),
-            );
-        }
-
-        // move_from 返回的对象
-        Ok(ValueImpl::Container(Container::Struct(fields)))
+    // 如果已经有对这个全局变量的多余１个的引用，说明多余一个对象引用当前对象，就不能 move_from 它
+    // Move虚拟机报错：moving global resource with dangling reference
+    if Rc::strong_count(&fields) != 1 {
+        return Err(
+            PartialVMError::new(StatusCode::UNKNOWN_INVARIANT_VIOLATION_ERROR)
+                .with_message("moving global resource with dangling reference".to_string()),
+        );
     }
+
+    // move_from 返回的对象
+    Ok(ValueImpl::Container(Container::Struct(fields)))
+}
 ```
 
 其中最关键的动作是：
@@ -258,6 +262,8 @@ fn into_effect(self) -> PartialVMResult<GlobalValueEffect<ValueImpl>> {
 ```
 
 最终在 `TransactionDataCache` 的 `into_effects()` 函数中，将上述两个状态转换：
+
+文件：`language/move-vm/runtime/src/interpreter.rs`
 
 ```rust
 // move_from 函数对 GlobalValueImpl Fresh 设置 None

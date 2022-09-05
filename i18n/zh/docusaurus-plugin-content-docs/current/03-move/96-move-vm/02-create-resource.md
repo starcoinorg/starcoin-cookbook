@@ -57,6 +57,8 @@ B0:
 
 不过在开始之前，先回顾一下 Move 虚拟机中代表函数栈帧的结构：
 
+文件: `language/move-vm/runtime/src/interpreter.rs`
+
 ```rust
 struct Frame {
     pc: u16,
@@ -86,6 +88,8 @@ struct Frame {
 **解释器的总体执行过程：**
 
 下面的代码，就是 Move 虚拟机中 `MoveTo` 指令的解释执行过程：
+
+文件：`language/move-vm/runtime/src/interpreter.rs`
 
 ```rust
 // sd_idx: 代表了资源对应的结构体类型，在Move虚拟机的结构体定义列表中的索引
@@ -119,19 +123,20 @@ Bytecode::MoveTo(sd_idx) => {
 
 `interpreter.move_to()` 的代码如下：
 
+文件：`language/move-vm/runtime/src/interpreter.rs`
 
 ```rust
 fn move_to(
-        &mut self,
-        data_store: &mut impl DataStore,
-        addr: AccountAddress,
-        ty: &Type,
-        resource: Value,
-    ) -> PartialVMResult<AbstractMemorySize<GasCarrier>> {
-        let size = resource.size();
-        Self::load_resource(data_store, addr, ty)?.move_to(resource)?;
-        Ok(size)
-    }
+    &mut self,
+    data_store: &mut impl DataStore,
+    addr: AccountAddress,
+    ty: &Type,
+    resource: Value,
+) -> PartialVMResult<AbstractMemorySize<GasCarrier>> {
+    let size = resource.size();
+    Self::load_resource(data_store, addr, ty)?.move_to(resource)?;
+    Ok(size)
+}
 ```
 
 **查询账户下的资源：**
@@ -146,9 +151,11 @@ Self::load_resource(data_store, addr, ty)?.move_to(resource)?;
 
 `Self::load_resource()` 函数最终会调用到 `DataStore` 类型的 `load_resource()` 函数：
 
+文件：`language/move-vm/runtime/src/interpreter.rs`
+
 ```rust
 impl<'r, 'l, S: MoveResolver> DataStore for TransactionDataCache<'r, 'l, S> {
-fn load_resource(
+    fn load_resource(
         &mut self,
         addr: AccountAddress,
         ty: &Type,
@@ -188,9 +195,9 @@ fn load_resource(
                         }
                     };
 
-                    GlobalValue::cached(val)?   // 查到了返回 GlobalValue::Cached
+                    GlobalValue::cached(val)? // 查到了返回 GlobalValue::Cached
                 }
-                Ok(None) => GlobalValue::none(),    // 没查到返回 GlobalValue::None
+                Ok(None) => GlobalValue::none(), // 没查到返回 GlobalValue::None
                 Err(err) => {
                     let msg = format!("Unexpected storage error: {:?}", err);
                     return Err(
@@ -211,12 +218,14 @@ fn load_resource(
             .map(|(_ty_layout, gv)| gv)
             .expect("global value must exist"))
     }
+}
 ```
 
 函数的核心功能，在代码中已经有注释，其中最关键的是 `self.remote.get_resource(&addr, &ty_tag)` 这一行代码，它将账户对应的 addr 和资源对应的结构体 tag，组成一个路径去底层数据库中查询数据。
 
 以本地磁盘中查询数据举例：
 
+文件：`language/tools/move-cli/src/sandbox/utils/on_disk_state_view.rs`
 
 ```rust
 impl ResourceResolver for OnDiskStateView {
@@ -236,37 +245,39 @@ impl ResourceResolver for OnDiskStateView {
 
 `OnDiskStateView` 的函数 `get_resources_bytes()` 实现了查询数据功能：
 
+文件：`language/tools/move-resource-viewer/src/lib.rs`
+
 ```rust
-pub fn get_resource_bytes(
-        &self,
-        addr: AccountAddress,
-        tag: StructTag,
-    ) -> Result<Option<Vec<u8>>> {
-        Self::get_bytes(&self.get_resource_path(addr, tag))
+pub fn get_resource_bytes(&self, addr: AccountAddress, tag: StructTag) -> Result<Option<Vec<u8>>> {
+    Self::get_bytes(&self.get_resource_path(addr, tag))
 }
 ```
 
 `get_resource_bytes()` 函数首先调用 `get_resource_path()` 把账户的地址和资源结构体的Tag组织成路径参数，组合的过程如下：
 
+文件：`./language/tools/move-resource-viewer/src/lib.rs`
+
 ```rust
 fn get_resource_path(&self, addr: AccountAddress, tag: StructTag) -> PathBuf {
-        let mut path = self.get_addr_path(&addr);
-        path.push(RESOURCES_DIR);
-        path.push(StructID(tag).to_string());
-        path.with_extension(BCS_EXTENSION)
+    let mut path = self.get_addr_path(&addr);
+    path.push(RESOURCES_DIR);
+    path.push(StructID(tag).to_string());
+    path.with_extension(BCS_EXTENSION)
 }
 ```
 
 然后 `get_resource_bytes()` 函数直接从文件系统读取数据：
 
+文件：`language/tools/move-cli/src/sandbox/utils/on_disk_state_view.rs`
+
 ```rust
 fn get_bytes(path: &Path) -> Result<Option<Vec<u8>>> {
-        Ok(if path.exists() {
-            // 从磁盘读取文件，并返回 u8 字节数据
-            Some(fs::read(path)?)
-        } else {
-            None
-        })
+    Ok(if path.exists() {
+        // 从磁盘读取文件，并返回 u8 字节数据
+        Some(fs::read(path)?)
+    } else {
+        None
+    })
 }
 ```
 
@@ -292,21 +303,22 @@ pub struct GlobalValue(GlobalValueImpl);
 `GlobalValueImpl` 是一个枚举类型：
 
 ```rust
-#[derive(Debug)]
 enum GlobalValueImpl {
     // 没有保存任何资源
     None,
 
     // 资源已经保存在GlobalValue中，但是还没有持久化到存储
-    Fresh { fields: Rc<RefCell<Vec<ValueImpl>>> },
-	
+    Fresh {
+        fields: Rc<RefCell<Vec<ValueImpl>>>,
+    },
+
     // 资源已经保存在Global中，也在持久化的存储中
     // status 字段指示资源可能已被更改
     Cached {
         fields: Rc<RefCell<Vec<ValueImpl>>>,
         status: Rc<RefCell<GlobalDataStatus>>,
     },
-	
+
     // 资源已经在存储中持久化，但是被当前交易标记为删除
     Deleted,
 }
@@ -339,23 +351,25 @@ Move 中借用的实现这里只是顺带提及，之后会有其他文章详细
 
 我们回到 `GlobalValue` 类型的 `move_to()` 函数中：
 
+文件：`language/move-vm/runtime/src/interpreter.rs`
+
 ```rust
 fn move_to(&mut self, val: ValueImpl) -> PartialVMResult<()> {
-        match self {
-            // 之前查出数据，类型是 Self::Cached，说明已经账户下已经有该资源，不能再次 move_to
-            Self::Fresh { .. } | Self::Cached { .. } => {
-                return Err(PartialVMError::new(StatusCode::RESOURCE_ALREADY_EXISTS))
-            }
-
-            // 之前未查出数据，就设置新的值，并标记自身(GlobalValueImpl)为Fresh状态
-            // Fresh状态在 into_effect() 函数中会被标记为 GlobalValueEffect::Changed
-            Self::None => *self = Self::fresh(val)?,
-
-            // 数据已被标记为 Deleted，move_from() 函数标记
-            // Dirty 状态也会被标记为 GlobalValueEffect::Changed
-            Self::Deleted => *self = Self::cached(val, GlobalDataStatus::Dirty)?,
+    match self {
+        // 之前查出数据，类型是 Self::Cached，说明已经账户下已经有该资源，不能再次 move_to
+        Self::Fresh { .. } | Self::Cached { .. } => {
+            return Err(PartialVMError::new(StatusCode::RESOURCE_ALREADY_EXISTS))
         }
-        Ok(())
+
+        // 之前未查出数据，就设置新的值，并标记自身(GlobalValueImpl)为Fresh状态
+        // Fresh状态在 into_effect() 函数中会被标记为 GlobalValueEffect::Changed
+        Self::None => *self = Self::fresh(val)?,
+
+        // 数据已被标记为 Deleted，move_from() 函数标记
+        // Dirty 状态也会被标记为 GlobalValueEffect::Changed
+        Self::Deleted => *self = Self::cached(val, GlobalDataStatus::Dirty)?,
+    }
+    Ok(())
 }
 ```
 
@@ -379,33 +393,34 @@ fn move_to(&mut self, val: ValueImpl) -> PartialVMResult<()> {
 
 ```
 pub fn run() {
-// 读取字节码文件
-let bytecode = if is_bytecode_file(script_path) {...};
+    // 读取字节码文件
+    let bytecode = if is_bytecode_file(script_path) {...};
 
-// 创建需要传递给 Move VM 的参数
-let vm_args: Vec<Vec<u8>> = convert_txn_args(txn_args);
+    // 创建需要传递给 Move VM 的参数
+    let vm_args: Vec<Vec<u8>> = convert_txn_args(txn_args);
 
-// 创建 Move VM 实例
-let vm = MoveVM::new(natives).unwrap();
+    // 创建 Move VM 实例
+    let vm = MoveVM::new(natives).unwrap();
 
-// 传入状态存储对象，创建 Move VM 会话
-let mut session: Session<OnDiskStateView> = vm.new_session(state);
+    // 传入状态存储对象，创建 Move VM 会话
+    let mut session: Session<OnDiskStateView> = vm.new_session(state);
 
-// 执行 Move 脚本
-session.execute_script(
-            bytecode.to_vec(),
-            vm_type_args.clone(),
-            vm_args,
-            &mut gas_status);
-			
-// 完成 Move VM 的执行
-// 拿到内存保存的所有账户下的 GlobalValue 数据对应的修改类型
-// GlobalValueEffect::Deleted 或者 GlobalValueEffect::Changed
-// 以及修改类型对应的数据
-let (changeset, events) = session.finish().map_err(|e| e.into_vm_status())?;
+    // 执行 Move 脚本
+    session.execute_script(
+        bytecode.to_vec(),
+        vm_type_args.clone(),
+        vm_args,
+        &mut gas_status,
+    );
 
-// 把内存 changeset 中的数据保存到磁盘
-maybe_commit_effects(!dry_run, changeset, events, state)
+    // 完成 Move VM 的执行
+    // 拿到内存保存的所有账户下的 GlobalValue 数据对应的修改类型
+    // GlobalValueEffect::Deleted 或者 GlobalValueEffect::Changed
+    // 以及修改类型对应的数据
+    let (changeset, events) = session.finish().map_err(|e| e.into_vm_status())?;
+
+    // 把内存 changeset 中的数据保存到磁盘
+    maybe_commit_effects(!dry_run, changeset, events, state)
 }
 ```
 
@@ -413,64 +428,69 @@ maybe_commit_effects(!dry_run, changeset, events, state)
 
 ```rust
 pub fn finish(self) -> VMResult<(ChangeSet, Vec<Event>)> {
-        self.data_cache
-            .into_effects()
-            .map_err(|e| e.finish(Location::Undefined))
+    self.data_cache
+        .into_effects()
+        .map_err(|e| e.finish(Location::Undefined))
 }
 ```
 
 上面的代码中，`self.data_cache.into_effects()` 是最重要的函数，最终调用的是 `TransactionDataCache` 类型的 `into_effects()` 函数：
 
+文件：`language/move-vm/runtime/src/data_cache.rs`
+
 ```rust
 pub(crate) fn into_effects(self) -> PartialVMResult<(ChangeSet, Vec<Event>)> {
-
     // change_set 用于保存账户地址对应的修改集列表
     let mut change_set = ChangeSet::new();
-	
+
     // 循环所有账户的账户缓存 AccountDataCache
-    for (addr, account_data_cache:AccountDataCache) in self.account_map.into_iter() {
+    for (addr, account_data_cache::AccountDataCache) in self.account_map.into_iter() {
         let mut resources = BTreeMap::new();
-		
-		    // 循环单个账户下缓存中的所有 GlobalValue
-        for (ty, (layout, gv: GlobalValue)) in account_data_cache.data_map {
-			       // 调用 GlobalValue 的 into_effect() 函数返回 GloalValue 对应的修改类型
-				     match gv.into_effect()? {
-						     GlobalValueEffect::None => (),	// 未修改什么都不做
-						     GlobalValueEffect::Deleted => {	// 标记为删除
-								     resources.insert(struct_tag, None);	// 资源类型: None
-						     },
-						     GlobalValueEffect::Changed(val) => {	// 标记为已被修改
-								     let resource_blob = val
-                            .simple_serialize(&layout)
-                            .ok_or_else(|| PartialVMError::new(StatusCode::INTERNAL_TYPE_ERROR))?;
-								     resources.insert(struct_tag, Some(resource_blob));	// 资源类型：修改后的数据
-						     }
-			       }
-			    // 为每个 change_set 关联账户地址
-			    change_set.publish_or_overwrite_account_change_set(
+
+        // 循环单个账户下缓存中的所有 GlobalValue
+        for (ty, (layout, gv::GlobalValue)) in account_data_cache.data_map {
+            // 调用 GlobalValue 的 into_effect() 函数返回 GlobalValue 对应的修改类型
+            match gv.into_effect()? {
+                GlobalValueEffect::None => (), // 什么都不做
+                GlobalValueEffect::Deleted => {
+                    // 标记为删除
+                    resources.insert(struct_tag, None); // 资源类型: None
+                }
+                GlobalValueEffect::Changed(val) => {
+                    // 标记为已被修改
+                    let resource_blob = val
+                        .simple_serialize(&layout)
+                        .ok_or_else(|| PartialVMError::new(StatusCode::INTERNAL_TYPE_ERROR))?;
+                    resources.insert(struct_tag, Some(resource_blob)); // 资源类型：修改后的数据
+                }
+            }
+            // 为每个 change_set 关联账户地址
+            change_set.publish_or_overwrite_account_change_set(
                 addr,
                 AccountChangeSet::from_modules_resources(modules, resources),
             );
-		    }
+        }
     }
-	
+
     // 返回 change_set
     Ok((change_set, events))
 }
 ```
 
-上面的函数 `TransactionDataCache.into_effects()` 循环素有账户的缓存中的 `GlobalValue`，并调用 `GlobalValue.into_effects()`，目的是把 `GlobalValue` 对应的枚举类型，变成 `GlobalValueEffect` 对应的类型。
+上面的函数 `TransactionDataCache.into_effects()` 循环所有账户的缓存中的 `GlobalValue`，并调用 `GlobalValue.into_effects()`，目的是把 `GlobalValue` 对应的枚举类型，变成 `GlobalValueEffect` 对应的类型。
 
 `GlobalValue.into_effects()` 函数：
 
+文件：`language/move-vm/types/src/values/values_impl.rs`
+
 ```rust
 pub fn into_effect(self) -> PartialVMResult<GlobalValueEffect<Value>> {
-        Ok(match self.0.into_effect()? {
-            GlobalValueEffect::None => GlobalValueEffect::None,
-            GlobalValueEffect::Deleted => GlobalValueEffect::Deleted,
-            GlobalValueEffect::Changed(v) => GlobalValueEffect::Changed(Value(v)),
-        })
-    }
+    Ok(match self.0.into_effect()? {
+        GlobalValueEffect::None => GlobalValueEffect::None,
+        GlobalValueEffect::Deleted => GlobalValueEffect::Deleted,
+        GlobalValueEffect::Changed(v) => GlobalValueEffect::Changed(Value(v)),
+    })
+}
 ```
 
 核心的函数是这一行：
@@ -481,22 +501,25 @@ self.0.into_effect()
 
 上面这行代码，实际调用的是 `ValueImpl.into_effects()` 函数：
 
+文件：`language/move-vm/types/src/values/values_impl.rs`
+
 ```rust
 fn into_effect(self) -> PartialVMResult<GlobalValueEffect<ValueImpl>> {
-        Ok(match self {
-            Self::None => GlobalValueEffect::None,
-            Self::Deleted => GlobalValueEffect::Deleted,
-            Self::Fresh { fields } => {	// 新的 GlobalValue 类型数据，即该账户下第一次创建对应类型的资源
+    Ok(match self {
+        Self::None => GlobalValueEffect::None,
+        Self::Deleted => GlobalValueEffect::Deleted,
+        Self::Fresh { fields } => {
+            // 新的 GlobalValue 类型数据，即该账户下第一次创建对应类型的资源
+            GlobalValueEffect::Changed(ValueImpl::Container(Container::Struct(fields)))
+        }
+        Self::Cached { fields, status } => match &*status.borrow() {
+            GlobalDataStatus::Dirty => {
                 GlobalValueEffect::Changed(ValueImpl::Container(Container::Struct(fields)))
             }
-            Self::Cached { fields, status } => match &*status.borrow() {
-                GlobalDataStatus::Dirty => {
-                    GlobalValueEffect::Changed(ValueImpl::Container(Container::Struct(fields)))
-                }
-                GlobalDataStatus::Clean => GlobalValueEffect::None,
-            },
-        })
-    }
+            GlobalDataStatus::Clean => GlobalValueEffect::None,
+        },
+    })
+}
 ```
 
 可以看到 `GlobalValue::Fresh` 类型的枚举，会返回 `GlobalValueEffech::Changed` 类型的枚举，并把实际的数据 `fields` 保存。
@@ -516,6 +539,8 @@ maybe_commit_effects(!dry_run, changeset, events, state)
 ```
 
 `maybe_commit_effects` 函数判断，只要不是 `dry_run`，就循环修改集中的每个元素，把它写入到磁盘：
+
+文件：`language/tools/move-cli/src/sandbox/utils/mod.rs`
 
 ```rust
 pub(crate) fn maybe_commit_effects(
@@ -537,7 +562,7 @@ pub(crate) fn maybe_commit_effects(
         for (event_key, event_sequence_number, event_type, event_data) in events {
             state.save_event(&event_key, event_sequence_number, event_type, event_data)?
         }
-	}
+    }
 
     Ok(())
 }
@@ -558,35 +583,34 @@ None => state.delete_resource(addr, struct_tag)
 
 `save_resource()`  函数保存数据：
 
+文件：`language/tools/move-cli/src/sandbox/utils/on_disk_state_view.rs`
+
 ```rust
-pub fn save_resource(
-        &self,
-        addr: AccountAddress,
-        tag: StructTag,
-        bcs_bytes: &[u8],
-    ) -> Result<()> {
-        let path = self.get_resource_path(addr, tag);
-        if !path.exists() {
-            fs::create_dir_all(path.parent().unwrap())?;
-        }
-        Ok(fs::write(path, bcs_bytes)?)
+pub fn save_resource(&self, addr: AccountAddress, tag: StructTag, bcs_bytes: &[u8]) -> Result<()> {
+    let path = self.get_resource_path(addr, tag);
+    if !path.exists() {
+        fs::create_dir_all(path.parent().unwrap())?;
     }
+    Ok(fs::write(path, bcs_bytes)?)
+}
 ```
 
 `delete_resource()` 函数删除数据：
 
+文件：`language/tools/move-cli/src/sandbox/utils/on_disk_state_view.rs`
+
 ```rust
 pub fn delete_resource(&self, addr: AccountAddress, tag: StructTag) -> Result<()> {
-        let path = self.get_resource_path(addr, tag);
-        fs::remove_file(path)?;
+    let path = self.get_resource_path(addr, tag);
+    fs::remove_file(path)?;
 
-        // delete addr directory if this address is now empty
-        let addr_path = self.get_addr_path(&addr);
-        if addr_path.read_dir()?.next().is_none() {
-            fs::remove_dir(addr_path)?
-        }
-        Ok(())
+    // delete addr directory if this address is now empty
+    let addr_path = self.get_addr_path(&addr);
+    if addr_path.read_dir()?.next().is_none() {
+        fs::remove_dir(addr_path)?
     }
+    Ok(())
+}
 ```
 
 到目前为止，在某个账户下创建资源的源码分析完毕。

@@ -573,7 +573,7 @@ pub fn save_resource(
     }
 ```
 
-`delete_resouce()` 函数删除数据：
+`delete_resource()` 函数删除数据：
 
 ```rust
 pub fn delete_resource(&self, addr: AccountAddress, tag: StructTag) -> Result<()> {

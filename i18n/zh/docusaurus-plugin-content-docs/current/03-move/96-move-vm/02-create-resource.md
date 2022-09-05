@@ -36,7 +36,7 @@ address 0x2 {
 
 `move_to()` 函数原型如下：
 
-```rust
+```move
 native fun move_to<T: key>(account: &signer, value: T);
 ```
 

@@ -254,10 +254,10 @@ fn move_from(&mut self) -> PartialVMResult<ValueImpl> {
 
 ```rust
 fn into_effect(self) -> PartialVMResult<GlobalValueEffect<ValueImpl>> {
-	Ok(match self {
-            Self::None => GlobalValueEffect::None,
-            Self::Deleted => GlobalValueEffect::Deleted,
-		})
+    Ok(match self {
+        Self::None => GlobalValueEffect::None,
+        Self::Deleted => GlobalValueEffect::Deleted,
+    })
 }
 ```
 

@@ -20,8 +20,6 @@ Move 中的资源类型，我们都知道它其实就是 Move 中的一个自定
 ```move
 address 0x2 {
 	module Counter {
-		use 0x1::Signer;
-
 		struct Counter has key { i: u64 }
 
 		public fun publish(account: &signer, i: u64) {

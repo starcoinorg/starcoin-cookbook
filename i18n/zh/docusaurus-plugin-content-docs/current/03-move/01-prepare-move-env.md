@@ -58,11 +58,14 @@ USAGE:
 
 ## 设置 Move Prover 环境
 
+Move Prover 是为了防止 Move 语言编写的智能合约中的错误而设计的形式化验证工具。[更多](../03-move/100-move-prover/02-mvp-tutorial.md)
+
 1. 运行 starcoin-framework 下的 dev_setup.sh（自动化安装脚本）
 
 ```
-./scripts/dev_setup.sh -ypt
+curl -s https://raw.githubusercontent.com/starcoinorg/starcoin-framework/main/scripts/dev_setup.sh | bash /dev/stdin -bpty
 ```
+
 当上面的命令执行完毕时，输入 `boogie /version`，如果输出类似 "Boogie program verifier version X.X.X"，那么安装已经成功。
 
 注意，目前 Move Prover 只能在类 UNIX 操作系统下运行（例如 Linux、macOS）。 Windows 用户可以通过安装 WSL 来运行。

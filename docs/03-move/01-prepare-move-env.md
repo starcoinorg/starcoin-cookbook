@@ -6,7 +6,7 @@ Move Package Manager(mpm) is a command line tool to develop move projects, like 
 ### Install using the convenience script
 1. Run [`scripts/dev_setup.sh`](https://github.com/starcoinorg/starcoin-framework/blob/main/scripts/dev_setup.sh)(automated installation script) of starcoin-framework, which contains mpm, Rust, PATH config and the move prover environment setup.
 ```
-curl -s https://raw.githubusercontent.com/starcoinorg/starcoin-framework/main/scripts/dev_setup.sh | bash /dev/stdin -b -t -p
+curl -Ss https://raw.githubusercontent.com/starcoinorg/starcoin-framework/main/scripts/dev_setup.sh | bash /dev/stdin -b -t -p
 ```
 
 The command above will install mpm and Rust to default location. It also set the PATH env. Check more arguments in shell script.

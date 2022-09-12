@@ -55,7 +55,7 @@ Move Prover is a formal verification tool designed to prevent bugs in smart cont
 1. Run [`dev_setup.sh`](https://github.com/starcoinorg/starcoin-framework/blob/main/scripts/dev_setup.sh)(automated installation script) of starcoin-framework
 
 ```
-curl -s https://raw.githubusercontent.com/starcoinorg/starcoin-framework/main/scripts/dev_setup.sh | bash /dev/stdin -bpty
+curl -Ss https://raw.githubusercontent.com/starcoinorg/starcoin-framework/main/scripts/dev_setup.sh | bash /dev/stdin -bpty
 ```
 
 When the above command is executed, type `boogie /version` and if the output is similar to "Boogie program verifier version X.X.X", then the installation has been successful.

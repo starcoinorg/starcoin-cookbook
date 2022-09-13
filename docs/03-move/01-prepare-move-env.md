@@ -6,7 +6,7 @@ Move Package Manager(mpm) is a command line tool to develop move projects, like 
 ### Install using the convenience script
 1. Run [`scripts/dev_setup.sh`](https://github.com/starcoinorg/starcoin-framework/blob/main/scripts/dev_setup.sh)(automated installation script) of starcoin-framework, which contains mpm, Rust, PATH config and the move prover environment setup.
 ```
-curl -s https://raw.githubusercontent.com/starcoinorg/starcoin-framework/main/scripts/dev_setup.sh | bash /dev/stdin -b -t
+curl -Ss https://raw.githubusercontent.com/starcoinorg/starcoin-framework/main/scripts/dev_setup.sh | bash /dev/stdin -b -t -p
 ```
 
 The command above will install mpm and Rust to default location. It also set the PATH env. Check more arguments in shell script.
@@ -50,9 +50,12 @@ Search `starcoin-ide` in Extensions.
 
 ## Set up env for move prover
 
+Move Prover is a formal verification tool designed to prevent bugs in smart contracts written in Move language. [more](../03-move/100-move-prover/02-mvp-tutorial.md)
+
 1. Run [`dev_setup.sh`](https://github.com/starcoinorg/starcoin-framework/blob/main/scripts/dev_setup.sh)(automated installation script) of starcoin-framework
+
 ```
-./scripts/dev_setup.sh -ypt
+curl -Ss https://raw.githubusercontent.com/starcoinorg/starcoin-framework/main/scripts/dev_setup.sh | bash /dev/stdin -bpty
 ```
 
 When the above command is executed, type `boogie /version` and if the output is similar to "Boogie program verifier version X.X.X", then the installation has been successful.

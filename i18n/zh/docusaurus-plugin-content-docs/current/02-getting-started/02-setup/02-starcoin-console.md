@@ -6,8 +6,7 @@
 
 在节点启动的时候进入控制台。
 
-注意：如果不指定存放数据的目录，以这种方式直接进入交互式控制台，会在 `/tmp` 目录下随机生成一个用于存放当前进程的数据目录。
-退出交互式控制台，进程结束，存放数据的目录也会立即被删除。
+注意：如果不指定存放数据的目录，以这种方式直接进入交互式控制台，会在 `/tmp` 目录下随机生成一个用于存放当前进程的数据目录。退出交互式控制台，进程结束，存放数据的目录也会立即被删除。
 
 ```shell
 starcoin -n dev console
@@ -99,8 +98,7 @@ starcoin -c /path/to/starcoin.ipc console
 starcoin.exe -c \\.\pipe\starcoin\dev\starcoin.ipc console
 ```
 
-此时，`starcoin console` 连接到了 IPC 文件对应节点的网络。
-可以是 dev、主网、测试网等，取决于启动的节点加入的网络。
+此时，`starcoin console` 连接到了 IPC 文件对应节点的网络。可以是 dev、主网、测试网等，取决于启动的节点加入的网络。
 
 ### 通过 WebSocket
 

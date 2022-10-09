@@ -1,7 +1,3 @@
----
-hide_table_of_contents: true
----
-
 # Starcoin JSON-RPC Reference
 
 * [https://starcoinorg.github.io/jsonrpcdoc/](https://starcoinorg.github.io/jsonrpcdoc/)

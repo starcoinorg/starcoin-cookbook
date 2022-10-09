@@ -82,5 +82,9 @@
   "sidebar.tutorialSidebar.category.StarMask Docs": {
     "message": "StarMask Docs",
     "description": "The label for category StarMask Docs in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Move VM 原理分析": {
+    "message": "Move VM 原理分析",
+    "description": "The label for category Move VM 原理分析 in sidebar tutorialSidebar"
   }
 }

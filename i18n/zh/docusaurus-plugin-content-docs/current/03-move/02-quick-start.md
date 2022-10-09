@@ -1,8 +1,6 @@
 # 快速开始
 
-在这个教程中，我们将实现一个简单的计数器，来展示 Move 是如何通过代码来管理资源的。
-这篇文档涉及的内容包括背景知识、写代码、如何编译、如何发布到链上、如何调用。
-完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
+在这个教程中，我们将实现一个简单的计数器，来展示 Move 是如何通过代码来管理资源的。这篇文档涉及的内容包括背景知识、写代码、如何编译、如何发布到链上、如何调用。完整的代码仓库在[这里](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-counter)。
 
 提前准备：
 
@@ -42,8 +40,7 @@ my-counter
 :::tip Move 模块
 模块是定义**结构体类型**和操作结构体的**函数**的库。*（可以借助其他编程语言“类（class）”的概念来帮助理解）*。
 
-模块会被发布到发布者的地址下，模块中的*入口方法（entry functions）*可以被大家调用执行。
-*（可以借助函数计算平台 —— 如 AWS Lambda —— 上发布函数、调用函数来帮助理解）*
+模块会被发布到发布者的地址下，模块中的*入口方法（entry functions）*可以被大家调用执行。*（可以借助函数计算平台 —— 如 AWS Lambda —— 上发布函数、调用函数来帮助理解）*
 :::
 
 由 *Move.toml* 文件和 *sources* 目录组成的项目，会被认为是一个 [Move 包（Move Package）](./03-move-language/01-packages.md)。
@@ -64,8 +61,7 @@ module <address>::<identifier> {
 
 ### 第一版代码
 
-在 `MyCounter` 模块中，我们定义一个结构体 `Counter`，包含有一个字段 `value`，代表这个计数器触发的次数。
-`value` 的类型是 `u64`，也就是无符号64位整型。
+在 `MyCounter` 模块中，我们定义一个结构体 `Counter`，包含有一个字段 `value`，代表这个计数器触发的次数。`value` 的类型是 `u64`，也就是无符号64位整型。
 
 下面是 `MyCounter` 模块的第一版代码：
 
@@ -144,20 +140,15 @@ module MyCounterAddr::MyCounter {
 这里的 `move_to<T>(&signer, T)` 是一个内置方法，作用是将类型为 `T` 的资源添加到账户 `signer` 的地址下的存储空间（尖括号在这里表示泛型）。
 
 :::info 更多信息
-这里的存储空间是 `GlobalState`，可以先简单理解为存放账户的*资源*和*模块代码*的地方。
-更多详细信息可以查阅[概念-状态](../99-concepts/04-state.md)。
+这里的存储空间是 `GlobalState`，可以先简单理解为存放账户的*资源*和*模块代码*的地方。更多详细信息可以查阅[概念-状态](../99-concepts/04-state.md)。
 :::
 
-在第6行的 `init` 函数的参数 `account: &signer` 中的 `signer` 是 Move 的内置类型。
-想要将资源放到调用者的账户地址下，需要将 `&signer` 参数传递给函数。
-`&signer` 数据类型代表当前交易的发起者（函数的调用者，可以是任何账户）。
+在第6行的 `init` 函数的参数 `account: &signer` 中的 `signer` 是 Move 的内置类型。想要将资源放到调用者的账户地址下，需要将 `&signer` 参数传递给函数。`&signer` 数据类型代表当前交易的发起者（函数的调用者，可以是任何账户）。
 
 :::info 帮你理解 —— signer
-`signer` 就像是 Linux 下的 *uid* 一样的东西。登陆 Linux 系统后，你输入的所有命令，都被认为是“这个已登陆的**经过认证**的用户”操作的。
-关键来了，这个认证过程不是在运行的命令、程序中做的，而是开机后由操作系统完成的。
+`signer` 就像是 Linux 下的 *uid* 一样的东西。登陆 Linux 系统后，你输入的所有命令，都被认为是“这个已登陆的**经过认证**的用户”操作的。关键来了，这个认证过程不是在运行的命令、程序中做的，而是开机后由操作系统完成的。
 
-对应到 Move 中，这个认证过程就是和其他区块链系统类似的、我们熟知的“私钥签名，公钥验证”的过程。
-在带有 `&signer` 参数的函数执行时，发起者的身份已经被 Starcoin 区块链认证过了。
+对应到 Move 中，这个认证过程就是和其他区块链系统类似的、我们熟知的“私钥签名，公钥验证”的过程。在带有 `&signer` 参数的函数执行时，发起者的身份已经被 Starcoin 区块链认证过了。
 :::
 
 我们试着编译一下：
@@ -179,16 +170,12 @@ error[E05001]: ability constraint not satisfied
   │         Invalid call of 'move_to'
 ```
 
-出错了！提示我们 “ability constraint not satisfied”，下面还有一句 “The type 'MyCounterAddr::MyCounter::Counter' does not have the ability 'key'”。
-编译器告诉我们 `MyCounterAddr::MyCounter::Counter` 这个资源类型缺少 `key` *能力（ability）*，所以不能用 `move_to` 添加到账户地址下。
+出错了！提示我们 “ability constraint not satisfied”，下面还有一句 “The type 'MyCounterAddr::MyCounter::Counter' does not have the ability 'key'”。编译器告诉我们 `MyCounterAddr::MyCounter::Counter` 这个资源类型缺少 `key` *能力（ability）*，所以不能用 `move_to` 添加到账户地址下。
 
 这里涉及到了 Move 的*能力*特性。
 
 :::tip 概念 —— ability
-Move语言是面向资源的语言，核心是资源的管理。
-针对资源拥有什么“**能力**”，Move 编程语言抽象了资源的四个属性 —— 可复制（copy)、可索引（key）、可丢弃（drop）、可储存（store）。
-通过这四个属性的不同组合，用户可以方便的定义出任何能力的资源。
-比如用户可以通过 `key + copy + drop + store` 的组合定义出一个普通的信息类型，通过 `key + store` 的组合定义出一个资产类型 —— 例如 NFT —— 没有 `copy` 属性可以保证 NFT 不能被随意的复制，提升了安全性。
+Move语言是面向资源的语言，核心是资源的管理。针对资源拥有什么“**能力**”，Move 编程语言抽象了资源的四个属性 —— 可复制（copy)、可索引（key）、可丢弃（drop）、可储存（store）。通过这四个属性的不同组合，用户可以方便的定义出任何能力的资源。比如用户可以通过 `key + copy + drop + store` 的组合定义出一个普通的信息类型，通过 `key + store` 的组合定义出一个资产类型 —— 例如 NFT —— 没有 `copy` 属性可以保证 NFT 不能被随意的复制，提升了安全性。
 
 Move 提供的四种能力：
 
@@ -197,13 +184,12 @@ Move 提供的四种能力：
 * key：表示该值是否可以作为全局状态的键进行访问
 * store：表示该值是否可以被存储到全局状态
 
-通过给资源赋予不同的能力，Move 虚拟机可以从根本上保证「资源」只能*转移（move）*，至于能否拷贝、修改、丢弃，需要看资源的具体能力。
-如果强行拷贝、修改或者丢弃，代码编译会出错，根本没有机会运行。
+通过给资源赋予不同的能力，Move 虚拟机可以从根本上保证「资源」只能*转移（move）*，至于能否拷贝、修改、丢弃，需要看资源的具体能力。如果强行拷贝、修改或者丢弃，代码编译会出错，根本没有机会运行。
 
 更多信息可以参考：[认识 Ability](./04-understanding-ability.md) 章节。
 :::
 
-一般来说我们认为，**有 `key` 能力的结构体，就是资源**。
+一般来说我们认为，**有 `key` 和 `store` 能力的结构体，就是资源**。
 
 我们修改代码，按照提示添加 `key` 能力。
 
@@ -245,8 +231,7 @@ module MyCounterAddr::MyCounter {
 }
 ```
 
-注意第3行我们引用了一个依赖 —— [StarcoinFramwork](https://github.com/starcoinorg/starcoin-framework) 可以认为是 Starcoin 的 Stdlib 标准库。
-我们需要使用库中的 `Signer::address_of(&signer)` 方法来提取 `signer` 的地址。
+注意第3行我们引用了一个依赖 —— [StarcoinFramwork](https://github.com/starcoinorg/starcoin-framework) 可以认为是 Starcoin 的 Stdlib 标准库。我们需要使用库中的 `Signer::address_of(&signer)` 方法来提取 `signer` 的地址。
 
 为了添加依赖到项目中，修改 *Move.toml* 文件
 
@@ -272,9 +257,7 @@ StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.gi
 4. `borrow_global_mut<T>(address): &mut T`：返回地址下类型为 `T` 的资源的*可变引用（mutable reference）*。
 5. `exists<T>(address): bool`：判断地址下是否有类型为 `T` 的资源。
 
-要使用这些方法，资源 `T` 必须定义在当前模块。
-**这确保了资源只能被定义资源的模块所提供的 API 方法来操作**。
-参数 `address` 和 `signer` 代表了类型为 `T` 的资源存储的地址。
+要使用这些方法，资源 `T` 必须定义在当前模块。**这确保了资源只能被定义资源的模块所提供的 API 方法来操作**。参数 `address` 和 `signer` 代表了类型为 `T` 的资源存储的地址。
 :::
 
 然后我们试着编译一下：
@@ -293,14 +276,12 @@ error[E04020]: missing acquires annotation
    │                       Invalid call to borrow_global_mut.
 ```
 
-哦！又出错了。
-报错信息提示了我们第14行调用方法获取 `Counter` 结构时，类型（Counter 结构）必须出现在调用上下文的 `acquires` 列表中，而当前函数的 `acquires` 列表没有包含这个类型。
+哦！又出错了。报错信息提示了我们第14行调用方法获取 `Counter` 结构时，类型（Counter 结构）必须出现在调用上下文的 `acquires` 列表中，而当前函数的 `acquires` 列表没有包含这个类型。
 
 这里我们引入 *acquire* 的概念。
 
 :::tip 概念
-当一个函数用 `move_from()`、`borrow_global()`、`borrow_global_mut()` 访问资源时，函数必须要显示声明需要“**获取**”哪种资源。
-这会被 Move 的类型系统确保对资源的引用是安全的、不存在悬空引用。
+当一个函数用 `move_from()`、`borrow_global()`、`borrow_global_mut()` 访问资源时，函数必须要显示声明需要“**获取**”哪种资源。这会被 Move 的类型系统确保对资源的引用是安全的、不存在悬空引用。
 :::
 
 修改后的代码如下：
@@ -396,8 +377,7 @@ Release done: release/my-counter.v0.0.1.blob, package hash: 0x31b36a1cd0fd13e840
 
 它将打包编译模块，获得二进制包。
 
-前文中我们准备了地址为 `0xcada49d6a37864931afb639203501695` 的账户，如果没有余额，可以通过 `dev get-coin` 命令获取一些测试币。
-现在将编译好的模块部署到这个账户地址下。
+前文中我们准备了地址为 `0xcada49d6a37864931afb639203501695` 的账户，如果没有余额，可以通过 `dev get-coin` 命令获取一些测试币。现在将编译好的模块部署到这个账户地址下。
 
 ```starcoin title="starcoin控制台" {1,3,5}
 starcoin% account unlock 0xcada49d6a37864931afb639203501695 -p <MY-PASSWORD>
@@ -478,8 +458,7 @@ txn 0x032c0eda779157e0ef3949338c3b3e4e6528c7720776d02c2cb0ddd64804f1c2 submitted
 }
 ```
 
-`init_counter` 函数中，我们初始化了一个 *Counter 对象（资源）*，然后 `move_to` 到了调用者地址下。
-让我们看看这个资源是否存在。使用 `state list resource <ADDRESS>` 命令查看给定地址下的资源列表。
+`init_counter` 函数中，我们初始化了一个 *Counter 对象（资源）*，然后 `move_to` 到了调用者地址下。让我们看看这个资源是否存在。使用 `state list resource <ADDRESS>` 命令查看给定地址下的资源列表。
 
 ```starcoin title="starcoin控制台" {1}
 starcoin% state list resource 0xcada49d6a37864931afb639203501695
@@ -505,8 +484,7 @@ starcoin% state list resource 0xcada49d6a37864931afb639203501695
 1. Linux 的绝对路径名 `/path/to/file` 就是 *fully qualified file name*，相对的 `./to/file` 是一个相对路径地址。
 2. 域名系统中，`google.com.` 是一个 *fully qualified domain name*，注意最后的 `.`。意味着这个域名不要继续被递归解析。
 
-那么对应到 Move 语言中，资源类型是发布到某个地址下的，属于这个地址。
-地址 `0x001` 可以创建一个 `Counter` 类型的资源，地址 `0x002` 也可以创建一个 `Counter` 类型的资源，要区分两个 `Counter`，就需要带上地址和模块名。
+那么对应到 Move 语言中，资源类型是发布到某个地址下的，属于这个地址。地址 `0x001` 可以创建一个 `Counter` 类型的资源，地址 `0x002` 也可以创建一个 `Counter` 类型的资源，要区分两个 `Counter`，就需要带上地址和模块名。
 
 ```
 <address>::<module_identifier>::<structure>
@@ -561,11 +539,7 @@ starcoin% state get resource 0x012ABC 0xcada49d6a37864931afb639203501695::MyCoun
 
 我们用 *Python* 的 `pip` 或者 *Node.js* 的 `npm` 来辅助理解。
 
-在 `pip` 和 `npm` 这样的中心化包管理托管平台出现之前，我们想安装一个包，需要 `setup.py install /path/to/package`。
-这样子当然不便于包的分发传播与索引。
-后来有了 `pip` 我们是怎么做的呢，包作者先将自己的包打包上传到 `pip` 仓库，`pip` 会存储包并建立索引。
-普通用户只需要 `pip install package_name` 即可。
-`pip` 工具会根据你提供的 `package_name` 下载源码，然后执行安装。这两种安装包的方式其实是一样的。
+在 `pip` 和 `npm` 这样的中心化包管理托管平台出现之前，我们想安装一个包，需要 `setup.py install /path/to/package`。这样子当然不便于包的分发传播与索引。后来有了 `pip` 我们是怎么做的呢，包作者先将自己的包打包上传到 `pip` 仓库，`pip` 会存储包并建立索引。普通用户只需要 `pip install package_name` 即可。`pip` 工具会根据你提供的 `package_name` 下载源码，然后执行安装。这两种安装包的方式其实是一样的。
 
 现在对应到 Move 中。在 `script function` 出现之前是只有 `script` 的，`script` 写在与 `sources` 目录平级的 `scripts` 目录下。
 
@@ -575,9 +549,7 @@ starcoin% state get resource 0x012ABC 0xcada49d6a37864931afb639203501695::MyCoun
 starcoin% account execute-script </path/to/mv_file>
 ```
 
-`script function` 作为 `script` 的替代，[被添加到了 Move 语言中](https://github.com/move-language/move/commit/e0a3acb7d5e3f5dbc07ee76b47dd05229584d4d0)。
-类比于保存在 `pip` 仓库中的软件包。`script function` 会在模块中一起发布到一个地址下（就像包作者把软件包发布在 `pip` 中一样）。
-此时，要调用 `script`，需要创建一个交易，`payload` 中指向已经发布的代码的地址即可。对应到 Starcoin 控制台中是:
+`script function` 作为 `script` 的替代，[被添加到了 Move 语言中](https://github.com/move-language/move/commit/e0a3acb7d5e3f5dbc07ee76b47dd05229584d4d0)。类比于保存在 `pip` 仓库中的软件包。`script function` 会在模块中一起发布到一个地址下（就像包作者把软件包发布在 `pip` 中一样）。此时，要调用 `script`，需要创建一个交易，`payload` 中指向已经发布的代码的地址即可。对应到 Starcoin 控制台中是:
 
 ```
 starcoin% account execute-function --function  <0x地址>::<模块>::<函数> --arg xxx

@@ -163,7 +163,7 @@ $ starcoin -c ~/.starcoin/main/starcoin.ipc console
 $ starcoin -c ws://main.seed.starcoin.org:9870 console
 ```
 
-If connected to a remote seed node through RPC, the methods related to the account is not availabel. You cat set the `--local-account-dir` option and import an account to use the account methods.
+If connected to a remote seed node through RPC, the methods related to the account is not availabel. You can set the `--local-account-dir` option and import an account to use the account methods.
 
 ```bash
 $ starcoin --connect ws://main.seed.starcoin.org:9870 --local-account-dir ~/.starcoin/main/account_vaults console

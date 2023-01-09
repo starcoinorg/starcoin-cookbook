@@ -87,7 +87,7 @@ pub struct AccumulatorInfo {
 这里 frozen_subtree_roots 最多只有64个。
 原因如下，假设有n个节点，假设 `2^k <= n < 2^(k + 1)`， 第一个 frozen_subtree 用的节点数是`2^k`，第二个的 frozen_subtree 用的节点数是 `2^k1`，
 其中 `2^k1 <= (n - 2^k) < 2^(k1 + 1)`， 可以发现 frozen_subtree_roots 和 n 的二进制表示中的1是对应的，由于 n 定以为64位整数，最多有64个节点数。
-HashValue 使用 sha3_256 计算占8个字节，一个 AccumulatorInfo 占的内存最大是`(1 + 64 + 2) * 8`个字节。
+HashValue 使用 sha3_256 计算占 32 个字节，一个 AccumulatorInfo 占的内存最大是`(1 + 64 + 2) * 32`个字节。
 
 ## Leaf Index 和 Node Index
 

@@ -12,11 +12,11 @@ module MyCounterAddr::MyCounter {
         counter.value = counter.value + 1;
      }
 
-     public(script) fun init_counter(account: signer){
+     public entry fun init_counter(account: signer){
         Self::init(&account)
      }
 
-     public(script) fun incr_counter(account: signer)  acquires Counter {
+     public entry fun incr_counter(account: signer)  acquires Counter {
         Self::incr(&account)
      }
 }

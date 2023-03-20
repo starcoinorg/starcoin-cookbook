@@ -7,4 +7,4 @@ StarcoinFramework = "0x1"
 MyCounterAddr = "0xABCDE"
 
 [dependencies]
-StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="2ee2378d0d6eaa4ebc1ac6d3e33c4aee11bc2fe4"}

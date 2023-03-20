@@ -267,10 +267,12 @@ StarcoinFramework = "0x1"
 MyCounterAddr = "0xcada49d6a37864931afb639203501695"
 
 [dependencies]
-StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="2ee2378d0d6eaa4ebc1ac6d3e33c4aee11bc2fe4"}
 ```
 
-Line 16 has a new method `borrow_global_mut`.
+Since the StarcoinFramework code is possibly updated,  the rev(`2ee2378d0d6eaa4ebc1ac6d3e33c4aee11bc2fe4`) of StarcoinFramework may be invalid for this example causing errors or warnings in the build or test progress. If it is, please check the latest version and update the rev of StarcoinFramework.
+
+Line 14 has a new method `borrow_global_mut`.
 Like the previous `move_to`, it is a built-in method to operate resources on the storage space of the account address.
 
 :::tip Gas Station -- Operation of Resources
@@ -301,10 +303,6 @@ error[E04020]: missing acquires annotation
    │                       Invalid call to borrow_global_mut.
 ```
 
-哦！又出错了。
-报错信息提示了我们第14行调用方法获取 `Counter` 结构时，类型（Counter 结构）必须出现在调用上下文的 `qcquires` 列表中，而当前函数的 `acquires` 列表没有包含这个类型。
-
-这里我们引入 `acquire` 的概念。
 Oh! Something went wrong again.
 The error message prompts that when we call the method in line 14 to get the `Counter` structure, the type (Counter structure) must appear in the `acquires` list of the call context, and the `acquires` list of the current function does not contain this type.
 
@@ -356,9 +354,9 @@ Different visibility determines where functions can be called. (The following co
 |-------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | internal          | fun                | It can also be called private, which can only be called in the same module.                                                                                                                                                                |
 | public            | public fun         | It can be called by functions in any module.                                                                                                                                                                                               |
-| **public script** | public(script) fun | The script function is an entry method in the module, which can be called by initiating a transaction through the console, just like the local execution script (although the code has been stored under the module address on the chain). |
+| **public entry** | public entry fun | The entry function is an entry method in the module, which can be called by initiating a transaction through the console, just like the local execution script (although the code has been stored under the module address on the chain). |
 | public friend     | public(friend) fun | It can be called in the same module and added to the trusted module call of the `friend list`.                                                                                                                                             |
-:::
+|:::|||
 
 Next, let's write the *script function* corresponding to `init` and `incr` functions.
 
@@ -380,11 +378,11 @@ module MyCounterAddr::MyCounter {
         counter.value = counter.value + 1
     }
 
-    public(script) fun init_counter(account: signer) {
+    public entry fun init_counter(account: signer) {
         Self::init(&account);
     }
 
-    public(script) fun incr_counter(account: signer) acquires Counter {
+    public entry fun incr_counter(account: signer) acquires Counter {
         Self::incr(&account);
     }
 }

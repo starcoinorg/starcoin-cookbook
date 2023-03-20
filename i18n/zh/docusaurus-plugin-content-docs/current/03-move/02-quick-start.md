@@ -260,10 +260,12 @@ StarcoinFramework = "0x1"
 MyCounterAddr = "0xcada49d6a37864931afb639203501695"
 
 [dependencies]
-StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="cf1deda180af40a8b3e26c0c7b548c4c290cd7e7"}
+StarcoinFramework = {git = "https://github.com/starcoinorg/starcoin-framework.git", rev="2ee2378d0d6eaa4ebc1ac6d3e33c4aee11bc2fe4"}
 ```
 
-第16行有个新方法 `borrow_global_mut`，和前文的 `move_to` 一样，都是操作账户地址的存储空间上资源的内置方法。
+由于 StarcoinFramework 源码可能会更新，导致使用这个例子中的StarcoinFramework rev(`2ee2378d0d6eaa4ebc1ac6d3e33c4aee11bc2fe4`) 在编译或者测试过程中失败或产生警告，如果遇到这种情况可以尝试使用最新的StarcoinFramework rev 版本。
+
+第14行有个新方法 `borrow_global_mut`，和前文的 `move_to` 一样，都是操作账户地址的存储空间上资源的内置方法。
 
 :::tip 加油站 —— 资源的操作方法
 1. `move_to<T>(&signer, T)`：发布、添加类型为 `T` 的资源到 `signer` 的地址下。
@@ -342,9 +344,9 @@ module MyCounterAddr::MyCounter {
 |-------------------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | internal          | fun                | 也可以叫 private，只能在同一个模块内调用                                                                                                              |
 | public            | public fun         | 可以被任一模块内的函数调用                                                                                                                            |
-| **public script** | public(script) fun | script function 是模块中的入口方法，可以**通过控制台发起一个交易来调用**，就像本地执行脚本一样（不过代码已经被存在了链上的模块地址下）。 |
+| **public entry** | public entry fun | entry function 是模块中的入口方法，可以**通过控制台发起一个交易来调用**，就像本地执行脚本一样（不过代码已经被存在了链上的模块地址下）。 |
 | public friend     | public(friend) fun | 可以被同一模块内调用，可以被加入到 `friend list` 的可信任模块调用                                                                                 |
-:::
+|:::|||
 
 下面，我们编写对应 `init` 和 `incr` 函数的 *script function*。
 

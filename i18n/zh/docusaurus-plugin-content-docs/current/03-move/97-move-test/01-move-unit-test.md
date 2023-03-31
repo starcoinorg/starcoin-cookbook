@@ -202,14 +202,14 @@ Test result: OK. Total tests: 3; passed: 3; failed: 0
 
 ### 测试命令的参数
 
-#### `-f <str> | --filter <str>`
+#### ` <str>`
 
-这将只运行名称中包含有 `<str>` 的测试。
+在 `mpm package test` 后面加上`<str>`，这将只运行名称中包含有 `<str>` 的测试。
 
 例如，如果我们想只运行名称中含有 "zero_coin "的测试。
 
 ```
-$ mpm package test -f zero_coin
+$ mpm package test zero_coin
 CACHED MoveStdlib
 BUILDING TestExample
 Running Move unit tests

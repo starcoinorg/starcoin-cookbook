@@ -4,14 +4,9 @@ Starcoin 标准Oracle协议介绍
 
 ## 为什么需要Oracle？
 
-区块链发展至今，遇到过很多困难，这些困难的背后往往催生出更多的创新。
-链上如何获取真实世界的数据？合约如何捕捉市场的价格波动？链游如何保证不可预测性？
-类似的很多疑问困扰着我们，Oracle(预言机)应运而生。
-Oracle不仅打通了链上与链下，也在公链之间开了一扇门，极大的拓展了区块链的应用场景。
-所以Oracle就像一座桥梁，让不同地方的数据相互之间建立起联系。
+区块链发展至今，遇到过很多困难，这些困难的背后往往催生出更多的创新。链上如何获取真实世界的数据？合约如何捕捉市场的价格波动？链游如何保证不可预测性？类似的很多疑问困扰着我们，Oracle(预言机)应运而生。Oracle不仅打通了链上与链下，也在公链之间开了一扇门，极大的拓展了区块链的应用场景。所以Oracle就像一座桥梁，让不同地方的数据相互之间建立起联系。
 
-Oracle已成为公链生态中必备的一个基础组件。
-Starcoin也定义了一套标准的Oracle协议，它就像卫星一样，将星球上的数据收集起来，再通过Move合约分发到其他的地方，创造丰富的价值。
+Oracle已成为公链生态中必备的一个基础组件。Starcoin也定义了一套标准的Oracle协议，它就像卫星一样，将星球上的数据收集起来，再通过Move合约分发到其他的地方，创造丰富的价值。
 
 ## Starcoin的标准Oracle协议
 
@@ -108,13 +103,11 @@ Starcoin的标准Oracle协议在结构上保持简洁高效，很好地应用了
 
 ### 1. 实时价格
 
-用户可以从不同的数据源采集加密货币的时间和价格数据，通过Oracle以接近实时的方式提交到链上。
-其他合约可以通过筛选数据源，直接使用这些数据，或者聚合处理之后使用这些数据，非常的方便和灵活。
+用户可以从不同的数据源采集加密货币的时间和价格数据，通过Oracle以接近实时的方式提交到链上。其他合约可以通过筛选数据源，直接使用这些数据，或者聚合处理之后使用这些数据，非常的方便和灵活。
 
 ### 2. 随机数和链游
 
-我们都知道在输入确定的情况下，智能合约必须保证所有人的执行结果是一致的，所以链上很难提供类似随机数的机制。
-而通过Oracle，用户可以将 VRF 随机数据提交到链上，这样既能验证随机数的正确性，又能让合约拥有随机的能力而增加更丰富的场景。
+我们都知道在输入确定的情况下，智能合约必须保证所有人的执行结果是一致的，所以链上很难提供类似随机数的机制。而通过Oracle，用户可以将 VRF 随机数据提交到链上，这样既能验证随机数的正确性，又能让合约拥有随机的能力而增加更丰富的场景。
 
 以游戏为例，不可预测性是游戏具有吸引力的重要的因素之一。游戏通过Oracle获取随机数，可以保障游戏的不可预测性。
 
@@ -122,8 +115,7 @@ Starcoin的标准Oracle协议在结构上保持简洁高效，很好地应用了
 
 ### 3. 链下复杂计算
 
-由于Gas、单线程等限制，智能合约中不能有复杂的计算逻辑，这会让智能合约的场景非常受限。
-如果通过某种类似Proof的方案，让复杂的计算在链下执行，然后把结果和Proof提交到链上的Oracle中，提供给其他合约使用，会大大降低智能合约的设计难度，同时，能够丰富智能合约的应用场景。
+由于Gas、单线程等限制，智能合约中不能有复杂的计算逻辑，这会让智能合约的场景非常受限。如果通过某种类似Proof的方案，让复杂的计算在链下执行，然后把结果和Proof提交到链上的Oracle中，提供给其他合约使用，会大大降低智能合约的设计难度，同时，能够丰富智能合约的应用场景。
 
 ### 4. 保险理赔
 
@@ -131,25 +123,17 @@ Starcoin的标准Oracle协议在结构上保持简洁高效，很好地应用了
 
 ### 5. 预测市场
 
-市场是瞬息万变的，任何链下的事件产生，都可以通过Oracle快速映射到链上。
-智能合约通过获取Oracle提供的数据，触发预测市场执行结算等操作。例如，体育竞技结果、黄金价格变化、电竞等等。
+市场是瞬息万变的，任何链下的事件产生，都可以通过Oracle快速映射到链上。智能合约通过获取Oracle提供的数据，触发预测市场执行结算等操作。例如，体育竞技结果、黄金价格变化、电竞等等。
 
 ## Starcoin的PriceOracle实现
 
-我们深入了解了Starcoin标准Oracle协议的设计，然后探讨了其丰富的应用场景。
-接下来，我们以市场价格的场景为例，了解一下如何在标准的Oracle协议之上，将特定场景的业务逻辑添加进去，实现一个完整的Oracle应用。
+我们深入了解了Starcoin标准Oracle协议的设计，然后探讨了其丰富的应用场景。接下来，我们以市场价格的场景为例，了解一下如何在标准的Oracle协议之上，将特定场景的业务逻辑添加进去，实现一个完整的Oracle应用。
 
-Starcoin在标准的Oracle协议之上封装了一个PriceOracle模块，针对价格场景做了官方的实现。
-PriceOracle也是一个通用的合约，能够注册任意类型的数字资产。
-然后，Starcoin在PriceOracle之上，实现了一个STCUSDOracle合约，注册了一对货币组合STC和USDT。
-再通过PriceOracleScript合约，将STC对应USD的价格注册到链上的Oracle中。
-最后，任何人可以通过PriceOracleAggregator聚合器对价格进行筛选、过滤，将聚合得到的价格应用到自己的产品中。
-接下来，我们来深入的分析一下PriceOracle、STCUSDOracle以及PriceOracleAggregator的源码。
+Starcoin在标准的Oracle协议之上封装了一个PriceOracle模块，针对价格场景做了官方的实现。PriceOracle也是一个通用的合约，能够注册任意类型的数字资产。然后，Starcoin在PriceOracle之上，实现了一个STCUSDOracle合约，注册了一对货币组合STC和USDT。再通过PriceOracleScript合约，将STC对应USD的价格注册到链上的Oracle中。最后，任何人可以通过PriceOracleAggregator聚合器对价格进行筛选、过滤，将聚合得到的价格应用到自己的产品中。接下来，我们来深入的分析一下PriceOracle、STCUSDOracle以及PriceOracleAggregator的源码。
 
 1. PriceOracle
 
-PriceOracle建立在标准的Oracle协议之上，是针对价格场景实现的一个通用合约。
-也就是说，任何Price形态的数据，都可以通过PriceOracle上链。
+PriceOracle建立在标准的Oracle协议之上，是针对价格场景实现的一个通用合约。也就是说，任何Price形态的数据，都可以通过PriceOracle上链。
 
 ```
 struct PriceOracleInfo has copy,store,drop{
@@ -157,8 +141,7 @@ struct PriceOracleInfo has copy,store,drop{
 }
 ```
 
-在标准的Oracle协议中，OracleInfo有一个泛型参数是Info: copy+store+drop。
-在PriceOracle中，Info对应的具体实现是PriceOracleInfo，里面只包含了计算因子scaling_factor，所以PriceOracleInfo必须有copy、store、drop这3种ability，这是Info这个泛型参数的要求。
+在标准的Oracle协议中，OracleInfo有一个泛型参数是Info: copy+store+drop。在PriceOracle中，Info对应的具体实现是PriceOracleInfo，里面只包含了计算因子scaling_factor，所以PriceOracleInfo必须有copy、store、drop这3种ability，这是Info这个泛型参数的要求。
 
 在明确了PriceOracleInfo的数据定义之后，可以调用Oracle合约的register_oracle函数注册PriceOracleInfo，还可以调用Oracle的init_data_source和update将数据上链。
 
@@ -172,9 +155,7 @@ PriceOracle是标准Oracle协议上面的一个应用，所以继承了Oracle协
 struct STCUSD has copy,store,drop {}
 ```
 
-我们看到，在标准的Oracle协议中，OracleInfo除了Info，还有另外一个泛型参数OracleT: copy+store+drop，OracleT表示一对货币组合，Info表示信息。
-PriceOracle只实现了PriceOracleInfo，OracleT在PriceOracle也是泛型参数，而STCUSDTOracle合约的最大作用就是确定OracleT的类型为STCUSD。
-当然，任何人可以实现属于自己的一对货币组合合约，定义自己的产品。
+我们看到，在标准的Oracle协议中，OracleInfo除了Info，还有另外一个泛型参数OracleT: copy+store+drop，OracleT表示一对货币组合，Info表示信息。PriceOracle只实现了PriceOracleInfo，OracleT在PriceOracle也是泛型参数，而STCUSDTOracle合约的最大作用就是确定OracleT的类型为STCUSD。当然，任何人可以实现属于自己的一对货币组合合约，定义自己的产品。
 
 3. PriceOracleScript
 

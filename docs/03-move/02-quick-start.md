@@ -210,7 +210,7 @@ If it is forcibly copied, modified or discarded, the code compilation will go wr
 For more information, please refer to the [Understanding Ability](./04-understanding-ability.md) chapter.
 :::
 
-Generally speaking, we believe that **the structure with `key` ability is resources**.
+Generally speaking, we believe that **the structure with `key` and `store` abilities is resources**.
 
 We modify the code and follow the prompts to add `key` ability.
 

@@ -1,7 +1,6 @@
 # 如何使用 Starcoin CLI
 
-`starcoin` 命令可以用来启动节点，运行本地网络，加入测试网络或者主网络，也可以直接连接到远程节点的接口上，纯粹作为命令行客户端工具使用。
-运行本地网络或者加入测试网络可以方便地测试用户的智能合约代码，`starcoin` 的子命令 `dev` 可以编译，执行和发布智能合约。
+`starcoin` 命令可以用来启动节点，运行本地网络，加入测试网络或者主网络，也可以直接连接到远程节点的接口上，纯粹作为命令行客户端工具使用。运行本地网络或者加入测试网络可以方便地测试用户的智能合约代码，`starcoin` 的子命令 `dev` 可以编译，执行和发布智能合约。
 
 当你按照前面的教程安装好 `starcoin` 后，可以运行 `starcoin -h` 查看帮助。
 
@@ -34,7 +33,8 @@ $ starcoin -n dev
 Waiting SIGINT or SIGTERM ...
 ```
 
-此时在上面的控制台输出中可以看到节点的四种 RPC 访问方式
+此时在上面的控制台输出中可以看到节点的四种 RPC 访问方式：
+
 * IPC 文件在 .../dev/starcoin.ipc
 * HTTP 服务默认运行在 0.0.0.0:9850
 * TCP 服务默认运行在 0.0.0.0:9860
@@ -42,8 +42,7 @@ Waiting SIGINT or SIGTERM ...
 
 ### 查看链的信息
 
-本地的 dev 模式默认使用一个临时目录，每次重启都会重置数据。
-dev 节点启动后，会在日志中打印 IPC 文件路径，我们通过 IPC（进程间通信）文件可以连接到节点执行命令，比如：
+本地的 dev 模式默认使用一个临时目录，每次重启都会重置数据。dev 节点启动后，会在日志中打印 IPC 文件路径，我们通过 IPC（进程间通信）文件可以连接到节点执行命令，比如：
 
 ```bash
 $ starcoin -c /var/folders/_4/1ghtd3z15qjcw8yj905dcql40000gn/T/.tmph3EJ8S/dev/starcoin.ipc chain info
@@ -156,8 +155,7 @@ starcoin% chain info
 }
 ```
 
-像上面这样进入控制台，如果发现当前尚未启动 Starcoin 节点，则会自动在后台启动一个节点，控制台和节点在进程内通信。
-这样的节点生命周期和控制台的生命周期绑定，从控制台退出后，节点也会自动退出。
+像上面这样进入控制台，如果发现当前尚未启动 Starcoin 节点，则会自动在后台启动一个节点，控制台和节点在进程内通信。这样的节点生命周期和控制台的生命周期绑定，从控制台退出后，节点也会自动退出。
 
 当然也可以通过 IPC 或者 WebSocket RPC 的方式连接，然后进入控制台。
 
@@ -185,9 +183,7 @@ starcoin -c ws://main.seed.starcoin.org:9870 chain info|jq '.ok.head.number'
 
 ### Node exit for an unexpected error: file limit the maximum number of open file descriptors is too small, got xxxx, expect greater or equal to 45056
 
-出现这个错误的原因是因为ubuntu系统默认的可打开的最大数量文件描述符不够。
-通过一下步骤，将系统的可打开的最大数量文件描述设置为65536即可。
-首先，将`DefaultLimitNOFILE=65536`添加到文件`/etc/systemd/system.conf` 和 `/etc/systemd/user.conf`的最末段，然后重启系统即可，最后可以通过`ulimit -n`命令来检查可打开的最大数量文件描述符限制
+出现这个错误的原因是因为ubuntu系统默认的可打开的最大数量文件描述符不够。通过一下步骤，将系统的可打开的最大数量文件描述设置为65536即可。首先，将`DefaultLimitNOFILE=65536`添加到文件`/etc/systemd/system.conf` 和 `/etc/systemd/user.conf`的最末段，然后重启系统即可，最后可以通过`ulimit -n`命令来检查可打开的最大数量文件描述符限制
 
 ## 选项说明
 

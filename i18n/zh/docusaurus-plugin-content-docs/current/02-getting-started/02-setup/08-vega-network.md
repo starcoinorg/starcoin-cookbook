@@ -1,10 +1,10 @@
-# 如何参与主网络
+# 如何参与2.0网络
 
 ## 简介
 
 2024年6月21日，Starcoin 推出了 Vega 网络，标志着 Starcoin 2.0 的新时代开启。此次升级引入了FlexiDag和TurboSTM技术，极大地提升了灵活性、性能和交易效率。这次升级展示了 Starcoin 在区块链领域持续创新的决心，并为未来的进步和机遇奠定了坚实的基础。
 
-## Windows 加入主网络
+## Windows 加入2.0网络
 
 **1. 启动**
 
@@ -77,7 +77,7 @@ account export <ADDRESS>
 exit
 ```
 
-## Linux 加入主网络（推荐）
+## Linux 加入2.0网络（推荐）
 
 **1. 启动**
 
@@ -134,7 +134,7 @@ account export <ADDRESS>
 exit
 ```
 
-## Docker 加入主网络
+## Docker 加入2.0网络
 
 **1. 拉取 [Docker 镜像](https://hub.docker.com/r/starcoin/starcoin/)**
 

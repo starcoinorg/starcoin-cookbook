@@ -5,13 +5,13 @@ Generally, there are 4 steps for a dapp to interact with the Starcoin blockchain
 1. Connect to StarMask
 2. Generate the rawUserTransaction hex string while calling the contract with params
 3. Wake up the StarMask and asking the user to confirm the transaction
-4. Wait until the transaction was confirmed on the Starcoin blockchian, and display the result
+4. Wait until the transaction was confirmed on the Starcoin blockchain, and display the result
 
-Let's explain each steps in details with examples from [starmask-test-dapp](https://github.com/starcoinorg/starmask-test-dapp).
+Let's explain each step in details with examples from [starmask-test-dapp](https://github.com/starcoinorg/starmask-test-dapp).
 
 ## 1. Connect to StarMask
 
-To interact with the Chrome extension StarMask, a Dapp must check wether it is installed or not:
+To interact with the Chrome extension StarMask, a Dapp must check whether it is installed or not:
 
 ```js
 import StarMaskOnboarding from "@starcoin/starmask-onboarding";
@@ -141,7 +141,7 @@ const scriptFunction = await utils.tx.encodeScriptFunctionByResolve(
 );
 ```
 
-Finally, geneate the rawUserTransaction hex string:
+Finally, generate the rawUserTransaction hex string:
 
 ```js
 const payloadInHex = (function () {
@@ -171,7 +171,7 @@ User can either `Reject` or `Confirm` this transaction.
 
 > Tips: before user click either of these two buttons, the Dapp should display a Loading status.
 
-## 4. Wait until the transaction was confirmed on the Starcoin blockchian, and display the result
+## 4. Wait until the transaction was confirmed on the Starcoin blockchain, and display the result
 
 A transaction must be confirmed by enough nodes, we can change this in the constant variable `MAX_CONFIRMED_NODES`.
 We need to display a loading status, and long polling the staus of the transaction using `transactionHash`, and check the confirmations of the response, and cancle the loading status until confirmations is equal to or larger than `MAX_CONFIRMED_NODES`.

@@ -62,7 +62,7 @@ If you see the above output, it means you have successfully entered the interact
 
 ### Method two
 
-After one terminal starts the node, start another termnal to attach the node to start the console.
+After one terminal starts the node, start another terminal to attach the node to start the console.
 
 ```shell
 # Terminal 1

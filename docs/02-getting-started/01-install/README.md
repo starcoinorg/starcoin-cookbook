@@ -12,7 +12,7 @@ This article guides you on how to install starcoin.
 
 This document needs to be improved.
 
-* Add one-line install scripts for user easy install.
+* Add one-line install scripts for user easy installation.
 * Add binary files description.
 
 :::

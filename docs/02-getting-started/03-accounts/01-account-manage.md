@@ -41,7 +41,7 @@ starcoin% account show 0xf096a2a61d3042774187a462a5394537
 ```
 
 - `address` is the address of the account.
-- `is_default` indicates whether the account is the default account. Many commands that require an account address parameter, if user not passed it, the command will use the default account address. If the node has enable the miner client, the default account will also be used for miner client.
+- `is_default` indicates whether the account is the default account. Many commands require an account address parameter, if user not passed it, the command will use the default account address. If the node has enabled the miner client, the default account will also be used for miner client.
 - `is_readonly` indicates whether the account is the read-only account. The private key of the read-only account is not hosted in the node wallet.
 - `public_key` is the public key corresponding to the address of the account.
 - `receipt_identifier` is receipt identifier.

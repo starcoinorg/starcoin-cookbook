@@ -19,7 +19,7 @@ Run `starcoin` to set up a node and join the main network.
 $ starcoin
 ```
 
-You can join to other netowrks using `-n|--net` options. For example, start a local dev network:
+You can join to other networks using `-n|--net` options. For example, start a local dev network:
 
 ```
 $ starcoin -n dev

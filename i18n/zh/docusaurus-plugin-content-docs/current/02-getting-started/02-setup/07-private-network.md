@@ -32,8 +32,7 @@ starcoin_generator -n <CHAIN_NAME>:<CHAIN_ID> --genesis-config <GENESIS_CONFIG> 
 starcoin_generator -n my_chain:123 --genesis-config halley genesis_config
 ```
 
-该命令将内置的 `halley` 网络配置作为模板，生成一个名为 `genesis_config.json` 配置文件在 `~/.starcoin/my_chain` 目录下。
-可以用编辑器修改 `~/.starcoin/my_chain/genesis_config.json` 文件中的参数。
+该命令将内置的 `halley` 网络配置作为模板，生成一个名为 `genesis_config.json` 配置文件在 `~/.starcoin/my_chain` 目录下。可以用编辑器修改 `~/.starcoin/my_chain/genesis_config.json` 文件中的参数。
 
 注：如果不想配置文件生成在默认的 `~/.starcoin/<CHAIN_NAME>` 目录下，也可以通过 `-d` 选项指定目录。
 
@@ -47,8 +46,7 @@ starcoin_generator -n my_chain:123 genesis
 
 该命令根据前面生成的创世配置文件来生成创世区块。
 
-上面例子中的创世配置文件是 `~/.starcoin/my_chain/genesis_config.json`。
-当然，也可以将 `genesis_config.json` 文件放置在其他位置，然后通过绝对路径指定，比如：
+上面例子中的创世配置文件是 `~/.starcoin/my_chain/genesis_config.json`。当然，也可以将 `genesis_config.json` 文件放置在其他位置，然后通过绝对路径指定，比如：
 
 ```shell
 starcoin_generator -n my_chain:123 --genesis-config /data/conf/my_chain/genesis_config.json genesis

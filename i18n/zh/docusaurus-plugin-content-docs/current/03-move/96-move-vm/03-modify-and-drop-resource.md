@@ -281,6 +281,3 @@ GlobalValueEffect::Deleted => {
 ```
 
 最后调用 `maybe_commit_effects()` 函数将状态变更集合的内存对象，写入并提交到磁盘。
-
-
-

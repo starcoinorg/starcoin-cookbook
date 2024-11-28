@@ -6,8 +6,7 @@
 
 首先，按照[如何设置本地开发网络](../../02-getting-started/02-setup/03-dev-network.md)中的描述启动一个开发网络，并获得一些 STC 代币，比如 `1000000000`。
 
-在本文档中，我将使用我的开发网络的默认帐户地址 `0xb19b07b76f00a8df445368a91c0547cc` 来代表**发行**和**发送**新 Token 的人。
-我还创建了另一个帐户 `0x831d51f0087596e6aa4e7b3b9c85f945` 并将一些 STC 转移给它。该帐户将用于接收 Token。
+在本文档中，我将使用我的开发网络的默认帐户地址 `0xb19b07b76f00a8df445368a91c0547cc` 来代表**发行**和**发送**新 Token 的人。我还创建了另一个帐户 `0x831d51f0087596e6aa4e7b3b9c85f945` 并将一些 STC 转移给它。该帐户将用于接收 Token。
 
 创建自定义代币的代码源文件位于 [my-token](https://github.com/starcoinorg/starcoin-cookbook/tree/main/examples/my-token)。
 

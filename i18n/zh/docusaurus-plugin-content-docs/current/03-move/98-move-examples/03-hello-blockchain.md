@@ -21,7 +21,7 @@
 
 ## 测试指令集
 
-使用 mpm 先构建 blob 二进制包
+使用 mpm 先构建 blob 二进制包，需要注意先将`Move.toml`中的模块目标地址改成发布地址，此处为`0x143e9f2175f92f51d9adaeee2b3d8bf0`
 ```shell
 ➜ cd <work_dir>/starcoin/vm2/move-example/hello-blockchain
 ➜ mpm2 release

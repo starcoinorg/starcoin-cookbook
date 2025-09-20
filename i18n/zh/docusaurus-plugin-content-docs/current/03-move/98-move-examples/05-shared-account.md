@@ -1,30 +1,28 @@
-# shared_account
+# 共享账户 (Shared Account)
 
-这一章节主要介绍开发者如何在 Starcoin
-区块链上测试部署shared-account测试工程，该工程用以测试模拟NFT佣金的派发场景，即从主账户创建一个派生账户，将一部分Token放在并且在其中添加一些参与佣金派发的账户，当需要派发时，直接从派生账户中派发
+本章节介绍如何在 Starcoin 区块链上测试和部署 `shared-account` 示例工程。该工程旨在模拟 NFT 佣金分发的场景：从主账户创建一个派生账户，将部分代币存入派生账户，并添加参与佣金分发的账户。在需要分发时，直接从派生账户中进行分发。
 
-## 前提
+## 前提条件
 
-该工程在 [resource-group](https://github.com/starcoinorg/starcoin/tree/dual-verse-dag/vm2/move-examples/resource_groups)
-处， 需要预先将starcoin仓库下载到本地，编译以下工程
+该工程位于 starcoin的 [shared-account](https://github.com/starcoinorg/starcoin/tree/dual-verse-dag/vm2/move-examples/shared_account) 仓库中。请先将 Starcoin 仓库克隆到本地，并编译以下工具：
 
-1. [starcoin-cmd](https://github.com/starcoinorg/starcoin/tree/dual-verse-dag/cmd/starcoin),该二进制负责与peer进行连接
-2. [move-package-manager2](https://github.com/starcoinorg/starcoin/tree/dual-verse-dag/vm2/move-package-manager)
-   ,该二进制负责进行打包
-3. 执行以下执行令进行编译连接（假设starcoin二进制已经编译成功），并且打包工程
+1. [starcoin-cmd](https://github.com/starcoinorg/starcoin/tree/dual-verse-dag/cmd/starcoin)：用于与节点连接。
+2. [move-package-manager2](https://github.com/starcoinorg/starcoin/tree/dual-verse-dag/vm2/move-package-manager)：用于打包 Move 模块。
+
+假设 Starcoin 二进制文件已编译成功，执行以下命令连接到 Starcoin 控制台并打包工程：
 
 ```shell
+# 连接到 Starcoin 控制台，<network> 为网络名称（如 dev、barnard 等）
+starcoin -n <network> console
 
-# 连接到starcoin控制台
-➜ starcoin -n <network> console 
-
-# 查看节点的同步进度，需要等待本地节点同步完成才能提交下面的测试交易
-➜ starcoin% node sync progress
+# 查看节点的同步进度，确保本地节点同步完成后再提交测试交易
+starcoin% node sync progress
 There are no running sync tasks.
-
 ```
 
 ## 测试指令集
+
+以下是在 Starcoin 控制台中部署和测试 `shared-account` 合约的步骤：
 
 ```shell
 # 部署合约
@@ -38,21 +36,18 @@ dev call --function 0x82cbfefb8076f2da3339b782fb074438::SharedAccount::get_deriv
   ]
 }
 
-# 给派生地址转账，否则在分发的时候报派生地址余额不足
+# 向派生账户转账，以确保分发时余额充足
 account transfer -r 0x711f9777700a13eaf73b173aa2664216 -v 10000000000
 
-# 初始化
-account execute-function -s 0x82cbfefb8076f2da3339b782fb074438 --function 0x82cbfefb8076f2da3339b782fb074438::SharedAccount::initliaze_with_resource_account --arg b"1" -b
+# 初始化派生账户
+account execute-function -s 0x82cbfefb8076f2da3339b782fb074438 --function 0x82cbfefb8076f2da3339b782fb074438::SharedAccount::initialize_with_resource_account --arg b"1" -b
 
-
-# 添加R1
+# 添加参与分发的账户 R1
 account execute-function -s 0x82cbfefb8076f2da3339b782fb074438 --function 0x82cbfefb8076f2da3339b782fb074438::SharedAccount::add_address --arg b"1" --arg 0x95cb8c2ef522014bd03f633bd6c8dee6 --arg 100u64 -b
 
-# 添加R2
+# 添加参与分发的账户 R2
 account execute-function -s 0x82cbfefb8076f2da3339b782fb074438 --function 0x82cbfefb8076f2da3339b782fb074438::SharedAccount::add_address --arg b"1" --arg 0x7111c56355d63f3434aa7de8b3c94aff --arg 100u64 -b
 
-# 执行分发
+# 执行佣金分发
 account execute-function --function 0x82cbfefb8076f2da3339b782fb074438::SharedAccount::disperse -t 0x1::starcoin_coin::STC --arg 0x711f9777700a13eaf73b173aa2664216 -b
-
 ```
-

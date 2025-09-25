@@ -32,8 +32,8 @@ For example, to generate a custom network named `my_chain` with id `123`:
 starcoin_generator -n my_chain:123 --genesis-config halley genesis_config
 ```
 
-This command uses the built-in `halley` network configuration as a template and generates a configuration file named `genesis_config.json` in the `~/.starcoin/my_chain` directory.
-Parameters in the `~/.starcoin/my_chain/genesis_config.json` file can be modified with an editor.
+This command uses the built-in `halley` network configuration as a template and generates configuration files named `genesis_config.json` and `genesis_config2.json` in the `~/.starcoin/my_chain` directory.
+Parameters in the `~/.starcoin/my_chain/genesis_config.json` and `~/.starcoin/my_chain/genesis_config2.json` file can be modified with an editor.
 
 Note: If you don't want the configuration file to be generated in the default `~/.starcoin/<CHAIN_NAME>` directory, you can also specify the directory with the `-d` option.
 
@@ -47,10 +47,10 @@ starcoin_generator -n my_chain:123 genesis
 
 This command generates the genesis block according to the genesis configuration file generated earlier.
 
-The genesis configuration file in the above example is `~/.starcoin/my_chain/genesis_config.json`. Of course, you can also place the `genesis_config.json` file in another location and specify it with an absolute path, for example:
+The genesis configuration file in the above example is `~/.starcoin/my_chain/genesis_config2.json`. Of course, you can also place the `genesis_config2.json` file in another location and specify it with an absolute path, for example:
 
 ```shell
-starcoin_generator -n my_chain:123 --genesis-config /data/conf/my_chain/genesis_config.json genesis
+starcoin_generator -n my_chain:123 --genesis-config /data/conf/my_chain/genesis_config2.json genesis
 ```
 
 ## Running custom network nodes
@@ -83,10 +83,11 @@ starcoin -n my_chain:123 --seed /ip4/ip of genesis seed/tcp/9840/p2p/12D3KooWR1p
 
 First, start one node as the genesis seed, which is already started if you follow the steps, and check your local ip address.
 
-Second, copy the *genesis_config.json* configuration file of the genesis seed node to a new directory:
+Second, copy the *genesis_config.json* and *genesis_config2.json*configuration file of the genesis seed node to a new directory:
 
 ```shell
 cp ~/.starcoin/my_chain/genesis_config.json ~/.starcoin1/my_chain/
+cp ~/.starcoin/my_chain/genesis_config2.json ~/.starcoin1/my_chain/
 ```
 
 Third, start other node using docker with following command:

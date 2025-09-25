@@ -32,8 +32,8 @@ starcoin_generator -n <CHAIN_NAME>:<CHAIN_ID> --genesis-config <GENESIS_CONFIG> 
 starcoin_generator -n my_chain:123 --genesis-config halley genesis_config
 ```
 
-该命令将内置的 `halley` 网络配置作为模板，生成一个名为 `genesis_config.json` 配置文件在 `~/.starcoin/my_chain` 目录下。
-可以用编辑器修改 `~/.starcoin/my_chain/genesis_config.json` 文件中的参数。
+该命令将内置的 `halley` 网络配置作为模板，生成名为 `genesis_config.json` 和 `genesis_config2.json` 的配置文件在 `~/.starcoin/my_chain` 目录下。
+可以用编辑器修改 `~/.starcoin/my_chain/genesis_config.json` 和 `~/.starcoin/my_chain/genesis_config2.json` 文件中的参数。
 
 注：如果不想配置文件生成在默认的 `~/.starcoin/<CHAIN_NAME>` 目录下，也可以通过 `-d` 选项指定目录。
 
@@ -47,11 +47,11 @@ starcoin_generator -n my_chain:123 genesis
 
 该命令根据前面生成的创世配置文件来生成创世区块。
 
-上面例子中的创世配置文件是 `~/.starcoin/my_chain/genesis_config.json`。
-当然，也可以将 `genesis_config.json` 文件放置在其他位置，然后通过绝对路径指定，比如：
+上面例子中的创世配置文件是 `~/.starcoin/my_chain/genesis_config2.json`。
+当然，也可以将 `genesis_config2.json` 文件放置在其他位置，然后通过绝对路径指定，比如：
 
 ```shell
-starcoin_generator -n my_chain:123 --genesis-config /data/conf/my_chain/genesis_config.json genesis
+starcoin_generator -n my_chain:123 --genesis-config /data/conf/my_chain/genesis_config2.json genesis
 ```
 
 ## 运行自定义网络节点
@@ -84,10 +84,11 @@ starcoin -n my_chain:123 --seed /ip4/创世seed节点的IP地址/tcp/9840/p2p/12
 
 第一步，启动一个节点作为创世种子节点，如果跟着上面的步骤来，那它已经启动了，这时候检查您的本地 IP 地址，第三步会用到
 
-第二步，把创世的种子节点（seed node）的 *genesis_config.json* 配置文件 `cp` 到新的目录下
+第二步，把创世的种子节点（seed node）的 *genesis_config.json* 和 *genesis_config2.json* 配置文件 `cp` 到新的目录下
 
 ```shell
 cp ~/.starcoin/my_chain/genesis_config.json ~/.starcoin1/my_chain/
+cp ~/.starcoin/my_chain/genesis_config2.json ~/.starcoin1/my_chain/
 ```
 
 第三步，用 docker 来启动其他节点，命令如下：
